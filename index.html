@@ -939,12 +939,13 @@
       //  }
       // ================================================================
       const firebaseConfig = {
-        apiKey: "REEMPLAZAR_API_KEY",
-        authDomain: "REEMPLAZAR_AUTH_DOMAIN",
-        projectId: "REEMPLAZAR_PROJECT_ID",
-        storageBucket: "REEMPLAZAR_STORAGE_BUCKET",
-        messagingSenderId: "REEMPLAZAR_MESSAGING_SENDER_ID",
-        appId: "REEMPLAZAR_APP_ID",
+        apiKey: "AIzaSyDxGpgXcRfdHf181HgfvPO2mWxyuCTblZQ",
+        authDomain: "club-campestre-d217d.firebaseapp.com",
+        projectId: "club-campestre-d217d",
+        storageBucket: "club-campestre-d217d.firebasestorage.app",
+        messagingSenderId: "900474365373",
+        appId: "1:900474365373:web:4915d45035d3877c345ed4",
+        measurementId: "G-WDZVQPVG2S",
       };
       // ================================================================
 
@@ -978,12 +979,29 @@
 
       let db, auth, provider, currentUser;
       let globalData = [];
-      let globalPosts = [];
       let globalWeekly = [];
       let mainChartInstance,
         followersChartInst,
         contentTypeChartInst,
         weeklyEngagementInst;
+
+      // Datos históricos de Notion — siempre visibles, sin necesidad de login
+      const NOTION_POSTS = [
+        { id:"n10", date:"2026-04-22", publishedAt:"2026-04-22T10:00", type:"Story",    title:"Copa Camilo Villegas",    vistas:20969, reproducciones:0,    reach:0,     likes:606,  comments:29,   saves:376, compartidos:182, pctSeguidores:0,    pctInteractuantes:0, createdAt:"2026-04-22T10:00:00.000Z" },
+        { id:"n9",  date:"2026-04-21", publishedAt:"2026-04-21T12:00", type:"Story",    title:"Torneo Semana Santa",     vistas:155,   reproducciones:0,    reach:0,     likes:241,  comments:4,    saves:76,  compartidos:43,  pctSeguidores:0,    pctInteractuantes:0, createdAt:"2026-04-21T12:00:00.000Z" },
+        { id:"n8",  date:"2025-03-20", publishedAt:"2025-03-20T00:00", type:"Story",    title:"Merga Kid´s Water Party", vistas:13803, reproducciones:0,    reach:0,     likes:667,  comments:1,    saves:112, compartidos:77,  pctSeguidores:0,    pctInteractuantes:0, createdAt:"2025-03-20T00:00:00.000Z" },
+        { id:"n7",  date:"2025-03-18", publishedAt:"2025-03-18T00:00", type:"Carrusel", title:"Post 18",                 vistas:53977, reproducciones:6602, reach:31105, likes:1133, comments:1000, saves:554, compartidos:216, pctSeguidores:32.1, pctInteractuantes:0, createdAt:"2025-03-18T00:00:00.000Z" },
+        { id:"n6",  date:"2025-02-19", publishedAt:"2025-02-19T00:00", type:"Reel",     title:"Post 19",                 vistas:16361, reproducciones:6150, reach:11569, likes:188,  comments:53,   saves:28,  compartidos:5,   pctSeguidores:20.9, pctInteractuantes:0, createdAt:"2025-02-19T00:00:00.000Z" },
+        { id:"n5",  date:"2025-02-17", publishedAt:"2025-02-17T00:00", type:"Reel",     title:"Post 17",                 vistas:12542, reproducciones:3292, reach:9504,  likes:165,  comments:2,    saves:17,  compartidos:7,   pctSeguidores:19.2, pctInteractuantes:0, createdAt:"2025-02-17T00:00:00.000Z" },
+        { id:"n4",  date:"2025-02-16", publishedAt:"2025-02-16T00:00", type:"Carrusel", title:"Post 16",                 vistas:13305, reproducciones:3978, reach:10100, likes:330,  comments:0,    saves:37,  compartidos:16,  pctSeguidores:24,   pctInteractuantes:0, createdAt:"2025-02-16T00:00:00.000Z" },
+        { id:"n3",  date:"2025-02-15", publishedAt:"2025-02-15T00:00", type:"Carrusel", title:"Post 15",                 vistas:16282, reproducciones:0,    reach:9084,  likes:368,  comments:3,    saves:30,  compartidos:78,  pctSeguidores:12,   pctInteractuantes:0, createdAt:"2025-02-15T00:00:00.000Z" },
+        { id:"n2",  date:"2025-02-14", publishedAt:"2025-02-14T00:00", type:"Reel",     title:"Post 14",                 vistas:30611, reproducciones:785,  reach:17708, likes:1250, comments:17,   saves:397, compartidos:477, pctSeguidores:6.3,  pctInteractuantes:0, createdAt:"2025-02-14T00:00:00.000Z" },
+        { id:"n1",  date:"2025-02-13", publishedAt:"2025-02-13T00:00", type:"Carrusel", title:"Post 13",                 vistas:24698, reproducciones:1565, reach:14754, likes:958,  comments:17,   saves:171, compartidos:130, pctSeguidores:57,   pctInteractuantes:0, createdAt:"2025-02-13T00:00:00.000Z" },
+      ];
+      let globalPosts = [...NOTION_POSTS];
+
+      // Mostrar datos inmediatamente al cargar
+      updateDashboard();
 
       if (!DEMO_MODE) {
         const app = initializeApp(firebaseConfig);
@@ -991,7 +1009,15 @@
         db = getFirestore(app);
         provider = new GoogleAuthProvider();
 
+        // Fallback: si onAuthStateChanged no responde en 6s, mostrar login
+        const authTimeout = setTimeout(() => {
+          authStatus.innerHTML = `<span class="text-yellow-300 text-sm">No autenticado</span>`;
+          btnGoogleLogin.classList.remove("hidden");
+          disableForms();
+        }, 6000);
+
         onAuthStateChanged(auth, (user) => {
+          clearTimeout(authTimeout);
           currentUser = user;
           if (user) {
             authStatus.innerHTML = `<span class="text-white text-sm hidden sm:inline">${user.displayName || user.email}</span>`;
@@ -1007,6 +1033,10 @@
             btnLogout.classList.add("hidden");
             disableForms();
           }
+        }, (err) => {
+          clearTimeout(authTimeout);
+          authStatus.innerHTML = `<span class="text-red-400 text-sm">Error: ${err.code}</span>`;
+          btnGoogleLogin.classList.remove("hidden");
         });
 
         btnGoogleLogin.addEventListener("click", () => {
@@ -1016,20 +1046,7 @@
         });
         btnLogout.addEventListener("click", () => signOut(auth));
       } else {
-        authStatus.innerHTML = `<span class="text-yellow-300 text-sm">Modo Demo — Configure Firebase</span>`;
-        // Pre-cargar datos reales del cliente (exportados de Notion)
-        globalPosts = [
-          { id:"n10", date:"2026-04-22", publishedAt:"2026-04-22T10:00", type:"Story",    title:"Copa Camilo Villegas",      vistas:20969, reproducciones:0,    reach:0,     likes:606,  comments:29,   saves:376, compartidos:182, pctSeguidores:0,    pctInteractuantes:0, createdAt:"2026-04-22T10:00:00.000Z" },
-          { id:"n9",  date:"2026-04-21", publishedAt:"2026-04-21T12:00", type:"Story",    title:"Torneo Semana Santa",       vistas:155,   reproducciones:0,    reach:0,     likes:241,  comments:4,    saves:76,  compartidos:43,  pctSeguidores:0,    pctInteractuantes:0, createdAt:"2026-04-21T12:00:00.000Z" },
-          { id:"n8",  date:"2025-03-20", publishedAt:"2025-03-20T00:00", type:"Story",    title:"Merga Kid\u00b4s Water Party",   vistas:13803, reproducciones:0,    reach:0,     likes:667,  comments:1,    saves:112, compartidos:77,  pctSeguidores:0,    pctInteractuantes:0, createdAt:"2025-03-20T00:00:00.000Z" },
-          { id:"n7",  date:"2025-03-18", publishedAt:"2025-03-18T00:00", type:"Carrusel", title:"Post 18",                  vistas:53977, reproducciones:6602, reach:31105, likes:1133, comments:1000, saves:554, compartidos:216, pctSeguidores:32.1, pctInteractuantes:0, createdAt:"2025-03-18T00:00:00.000Z" },
-          { id:"n6",  date:"2025-02-19", publishedAt:"2025-02-19T00:00", type:"Reel",     title:"Post 19",                  vistas:16361, reproducciones:6150, reach:11569, likes:188,  comments:53,   saves:28,  compartidos:5,   pctSeguidores:20.9, pctInteractuantes:0, createdAt:"2025-02-19T00:00:00.000Z" },
-          { id:"n5",  date:"2025-02-17", publishedAt:"2025-02-17T00:00", type:"Reel",     title:"Post 17",                  vistas:12542, reproducciones:3292, reach:9504,  likes:165,  comments:2,    saves:17,  compartidos:7,   pctSeguidores:19.2, pctInteractuantes:0, createdAt:"2025-02-17T00:00:00.000Z" },
-          { id:"n4",  date:"2025-02-16", publishedAt:"2025-02-16T00:00", type:"Carrusel", title:"Post 16",                  vistas:13305, reproducciones:3978, reach:10100, likes:330,  comments:0,    saves:37,  compartidos:16,  pctSeguidores:24,   pctInteractuantes:0, createdAt:"2025-02-16T00:00:00.000Z" },
-          { id:"n3",  date:"2025-02-15", publishedAt:"2025-02-15T00:00", type:"Carrusel", title:"Post 15",                  vistas:16282, reproducciones:0,    reach:9084,  likes:368,  comments:3,    saves:30,  compartidos:78,  pctSeguidores:12,   pctInteractuantes:0, createdAt:"2025-02-15T00:00:00.000Z" },
-          { id:"n2",  date:"2025-02-14", publishedAt:"2025-02-14T00:00", type:"Reel",     title:"Post 14",                  vistas:30611, reproducciones:785,  reach:17708, likes:1250, comments:17,   saves:397, compartidos:477, pctSeguidores:6.3,  pctInteractuantes:0, createdAt:"2025-02-14T00:00:00.000Z" },
-          { id:"n1",  date:"2025-02-13", publishedAt:"2025-02-13T00:00", type:"Carrusel", title:"Post 13",                  vistas:24698, reproducciones:1565, reach:14754, likes:958,  comments:17,   saves:171, compartidos:130, pctSeguidores:57,   pctInteractuantes:0, createdAt:"2025-02-13T00:00:00.000Z" },
-        ];
+        authStatus.innerHTML = `<span class="text-yellow-300 text-sm">Modo Demo</span>`;
         enableForms();
         updateDashboard();
       }
@@ -1068,10 +1085,13 @@
         onSnapshot(
           collection(db, "users", currentUser.uid, "instagram_posts"),
           (snap) => {
-            const data = [];
-            snap.forEach((d) => data.push({ id: d.id, ...d.data() }));
-            globalPosts = data.sort(
-              (a, b) => new Date(b.date) - new Date(a.date),
+            const firebasePosts = [];
+            snap.forEach((d) => firebasePosts.push({ id: d.id, ...d.data() }));
+            // Fusionar: Firebase primero, luego los de Notion que no estén duplicados
+            const fbIds = new Set(firebasePosts.map(p => p.id));
+            const notionOnly = NOTION_POSTS.filter(p => !fbIds.has(p.id));
+            globalPosts = [...firebasePosts, ...notionOnly].sort(
+              (a, b) => new Date(b.publishedAt || b.date) - new Date(a.publishedAt || a.date),
             );
             renderPostsGrid();
             renderInsights();
