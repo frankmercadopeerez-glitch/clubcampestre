@@ -1685,123 +1685,34 @@
           types[p.type].count++;
           types[p.type].totalInteractions +=
             (p.likes || 0) + (p.comments || 0) + (p.saves || 0);
-          types[p.t     = document.getElementById("posts-grid");
-        const tableWrap = document.getElementById("posts-table-wrap");
-
-        if (globalPosts.length === 0) {
-          grid.innerHTML = `<div class="glass-card p-8 col-span-full text-center text-slate-400"><i data-lucide="image" class="w-10 h-10 mx-auto mb-2 opacity-40"></i><p>No hay publicaciones registradas.</p></div>`;
-          tableWrap.innerHTML = '';
-          lucide.createIcons();
-          return;
-        }
-
-        const BADGE = { Reel:"badge-reel", Foto:"badge-foto", Carrusel:"badge-carrusel", Story:"badge-story", Video:"badge-video" };
-
-        // Sort by total interactions desc for cards
-        const sortedByInt = [...globalPosts].sort((a,b) =>
-          ((b.likes||0)+(b.comments||0)+(b.saves||0)) - ((a.likes||0)+(a.comments||0)+(a.saves||0))
-        );
-
-        grid.innerHTML = sortedByInt.map((p, idx) => {
-          const total    = (p.likes||0)+(p.comments||0)+(p.saves||0)+(p.compartidos||0);
-          const d        = new Date(p.date + "T00:00:00");
-          const fmtDate  = d.toLocaleDateString("es-ES", {day:"2-digit",month:"short",year:"numeric"});
-          const timeStr  = p.publishedAt ? p.publishedAt.split("T")[1] : "";
-          const engPost  = p.reach > 0 ? ((total/p.reach)*100).toFixed(1) : (p.vistas > 0 ? ((total/p.vistas)*100).toFixed(1) : "---");
-          const medal    = idx===0?"🥇":idx===1?"🥈":idx===2?"🥉":"";
-          return `<div class="glass-card p-4 flex flex-col gap-3 hover:shadow-md transition-shadow">
-            <div class="flex items-start justify-between">
-              <span class="px-2.5 py-1 rounded-full text-xs font-semibold ${BADGE[p.type]||""}">${p.type}</span>
-              <button onclick="deletePost('${p.id}')" class="text-slate-300 hover:text-red-500 transition-colors p-1"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
-            </div>
-            <p class="text-sm font-medium text-slate-700 leading-snug">${medal} ${p.title}</p>
-            <p class="text-xs text-slate-400">${fmtDate}${timeStr ? ' · <b>' + timeStr + '</b>' : ''}</p>
-            <div class="grid grid-cols-3 gap-1.5 pt-2 border-t border-slate-100 text-center">
-              <div><p class="text-base font-bold text-club-dark">${(p.vistas||0).toLocaleString()}</p><p class="text-[10px] text-slate-400">Vistas</p></div>
-              <div><p class="text-base font-bold text-club-green">${(p.reach||0).toLocaleString()}</p><p class="text-[10px] text-slate-400">Ctas. alcanz.</p></div>
-              <div><p class="text-base font-bold text-club-gold">${total.toLocaleString()}</p><p class="text-[10px] text-slate-400">Interacc.</p></div>
-            </div>
-            <div class="grid grid-cols-4 gap-1 text-center text-xs text-slate-500">
-              <div><span class="block font-semibold text-slate-700">${(p.likes||0).toLocaleString()}</span>❤️</div>
-              <div><span class="block font-semibold text-slate-700">${(p.comments||0).toLocaleString()}</span>💬</div>
-              <div><span class="block font-semibold text-slate-700">${(p.saves||0).toLocaleString()}</span>🔖</div>
-              <div><span class="block font-semibold text-slate-700">${(p.compartidos||0).toLocaleString()}</span>↗️</div>
-            </div>
-            <div class="flex gap-2 text-xs justify-between bg-slate-50 rounded-lg px-3 py-1.5">
-              <span class="text-slate-500">Eng: <b class="text-club-gold">${engPost}%</b></span>
-              ${p.pctSeguidores ? `<span class="text-slate-500">Seg: <b>${p.pctSeguidores}%</b></span>` : ''}
-              ${p.pctInteractuantes ? `<span class="text-slate-500">Int: <b>${p.pctInteractuantes}%</b></span>` : ''}
-            </div>
+          types[p.type].totalImpressions += (p.vistas || 0);
+        });
+        const labels = Object.keys(types);
+        const COLORS = ["#C5A059", "#145333", "#0D3341", "#6B7280", "#9CA3AF"];
+        contentTypeChartInst = new Chart(ctx, {
+          type: "doughnut",
+          data: {
+            labels,
+            datasets: [{
+              data: labels.map((t) => types[t].totalInteractions),
+              backgroundColor: COLORS.slice(0, labels.length),
+              borderWidth: 0,
+            }],
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { position: "bottom" }, tooltip: tooltipStyle() },
+          },
+        });
+        typeTable.innerHTML = labels.map((t) => {
+          const v = types[t];
+          const avgInt = v.count > 0 ? Math.round(v.totalInteractions / v.count) : 0;
+          return `<div class="flex items-center justify-between py-2 border-b border-slate-100 last:border-0">
+            <span class="font-medium text-slate-700">${t}</span>
+            <span class="text-xs text-slate-500">${v.count} pub · avg ${avgInt} int.</span>
           </div>`;
-        }).join("");
-
-        // ---- Weekly table ----
-        // Sort by publishedAt desc for table
-        const sortedByDate = [...globalPosts].sort((a,b) => new Date(b.publishedAt||b.date) - new Date(a.publishedAt||a.date));
-        const tableRows = sortedByDate.map(p => {
-          const total   = (p.likes||0)+(p.comments||0)+(p.saves||0)+(p.compartidos||0);
-          const d       = new Date(p.date + "T00:00:00");
-          const DAYS    = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
-          const fmtDate = d.toLocaleDateString("es-ES",{day:"2-digit",month:"short"});
-          const timeStr = p.publishedAt ? p.publishedAt.split("T")[1] : "";
-          const engPost = p.reach > 0 ? ((total/p.reach)*100).toFixed(1) : (p.vistas>0?((total/p.vistas)*100).toFixed(1):"---");
-          return `<tr class="hover:bg-slate-50 transition-colors text-sm">
-            <td class="p-3 whitespace-nowrap">
-              <span class="px-2 py-0.5 rounded-full text-xs font-semibold ${BADGE[p.type]||''}">${p.type}</span>
-            </td>
-            <td class="p-3 text-slate-700 max-w-[180px] truncate" title="${p.title}">${p.title}</td>
-            <td class="p-3 text-slate-500 text-xs whitespace-nowrap">${fmtDate} ${DAYS[d.getDay()]}${timeStr ? '<br><span class="font-medium text-slate-600">' + timeStr + '</span>' : ''}</td>
-            <td class="p-3 text-right">${(p.likes||0).toLocaleString()}</td>
-            <td class="p-3 text-right">${(p.comments||0).toLocaleString()}</td>
-            <td class="p-3 text-right">${(p.compartidos||0).toLocaleString()}</td>
-            <td class="p-3 text-right">${(p.saves||0).toLocaleString()}</td>
-            <td class="p-3 text-right">${(p.vistas||0).toLocaleString()}</td>
-            <td class="p-3 text-right">${(p.reproducciones||0).toLocaleString()}</td>
-            <td class="p-3 text-right">${(p.reach||0).toLocaleString()}</td>
-            <td class="p-3 text-right text-xs">${p.pctSeguidores ? p.pctSeguidores+'%' : '—'}</td>
-            <td class="p-3 text-right text-xs">${p.pctInteractuantes ? p.pctInteractuantes+'%' : '—'}</td>
-            <td class="p-3 text-right font-semibold text-club-green">${total.toLocaleString()}</td>
-            <td class="p-3 text-right text-xs text-club-gold font-semibold">${engPost}%</td>
-            <td class="p-3 text-center">
-              <button onclick="deletePost('${p.id}')" class="text-slate-300 hover:text-red-500 transition-colors p-1"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
-            </td>
-          </tr>`;
-        }).join("");
-
-        tableWrap.innerHTML = `
-          <div class="glass-card overflow-hidden mt-2">
-            <div class="p-4 border-b border-slate-100 flex items-center justify-between">
-              <h3 class="font-semibold text-club-dark">Tabla detallada de publicaciones</h3>
-              <span class="text-xs text-slate-400">${globalPosts.length} publicaciones</span>
-            </div>
-            <div class="overflow-x-auto">
-              <table class="w-full text-left border-collapse">
-                <thead>
-                  <tr class="bg-slate-50 text-slate-500 text-xs uppercase tracking-wider">
-                    <th class="p-3 font-medium">Formato</th>
-                    <th class="p-3 font-medium">Descripcion</th>
-                    <th class="p-3 font-medium">Fecha / Hora</th>
-                    <th class="p-3 font-medium text-right">❤️ Likes</th>
-                    <th class="p-3 font-medium text-right">💬 Coment.</th>
-                    <th class="p-3 font-medium text-right">↗️ Compart.</th>
-                    <th class="p-3 font-medium text-right">🔖 Guard.</th>
-                    <th class="p-3 font-medium text-right">👁️ Vistas</th>
-                    <th class="p-3 font-medium text-right">▶️ Reprod.</th>
-                    <th class="p-3 font-medium text-right">👥 Ctas. alc.</th>
-                    <th class="p-3 font-medium text-right">% Seg.</th>
-                    <th class="p-3 font-medium text-right">% Int.</th>
-                    <th class="p-3 font-medium text-right">Total Int.</th>
-                    <th class="p-3 font-medium text-right">Eng.%</th>
-                    <th class="p-3 font-medium text-center">Acción</th>
-                  </tr>
-                </thead>
-                <tbody class="divide-y divide-slate-100">${tableRows}</tbody>
-              </table>
-            </div>
-          </div>`;
-v>`;
-            })
-            .join("") || `<p class="text-slate-400">Sin datos.</p>`;
+        }).join("") || `<p class="text-slate-400">Sin datos.</p>`;
       }
 
       function renderWeeklyEngagementChart() {
