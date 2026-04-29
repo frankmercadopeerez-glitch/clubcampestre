@@ -444,6 +444,9 @@
         <button class="tab-btn flex items-center gap-1 px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg text-xs sm:text-sm font-medium transition-colors text-slate-600 hover:bg-slate-100 whitespace-nowrap" data-tab="weekly">
           <i data-lucide="calendar-days" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i> <span>Semanal</span>
         </button>
+        <button class="tab-btn flex items-center gap-1 px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg text-xs sm:text-sm font-medium transition-colors text-slate-600 hover:bg-slate-100 whitespace-nowrap" data-tab="monthly">
+          <i data-lucide="calendar" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i> <span>Mensual</span>
+        </button>
       </div>
     </nav>
 
@@ -625,8 +628,9 @@
                   id="chart-filter"
                   class="text-sm border border-slate-200 rounded-md px-2 py-1 text-slate-600 focus:outline-none"
                 >
-                  <option value="15">Ultimos 15 dias</option>
-                  <option value="30">Ultimos 30 dias</option>
+                  <option value="7">Ultima semana</option>
+                  <option value="15" selected>Ultimos 15 dias</option>
+                  <option value="30">Ultimo mes</option>
                   <option value="all">Todo historico</option>
                 </select>
               </div>
@@ -840,6 +844,53 @@
                 </table>
               </div>
             </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB: MENSUAL -->
+      <section id="tab-monthly" class="hidden flex-col gap-6">
+        <!-- Selector de mes -->
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <button id="btn-month-prev" class="p-2 rounded-lg hover:bg-slate-200 transition">
+              <i data-lucide="chevron-left" class="w-5 h-5 text-slate-600"></i>
+            </button>
+            <span id="monthly-label" class="text-lg font-bold text-club-dark min-w-[160px] text-center capitalize"></span>
+            <button id="btn-month-next" class="p-2 rounded-lg hover:bg-slate-200 transition">
+              <i data-lucide="chevron-right" class="w-5 h-5 text-slate-600"></i>
+            </button>
+          </div>
+          <select id="monthly-period-filter" class="text-sm border border-slate-200 rounded-md px-3 py-1.5 text-slate-600 focus:outline-none">
+            <option value="month">Vista mensual</option>
+            <option value="week">Vista semanal</option>
+          </select>
+        </div>
+
+        <!-- KPIs del mes -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3" id="monthly-kpis"></div>
+
+        <!-- Grafico de barras del mes -->
+        <div class="glass-card p-4 md:p-6">
+          <h2 class="text-base sm:text-lg font-semibold text-club-dark mb-4" id="monthly-chart-title">Interacciones del mes</h2>
+          <div class="w-full h-72 relative">
+            <canvas id="monthlyChart"></canvas>
+          </div>
+        </div>
+
+        <!-- Tabla detalle por semana/dia -->
+        <div class="glass-card overflow-hidden">
+          <div class="p-4 border-b border-slate-100 flex items-center justify-between">
+            <h2 class="text-base font-semibold text-club-dark" id="monthly-table-title">Detalle por semana</h2>
+            <span id="monthly-record-count" class="text-xs text-slate-400"></span>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+              <thead>
+                <tr class="bg-slate-50 text-slate-500 text-xs uppercase tracking-wider" id="monthly-table-head"></tr>
+              </thead>
+              <tbody id="monthly-table-body" class="text-sm divide-y divide-slate-100"></tbody>
+            </table>
           </div>
         </div>
       </section>
@@ -1354,6 +1405,111 @@
 
       chartFilter.addEventListener("change", updateDashboard);
 
+      // ─── MENSUAL ───────────────────────────────────────────────────────────
+      const MESES_ES = ["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
+      let monthlyYear  = new Date().getFullYear();
+      let monthlyMonth = new Date().getMonth(); // 0-indexed
+      let monthlyChartInst = null;
+
+      document.getElementById("btn-month-prev").addEventListener("click", () => {
+        monthlyMonth--;
+        if (monthlyMonth < 0) { monthlyMonth = 11; monthlyYear--; }
+        renderMonthly();
+      });
+      document.getElementById("btn-month-next").addEventListener("click", () => {
+        const now = new Date();
+        if (monthlyYear === now.getFullYear() && monthlyMonth === now.getMonth()) return;
+        monthlyMonth++;
+        if (monthlyMonth > 11) { monthlyMonth = 0; monthlyYear++; }
+        renderMonthly();
+      });
+      document.getElementById("monthly-period-filter").addEventListener("change", renderMonthly);
+
+      function renderMonthly() {
+        const label = document.getElementById("monthly-label");
+        label.textContent = MESES_ES[monthlyMonth] + " " + monthlyYear;
+        // Disable next if current month
+        const now = new Date();
+        const nextBtn = document.getElementById("btn-month-next");
+        nextBtn.style.opacity = (monthlyYear === now.getFullYear() && monthlyMonth === now.getMonth()) ? "0.3" : "1";
+
+        const prefix = monthlyYear + "-" + String(monthlyMonth + 1).padStart(2, "0");
+        const monthData = globalData.filter(r => (r.date || "").startsWith(prefix))
+          .sort((a, b) => new Date(a.date) - new Date(b.date));
+
+        const monthPosts = globalPosts.filter(p => (p.date || "").startsWith(prefix));
+        const period = document.getElementById("monthly-period-filter").value;
+
+        // ─── KPIs ───
+        const totalViews   = monthData.reduce((s, r) => s + (r.storyViews || 0), 0);
+        const totalLikes   = monthData.reduce((s, r) => s + (r.likes || 0), 0);
+        const totalComments= monthData.reduce((s, r) => s + (r.comments || 0), 0);
+        const totalSaves   = monthData.reduce((s, r) => s + (r.saves || 0), 0);
+        const totalShares  = monthData.reduce((s, r) => s + (r.shares || 0), 0);
+        const totalInt     = totalLikes + totalComments + totalSaves + totalShares;
+        const avgEng       = totalViews > 0 ? ((totalInt / totalViews) * 100).toFixed(2) : "0.00";
+        document.getElementById("monthly-kpis").innerHTML = [
+          { label:"Vistas Historia", val: totalViews.toLocaleString(), icon:"eye", color:"border-blue-400" },
+          { label:"Total Interacc.", val: totalInt.toLocaleString(), icon:"heart", color:"border-pink-400" },
+          { label:"Publicaciones", val: monthPosts.length, icon:"image", color:"border-club-green" },
+          { label:"Eng. Rate", val: avgEng + "%", icon:"trending-up", color:"border-amber-400" },
+        ].map(k => `<div class="glass-card p-3 sm:p-4 border-l-4 ${k.color}">
+          <p class="text-xs text-slate-500 mb-1">${k.label}</p>
+          <p class="text-xl font-bold text-club-dark">${k.val}</p>
+        </div>`).join("");
+
+        // ─── CHART & TABLE ───
+        const ctx = document.getElementById("monthlyChart").getContext("2d");
+        if (monthlyChartInst) monthlyChartInst.destroy();
+
+        if (period === "week") {
+          // Group by ISO week
+          document.getElementById("monthly-chart-title").textContent = "Interacciones por semana — " + MESES_ES[monthlyMonth];
+          document.getElementById("monthly-table-title").textContent = "Detalle por semana";
+          const weeks = {};
+          monthData.forEach(r => {
+            const d  = new Date(r.date + "T00:00:00");
+            const wk = getISOWeek(d);
+            const key = "Sem " + wk;
+            if (!weeks[key]) weeks[key] = { views:0, likes:0, comments:0, saves:0, shares:0, days:0 };
+            weeks[key].views    += r.storyViews || 0;
+            weeks[key].likes    += r.likes || 0;
+            weeks[key].comments += r.comments || 0;
+            weeks[key].saves    += r.saves || 0;
+            weeks[key].shares   += r.shares || 0;
+            weeks[key].days++;
+          });
+          const wKeys = Object.keys(weeks);
+          const wInts = wKeys.map(k => weeks[k].likes + weeks[k].comments + weeks[k].saves + weeks[k].shares);
+          monthlyChartInst = new Chart(ctx, { type:"bar", data:{ labels:wKeys, datasets:[{ label:"Interacciones", data:wInts, backgroundColor:"rgba(20,83,51,0.75)", borderRadius:6 }] }, options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false},tooltip:tooltipStyle()}, scales:{x:{grid:{display:false}},y:{grid:{color:"#f1f5f9"}}} } });
+          document.getElementById("monthly-record-count").textContent = wKeys.length + " semanas";
+          document.getElementById("monthly-table-head").innerHTML = `<th class="p-3 font-medium">Semana</th><th class="p-3 font-medium text-right">Días</th><th class="p-3 font-medium text-right">Vistas</th><th class="p-3 font-medium text-right">❤️</th><th class="p-3 font-medium text-right">💬</th><th class="p-3 font-medium text-right">🔖</th><th class="p-3 font-medium text-right">↗️</th><th class="p-3 font-medium text-right font-semibold">Total</th><th class="p-3 font-medium text-right">Eng%</th>`;
+          document.getElementById("monthly-table-body").innerHTML = wKeys.map(k => {
+            const v = weeks[k]; const total = v.likes+v.comments+v.saves+v.shares;
+            const eng = v.views > 0 ? ((total/v.views)*100).toFixed(1) : "0.0";
+            return `<tr class="hover:bg-slate-50"><td class="p-3 font-medium text-club-dark">${k}</td><td class="p-3 text-right text-slate-500">${v.days}</td><td class="p-3 text-right">${v.views.toLocaleString()}</td><td class="p-3 text-right text-pink-600">${v.likes.toLocaleString()}</td><td class="p-3 text-right text-blue-600">${v.comments.toLocaleString()}</td><td class="p-3 text-right text-amber-600">${v.saves.toLocaleString()}</td><td class="p-3 text-right text-green-600">${v.shares.toLocaleString()}</td><td class="p-3 text-right font-bold text-club-green">${total.toLocaleString()}</td><td class="p-3 text-right text-xs text-slate-500">${eng}%</td></tr>`;
+          }).join("") || `<tr><td colspan="9" class="p-8 text-center text-slate-400">Sin datos para este mes.</td></tr>`;
+        } else {
+          // Group by day
+          document.getElementById("monthly-chart-title").textContent = "Interacciones diarias — " + MESES_ES[monthlyMonth] + " " + monthlyYear;
+          document.getElementById("monthly-table-title").textContent = "Detalle diario";
+          const DAYS = ["Dom","Lun","Mar","Mié","Jue","Vie","Sáb"];
+          const labels = monthData.map(r => { const d = new Date(r.date+"T00:00:00"); return d.getDate()+" "+DAYS[d.getDay()]; });
+          const ints   = monthData.map(r => (r.likes||0)+(r.comments||0)+(r.saves||0)+(r.shares||0));
+          const views  = monthData.map(r => r.storyViews || 0);
+          monthlyChartInst = new Chart(ctx, { type:"bar", data:{ labels, datasets:[ { label:"Interacciones", data:ints, backgroundColor:"rgba(197,160,89,0.8)", borderRadius:5, yAxisID:"y" }, { label:"Vistas", data:views, type:"line", borderColor:"#145333", backgroundColor:"transparent", borderWidth:2, pointRadius:2, tension:0.3, yAxisID:"y1" } ] }, options:{ responsive:true, maintainAspectRatio:false, interaction:{mode:"index",intersect:false}, plugins:{legend:{position:"bottom",labels:{usePointStyle:true,boxWidth:6}},tooltip:tooltipStyle()}, scales:{ x:{grid:{display:false}}, y:{type:"linear",position:"left",grid:{color:"#f1f5f9"},title:{display:true,text:"Interacciones",font:{size:11}}}, y1:{type:"linear",position:"right",grid:{display:false},title:{display:true,text:"Vistas",font:{size:11}}} } } });
+          document.getElementById("monthly-record-count").textContent = monthData.length + " registros";
+          document.getElementById("monthly-table-head").innerHTML = `<th class="p-3 font-medium">Fecha</th><th class="p-3 font-medium">Día</th><th class="p-3 font-medium text-right">Vistas</th><th class="p-3 font-medium text-right">❤️</th><th class="p-3 font-medium text-right hidden sm:table-cell">💬</th><th class="p-3 font-medium text-right hidden sm:table-cell">🔖</th><th class="p-3 font-medium text-right hidden sm:table-cell">↗️</th><th class="p-3 font-medium text-right">Total</th><th class="p-3 font-medium text-right">Eng%</th>`;
+          document.getElementById("monthly-table-body").innerHTML = monthData.map(r => {
+            const d = new Date(r.date+"T00:00:00"); const total = (r.likes||0)+(r.comments||0)+(r.saves||0)+(r.shares||0);
+            const eng = (r.storyViews||0) > 0 ? ((total/(r.storyViews))*100).toFixed(1) : "0.0";
+            return `<tr class="hover:bg-slate-50"><td class="p-3 font-medium text-slate-700 whitespace-nowrap">${d.toLocaleDateString("es-ES",{day:"2-digit",month:"short"})}</td><td class="p-3 text-slate-400 text-xs">${DAYS[d.getDay()]}</td><td class="p-3 text-right">${(r.storyViews||0).toLocaleString()}</td><td class="p-3 text-right text-pink-600">${(r.likes||0).toLocaleString()}</td><td class="p-3 text-right text-blue-600 hidden sm:table-cell">${(r.comments||0).toLocaleString()}</td><td class="p-3 text-right text-amber-600 hidden sm:table-cell">${(r.saves||0).toLocaleString()}</td><td class="p-3 text-right text-green-600 hidden sm:table-cell">${(r.shares||0).toLocaleString()}</td><td class="p-3 text-right font-bold text-club-green">${total.toLocaleString()}</td><td class="p-3 text-right text-xs text-slate-500">${eng}%</td></tr>`;
+          }).join("") || `<tr><td colspan="9" class="p-8 text-center text-slate-400">Sin datos para este mes.</td></tr>`;
+        }
+        lucide.createIcons();
+      }
+      // ──────────────────────────────────────────────────────────────────────
+
       function updateDashboard() {
         calculateKPIs();
         renderTable();
@@ -1362,6 +1518,7 @@
         renderInsights();
         renderPostsGrid();
         renderWeeklyHistory();
+        renderMonthly();
         lucide.createIcons();
       }
 
@@ -2036,6 +2193,9 @@
           }
           if (tab === "weekly") {
             renderWeeklyHistory();
+          }
+          if (tab === "monthly") {
+            renderMonthly();
           }
           lucide.createIcons();
         });
