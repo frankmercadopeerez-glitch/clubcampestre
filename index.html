@@ -1,0 +1,2198 @@
+﻿<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Métricas Instagram | Club Campestre de Cartagena</title>
+    <link
+      rel="icon"
+      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⛳</text></svg>"
+    />
+
+    <!-- =====================================================================
+         INSTRUCCIONES PARA CONECTAR FIREBASE DEL CLIENTE
+         =====================================================================
+         1. El cliente debe ir a: https://console.firebase.google.com/
+         2. Iniciar sesión con SU cuenta de Google (la del proyecto).
+         3. Crear un nuevo proyecto (ej. "clubcampestre-metrics").
+         4. En el menú lateral: "Firestore Database" → Crear base de datos
+            → Modo producción → Seleccionar región (us-east1 recomendado).
+         5. En "Autenticación" → "Comenzar" → Habilitar proveedor "Google".
+         6. En el menú lateral: ⚙️ Configuración del proyecto → "Tus apps"
+            → Agregar app Web (</>).
+         7. Copiar el objeto firebaseConfig que aparece y reemplazar el de
+            abajo (dentro de FIREBASE CONFIG).
+         8. En Firestore: "Reglas" → Pegar las reglas indicadas abajo.
+         ===================================================================== -->
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              club: {
+                dark: "#0D3341",
+                green: "#145333",
+                light: "#E8F1EC",
+                gold: "#C5A059",
+                goldhover: "#B08D4C",
+              },
+            },
+            fontFamily: {
+              sans: ["Inter", "sans-serif"],
+            },
+          },
+        },
+      };
+    </script>
+
+    <!-- Google Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Chart.js Date Adapter -->
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+        background-color: #f0f4f8;
+      }
+      .glass-card {
+        background: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 1rem;
+        box-shadow:
+          0 4px 6px -1px rgba(0, 0, 0, 0.05),
+          0 2px 4px -1px rgba(0, 0, 0, 0.03);
+      }
+      ::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+      }
+      ::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #cbd5e1;
+        border-radius: 10px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #94a3b8;
+      }
+      .loader {
+        border: 3px solid #f3f3f3;
+        border-radius: 50%;
+        border-top: 3px solid #145333;
+        width: 20px;
+        height: 20px;
+        animation: spin 1s linear infinite;
+        display: inline-block;
+      }
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      /* Tab active */
+      .tab-btn.active {
+        background-color: #145333;
+        color: white;
+      }
+      /* Badge colores tipo contenido */
+      .badge-reel {
+        background: #E1D3B8;
+        color: #5c4a2a;
+      }
+      .badge-foto {
+        background: #0D3341;
+        color: #ffffff;
+      }
+      .badge-carrusel {
+        background: #0D3341;
+        color: #ffffff;
+      }
+      .badge-story {
+        background: #AEA468;
+        color: #ffffff;
+      }
+      .badge-video {
+        background: #0D3341;
+        color: #ffffff;
+      }
+
+      /* Toast notification */
+      #toast {
+        transition:
+          opacity 0.3s,
+          transform 0.3s;
+      }
+      #toast.hide {
+        opacity: 0;
+        transform: translateY(20px);
+        pointer-events: none;
+      }
+
+      /* Modal overlay */
+      #modal-overlay {
+        transition: opacity 0.2s;
+      }
+      /* Best day highlight */
+      .best-day-bar {
+        background: linear-gradient(90deg, #c5a059, #e6c67a);
+      }
+
+      /* Sticky header shadow on scroll */
+      header.scrolled {
+        box-shadow: 0 4px 24px rgba(11, 47, 29, 0.18);
+      }
+    </style>
+  </head>
+  <body class="text-slate-800 antialiased min-h-screen flex flex-col">
+    <!-- Toast Notification -->
+    <div
+      id="toast"
+      class="hide fixed bottom-6 left-1/2 -translate-x-1/2 z-[200] bg-club-dark text-white text-sm font-medium px-5 py-3 rounded-xl shadow-xl flex items-center gap-2"
+    ></div>
+
+    <!-- ==================== MODAL NUEVA PUBLICACION ==================== -->
+    <div
+      id="modal-overlay"
+      class="fixed inset-0 bg-black/50 z-[100] flex items-center justify-center p-4 hidden"
+    >
+      <div2xl p-6 relative overflow-y-auto max-h-[92vh]
+        class="glass-card w-full max-w-2xl p-6 relative overflow-y-auto max-h-[92vh]"
+      >
+        <button
+          id="modal-close"
+          class="absolute top-4 right-4 text-slate-400 hover:text-red-500 transition-colors"
+        >
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+        <div
+          class="flex items-center gap-2 mb-5 border-b border-slate-100 pb-4"
+        >
+          <i data-lucide="image-plus" class="w-5 h-5 text-club-green"></i>
+          <h2 class="text-lg font-semibold text-club-dark">
+            Registrar Publicacion
+          </h2>
+        </div>
+        <form id="post-form" class="space-y-4">
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm font-medium text-slate-700 mb-1"
+                >Fecha y hora de subida</label
+              >
+              <input
+                type="datetime-local"
+                id="post-datetime"
+                required
+                class="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-club-green/50"
+              />
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-slate-700 mb-1"
+                >Tipo de contenido</label
+              >
+              <select
+                id="post-type"
+                required
+                class="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-club-green/50"
+              >
+                <option value="">Seleccionar...</option>
+                <option value="Reel">Reel</option>
+                <option value="Foto">Foto</option>
+                <option value="Carrusel">Carrusel</option>
+                <option value="Story">Story</option>
+                <option value="Video">Video</option>
+              </select>
+            </div>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-slate-700 mb-1"
+              >Descripcion / Titulo del post</label
+            >
+            <input
+              type="text"
+              id="post-title"
+              placeholder="Ej. Promocion fin de semana"
+              maxlength="120"
+              class="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-club-green/50"
+           !-- Visibilidad -->
+          <div class="pt-1">
+            <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Visibilidad</p>
+            <div class="grid grid-cols-3 gap-3">
+              <div>
+                <label class="block text-xs font-medium text-slate-700 mb-1">👁️ Vistas</label>
+                <input type="number" id="post-vistas" min="0" placeholder="0" class="w-full px-2 py-1.5 text-sm border border-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-club-green/50">
+              </div>
+              <div>
+                <label class="block text-xs font-medium text-slate-700 mb-1">▶️ Reproducciones</label>
+                <input type="number" id="post-reproducciones" min="0" placeholder="0" class="w-full px-2 py-1.5 text-sm border border-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-club-green/50">
+              </div>
+              <div>
+                <label class="block text-xs font-medium text-slate-700 mb-1">👥 Cuentas alcanzadas</label>
+                <input type="number" id="post-reach" min="0" placeholder="0" class="w-full px-2 py-1.5 text-sm border border-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-club-green/50">
+              </div>
+            </div>
+          </div>
+          <!-- Interacciones -->
+          <div class="pt-2 border-t border-slate-100">
+            <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Interacciones</p>
+            <div class="grid grid-cols-4 gap-2">
+              <div>
+                <label class="block text-xs text-slate-600 mb-1">❤️ Likes</label>
+                <input type="number" id="post-likes" min="0" placeholder="0" class="w-full px-2 py-1.5 text-sm border border-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-club-green/50">
+              </div>
+              <div>
+                <label class="block text-xs text-slate-600 mb-1">💬 Coment.</label>
+                <input type="number" id="post-comments" min="0" placeholder="0" class="w-full px-2 py-1.5 text-sm border border-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-club-green/50">
+              </div>
+              <div>
+                <label class="block text-xs text-slate-600 mb-1">🔖 Guardados</label>
+                <input type="number" id="post-saves" min="0" placeholder="0" class="w-full px-2 py-1.5 text-sm border border-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-club-green/50">
+              </div>
+              <div>
+                <label class="block text-xs text-slate-600 mb-1">↗️ Compartidos</label>
+                <input type="number" id="post-compartidos" min="0" placeholder="0" class="w-full px-2 py-1.5 text-sm border border-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-club-green/50">
+              </div>
+            </div>
+          </div>
+          <!-- Porcentajes -->
+          <div class="pt-2 border-t border-slate-100">
+            <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Porcentajes de audiencia</p>
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label class="block text-xs font-medium text-slate-700 mb-1">% Seguidores en alcance</label>
+                <div class="relative">
+                  <input type="number" id="post-pct-seguidores" min="0" max="100" step="0.1" placeholder="0.0" class="w-full px-2 py-1.5 pr-7 text-sm border border-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-club-green/50">
+                  <span class="absolute right-2 top-1/2 -translate-y-1/2 text-xs text-slate-400">%</span>
+                </div>
+              </div>
+              <div>
+                <label class="block text-xs font-medium text-slate-700 mb-1">% Seguidores que interactúan</label>
+                <div class="relative">
+                  <input type="number" id="post-pct-interactuantes" min="0" max="100" step="0.1" placeholder="0.0" class="w-full px-2 py-1.5 pr-7 text-sm border border-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-club-green/50">
+                  <span class="absolute right-2 top-1/2 -translate-y-1/2 text-xs text-slate-400">%</span>
+                </div>
+              </div <label class="block text-xs text-slate-600 mb-1"
+                  >❤️ Likes</label
+                >
+                <input
+                  type="number"
+                  id="post-likes"
+                  min="0"
+                  placeholder="0"
+                  class="w-full px-2 py-1.5 text-sm border border-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-club-green/50"
+                />
+              </div>
+              <div>
+                <label class="block text-xs text-slate-600 mb-1"
+                  >💬 Coment.</label
+                >
+                <input
+                  type="number"
+                  id="post-comments"
+                  min="0"
+                  placeholder="0"
+                  class="w-full px-2 py-1.5 text-sm border border-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-club-green/50"
+                />
+              </div>
+              <div>
+                <label class="block text-xs text-slate-600 mb-1"
+                  >🔖 Guardados</label
+                >
+                <input
+                  type="number"
+                  id="post-saves"
+                  min="0"
+                  placeholder="0"
+                  class="w-full px-2 py-1.5 text-sm border border-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-club-green/50"
+                />
+              </div>
+              <div>
+                <label class="block text-xs text-slate-600 mb-1"
+                  >↗️ Compartidos</label
+                >
+                <input
+                  type="number"
+                  id="post-compartidos"
+                  min="0"
+                  placeholder="0"
+                  class="w-full px-2 py-1.5 text-sm border border-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-club-green/50"
+                />
+              </div>
+            </div>
+          </div>
+          <!-- Porcentajes -->
+          <div class="pt-2 border-t border-slate-100">
+            <p
+              class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2"
+            >
+              Porcentajes de audiencia
+            </p>
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label class="block text-xs font-medium text-slate-700 mb-1"
+                  >% Seguidores en alcance</label
+                >
+                <div class="relative">
+                  <input
+                    type="number"
+                    id="post-pct-seguidores"
+                    min="0"
+                    max="100"
+                    step="0.1"
+                    placeholder="0.0"
+                    class="w-full px-2 py-1.5 pr-7 text-sm border border-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-club-green/50"
+                  />
+                  <span
+                    class="absolute right-2 top-1/2 -translate-y-1/2 text-xs text-slate-400"
+                    >%</span
+                  >
+                </div>
+              </div>
+              <div>
+                <label class="block text-xs font-medium text-slate-700 mb-1"
+                  >% Seguidores que interactúan</label
+                >
+                <div class="relative">
+                  <input
+                    type="number"
+                    id="post-pct-interactuantes"
+                    min="0"
+                    max="100"
+                    step="0.1"
+                    placeholder="0.0"
+                    class="w-full px-2 py-1.5 pr-7 text-sm border border-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-club-green/50"
+                  />
+                  <span
+                    class="absolute right-2 top-1/2 -translate-y-1/2 text-xs text-slate-400"
+                    >%</span
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+          <button
+            type="submit"
+            id="btn-post-submit"
+            disabled
+            class="w-full mt-2 bg-club-gold hover:bg-club-goldhover text-club-dark font-semibold py-2.5 px-4 rounded-lg transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <i data-lucide="save" class="w-4 h-4"></i> Guardar Publicacion
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Header -->
+    <header
+      id="main-header"
+      class="bg-club-dark text-white sticky top-0 z-50 transition-shadow"
+    >
+      <div
+        class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between"
+      >
+        <div class="flex items-center gap-3">
+          <div class="bg-club-gold text-club-dark p-2 rounded-lg">
+            <i data-lucide="bar-chart-2" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <h1 class="font-bold text-lg leading-tight">Club Campestre</h1>
+            <p class="text-xs text-club-light opacity-80">
+              Metricas de Instagram
+            </p>
+          </div>
+        </div>
+        <div class="flex items-center gap-3">
+          <div
+            id="auth-status"
+            class="flex items-center gap-2 text-sm text-club-light opacity-80"
+          >
+            <div class="loader"></div>
+            Conectando...
+          </div>
+          <button
+            id="btn-google-login"
+            class="hidden bg-white text-slate-800 font-semibold px-3 py-1.5 rounded-lg text-sm flex items-center gap-2 hover:bg-slate-100 transition-colors"
+          >
+            <svg class="w-4 h-4" viewBox="0 0 24 24">
+              <path
+                fill="#4285F4"
+                d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+              />
+              <path
+                fill="#34A853"
+                d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+              />
+              <path
+                fill="#FBBC05"
+                d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"
+              />
+              <path
+                fill="#EA4335"
+                d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
+              />
+            </svg>
+            Iniciar sesion
+          </button>
+          <button
+            id="btn-logout"
+            class="hidden text-xs text-club-light/70 hover:text-white underline"
+          >
+            Cerrar sesion
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Navigation Tabs -->
+    <nav class="bg-white border-b border-slate-200 sticky top-16 z-40">
+      <div
+        class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex gap-1 py-2 overflow-x-auto"
+      >
+        <button
+          class="tab-btn active flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium transition-colors text-slate-600 hover:bg-slate-100 whitespace-nowrap"
+          data-tab="overview"
+        >
+          <i data-lucide="layout-dashboard" class="w-4 h-4"></i> Panel General
+        </button>
+        <button
+          class="tab-btn flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium transition-colors text-slate-600 hover:bg-slate-100 whitespace-nowrap"
+          data-tab="insights"
+        >
+          <i data-lucide="lightbulb" class="w-4 h-4"></i> Insights
+        </button>
+        <button
+          class="tab-btn flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium transition-colors text-slate-600 hover:bg-slate-100 whitespace-nowrap"
+          data-tab="posts"
+        >
+          <i data-lucide="grid" class="w-4 h-4"></i> Publicaciones
+        </button>
+        <button
+          class="tab-btn flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium transition-colors text-slate-600 hover:bg-slate-100 whitespace-nowrap"
+          data-tab="history"
+        >
+          <i data-lucide="table" class="w-4 h-4"></i> Historial
+        </button>
+        <button
+          class="tab-btn flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium transition-colors text-slate-600 hover:bg-slate-100 whitespace-nowrap"
+          data-tab="weekly"
+        >
+          <i data-lucide="calendar-days" class="w-4 h-4"></i> Semanal
+        </button>
+      </div>
+    </nav>
+
+    <main
+      class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-8 w-full flex flex-col gap-6"
+    >
+      <!-- TAB: PANEL GENERAL -->
+      <section id="tab-overview" class="flex flex-col gap-6">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div class="glass-card p-4 flex flex-col relative overflow-hidden">
+            <div class="absolute -right-4 -top-4 opacity-5">
+              <i data-lucide="users" class="w-24 h-24 text-club-green"></i>
+            </div>
+            <span
+              class="text-xs text-slate-500 font-medium mb-1 uppercase tracking-wide"
+              >Seguidores</span
+            >
+            <span class="text-2xl font-bold text-club-dark" id="kpi-followers"
+              >---</span
+            >
+            <div
+              class="mt-2 flex items-center gap-1 text-xs"
+              id="kpi-followers-trend"
+            >
+              <span class="text-slate-400">Esperando datos...</span>
+            </div>
+          </div>
+          <div class="glass-card p-4 flex flex-col relative overflow-hidden">
+            <div class="absolute -right-4 -top-4 opacity-5">
+              <i data-lucide="eye" class="w-24 h-24 text-club-green"></i>
+            </div>
+            <span
+              class="text-xs text-slate-500 font-medium mb-1 uppercase tracking-wide"
+              >Visitas al perfil</span
+            >
+            <span class="text-2xl font-bold text-club-dark" id="kpi-reach"
+              >---</span
+            >
+            <div
+              class="mt-2 flex items-center gap-1 text-xs"
+              id="kpi-reach-trend"
+            >
+              <span class="text-slate-400">Esperando datos...</span>
+            </div>
+          </div>
+          <div class="glass-card p-4 flex flex-col relative overflow-hidden">
+            <div class="absolute -right-4 -top-4 opacity-5">
+              <i data-lucide="heart" class="w-24 h-24 text-club-green"></i>
+            </div>
+            <span
+              class="text-xs text-slate-500 font-medium mb-1 uppercase tracking-wide"
+              >Interacciones 7d</span
+            >
+            <span
+              class="text-2xl font-bold text-club-dark"
+              id="kpi-interactions"
+              >---</span
+            >
+            <div
+              class="mt-2 flex items-center gap-1 text-xs"
+              id="kpi-interactions-trend"
+            >
+              <span class="text-slate-400">Esperando datos...</span>
+            </div>
+          </div>
+          <div
+            class="glass-card p-4 flex flex-col relative overflow-hidden bg-club-green text-white border-transparent"
+          >
+            <span
+              class="text-xs text-club-light opacity-90 font-medium mb-1 uppercase tracking-wide"
+              >Engagement Rate</span
+            >
+            <span class="text-2xl font-bold text-club-gold" id="kpi-engagement"
+              >---</span
+            >
+            <div class="mt-2 text-xs text-club-light opacity-70">
+              Basado en alcance reciente
+            </div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div class="lg:col-span-1">
+            <div class="glass-card p-5 sticky top-[7.5rem]">
+              <div
+                class="flex items-center gap-2 mb-4 border-b border-slate-100 pb-3"
+              >
+                <i
+                  data-lucide="plus-circle"
+                  class="w-5 h-5 text-club-green"
+                ></i>
+                <h2 class="text-lg font-semibold text-club-dark">
+                  Registro Diario — Historia
+                </h2>
+              </div>
+              <form id="stats-form" class="space-y-4">
+                <div>
+                  <label class="block text-sm font-medium text-slate-700 mb-1">Fecha</label>
+                  <input
+                    type="date"
+                    id="input-date"
+                    required
+                    class="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-club-green/50 text-slate-700"
+                  />
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-slate-700 mb-1">👁️ Vistas de la Historia</label>
+                  <input
+                    type="number"
+                    id="input-story-views"
+                    min="0"
+                    placeholder="0"
+                    class="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-club-green/50"
+                  />
+                </div>
+                <div class="pt-2 border-t border-slate-100">
+                  <p class="text-xs text-slate-500 font-semibold mb-3 uppercase tracking-wider">
+                    Interacciones
+                  </p>
+                  <div class="grid grid-cols-2 gap-2">
+                    <div>
+                      <label class="block text-xs text-slate-600 mb-1">❤️ Likes</label>
+                      <input type="number" id="input-likes" min="0" placeholder="0"
+                        class="w-full px-2 py-1.5 text-sm border border-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-club-green/50"/>
+                    </div>
+                    <div>
+                      <label class="block text-xs text-slate-600 mb-1">💬 Coment.</label>
+                      <input type="number" id="input-comments" min="0" placeholder="0"
+                        class="w-full px-2 py-1.5 text-sm border border-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-club-green/50"/>
+                    </div>
+                    <div>
+                      <label class="block text-xs text-slate-600 mb-1">🔖 Guard.</label>
+                      <input type="number" id="input-saves" min="0" placeholder="0"
+                        class="w-full px-2 py-1.5 text-sm border border-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-club-green/50"/>
+                    </div>
+                    <div>
+                      <label class="block text-xs text-slate-600 mb-1">↗️ Compart.</label>
+                      <input type="number" id="input-shares" min="0" placeholder="0"
+                        class="w-full px-2 py-1.5 text-sm border border-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-club-green/50"/>
+                    </div>
+                  </div>
+                </div>
+                <button
+                  type="submit"
+                  id="btn-submit"
+                  disabled
+                  class="w-full mt-1 bg-club-gold hover:bg-club-goldhover text-club-dark font-semibold py-2.5 px-4 rounded-lg transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  <i data-lucide="save" class="w-4 h-4"></i> Guardar Metricas
+                </button>
+              </form>
+              <div class="mt-4 pt-4 border-t border-slate-100">
+                <button
+                  id="btn-open-post-modal"
+                  disabled
+                  class="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium py-2.5 px-4 rounded-lg transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  <i
+                    data-lucide="image-plus"
+                    class="w-4 h-4 text-club-green"
+                  ></i>
+                  + Registrar Publicacion
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="lg:col-span-2 flex flex-col gap-6">
+            <div class="glass-card p-4 md:p-6">
+              <div class="flex items-center justify-between mb-4">
+                <h2 class="text-lg font-semibold text-club-dark">
+                  Evolucion: Interacciones y Alcance
+                </h2>
+                <select
+                  id="chart-filter"
+                  class="text-sm border border-slate-200 rounded-md px-2 py-1 text-slate-600 focus:outline-none"
+                >
+                  <option value="15">Ultimos 15 dias</option>
+                  <option value="30">Ultimos 30 dias</option>
+                  <option value="all">Todo historico</option>
+                </select>
+              </div>
+              <div class="w-full h-72 relative">
+                <canvas id="mainChart"></canvas>
+              </div>
+            </div>
+            <div class="glass-card p-4 md:p-6">
+              <h2 class="text-lg font-semibold text-club-dark mb-4">
+                Crecimiento de Seguidores
+              </h2>
+              <div class="w-full h-52 relative">
+                <canvas id="followersChart"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB: INSIGHTS -->
+      <section id="tab-insights" class="hidden flex-col gap-6">
+        <div class="glass-card p-5 md:p-6">
+          <div class="flex items-center gap-2 mb-5">
+            <i data-lucide="calendar-check" class="w-5 h-5 text-club-gold"></i>
+            <h2 class="text-lg font-semibold text-club-dark">
+              Mejores dias para publicar
+            </h2>
+            <span class="ml-auto text-xs text-slate-400"
+              >Promedio de interacciones por dia de la semana</span
+            >
+          </div>
+          <div id="weekday-bars" class="space-y-3">
+            <p class="text-slate-400 text-sm">Cargando analisis...</p>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="glass-card p-5 md:p-6">
+            <div class="flex items-center gap-2 mb-5">
+              <i data-lucide="pie-chart" class="w-5 h-5 text-club-green"></i>
+              <h2 class="text-lg font-semibold text-club-dark">
+                Rendimiento por tipo de contenido
+              </h2>
+            </div>
+            <div class="w-full h-64 relative">
+              <canvas id="contentTypeChart"></canvas>
+            </div>
+          </div>
+          <div class="glass-card p-5 md:p-6">
+            <div class="flex items-center gap-2 mb-4">
+              <i data-lucide="trending-up" class="w-5 h-5 text-club-green"></i>
+              <h2 class="text-lg font-semibold text-club-dark">
+                Resumen por tipo
+              </h2>
+            </div>
+            <div id="content-type-table" class="space-y-2 text-sm">
+              <p class="text-slate-400">Sin publicaciones registradas aun.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="glass-card p-5 md:p-6">
+          <div class="flex items-center gap-2 mb-5">
+            <i data-lucide="zap" class="w-5 h-5 text-club-gold"></i>
+            <h2 class="text-lg font-semibold text-club-dark">
+              Engagement semanal comparativo
+            </h2>
+          </div>
+          <div class="w-full h-64 relative">
+            <canvas id="weeklyEngagementChart"></canvas>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB: PUBLICACIONES -->
+      <section id="tab-posts" class="hidden flex-col gap-6">
+        <div class="flex items-center justify-between">
+          <h2 class="text-xl font-bold text-club-dark">
+            Publicaciones registradas
+          </h2>
+          <button
+            id="btn-add-post-top"
+            disabled
+            class="bg-club-gold hover:bg-club-goldhover text-club-dark font-semibold px-4 py-2 rounded-lg text-sm flex items-center gap-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <i data-lucide="plus" class="w-4 h-4"></i> Nueva publicacion
+          </button>
+        </div>
+        <!-- Resumen semanal KPIs -->
+        <div
+          id="weekly-kpis"
+          class="grid grid-cols-2 md:grid-cols-4 gap-3"
+        ></div>
+
+        <!-- Cards por interacciones -->
+        <div
+          id="posts-grid"
+          class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"
+        >
+          <div class="glass-card p-8 col-span-full text-center text-slate-400">
+            <i
+              data-lucide="image"
+              class="w-10 h-10 mx-auto mb-2 opacity-40"
+            ></i>
+            <p>No hay publicaciones registradas.</p>
+          </div>
+        </div>
+
+        <!-- Tabla detallada (se inyecta por JS) -->
+        <div id="posts-table-wrap"></div>
+      </section>
+
+      <!-- TAB: HISTORIAL -->
+      <section id="tab-history" class="hidden flex-col gap-6">
+        <div class="glass-card overflow-hidden">
+          <div
+            class="p-4 md:p-6 border-b border-slate-100 flex items-center justify-between"
+          >
+            <h2 class="text-lg font-semibold text-club-dark">
+              Historial completo de metricas diarias
+            </h2>
+            <span id="history-count" class="text-xs text-slate-400"></span>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+              <thead>
+                <tr
+                  class="bg-slate-50 text-slate-500 text-xs uppercase tracking-wider"
+                >
+                  <th class="p-4 font-medium">Fecha</th>
+                  <th class="p-4 font-medium">Dia</th>
+                  <th class="p-4 font-medium text-right">Vistas Historia</th>
+                  <th class="p-4 font-medium text-right">Likes</th>
+                  <th class="p-4 font-medium text-right">Coment.</th>
+                  <th class="p-4 font-medium text-right">Guard.</th>
+                  <th class="p-4 font-medium text-right">Compart.</th>
+                  <th class="p-4 font-medium text-right">Total Int.</th>
+                  <th class="p-4 font-medium text-right">Eng.%</th>
+                  <th class="p-4 font-medium text-center">Accion</th>
+                </tr>
+              </thead>
+              <tbody id="table-body" class="text-sm divide-y divide-slate-100">
+                <tr>
+                  <td colspan="11" class="p-8 text-center text-slate-400">
+                    <div class="flex flex-col items-center">
+                      <i
+                        data-lucide="database"
+                        class="w-8 h-8 mb-2 opacity-40"
+                      ></i>
+                      <p>Cargando datos...</p>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB: SEMANAL -->
+      <section id="tab-weekly" class="hidden flex-col gap-6">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <!-- Formulario semanal -->
+          <div class="lg:col-span-1">
+            <div class="glass-card p-5">
+              <div class="flex items-center gap-2 mb-4 border-b border-slate-100 pb-3">
+                <i data-lucide="calendar-days" class="w-5 h-5 text-club-green"></i>
+                <h2 class="text-lg font-semibold text-club-dark">Registro Semanal</h2>
+              </div>
+              <p class="text-xs text-slate-500 mb-4">Registra una vez por semana el total de seguidores y las visitas al perfil para medir el crecimiento.</p>
+              <form id="weekly-form" class="space-y-4">
+                <div>
+                  <label class="block text-sm font-medium text-slate-700 mb-1">Fecha de registro</label>
+                  <input type="date" id="weekly-date" required
+                    class="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-club-green/50 text-slate-700"/>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-slate-700 mb-1">👥 Total de Seguidores</label>
+                  <input type="number" id="weekly-followers" required min="0" placeholder="0"
+                    class="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-club-green/50"/>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-slate-700 mb-1">👁️ Visitas al perfil</label>
+                  <input type="number" id="weekly-visits" min="0" placeholder="0"
+                    class="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-club-green/50"/>
+                </div>
+                <button type="submit" id="btn-weekly-submit" disabled
+                  class="w-full bg-club-gold hover:bg-club-goldhover text-club-dark font-semibold py-2.5 px-4 rounded-lg transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed">
+                  <i data-lucide="save" class="w-4 h-4"></i> Guardar registro semanal
+                </button>
+              </form>
+            </div>
+          </div>
+          <!-- Historial semanal -->
+          <div class="lg:col-span-2">
+            <div class="glass-card overflow-hidden">
+              <div class="p-4 border-b border-slate-100 flex items-center justify-between">
+                <h3 class="font-semibold text-club-dark">Historial de seguimiento semanal</h3>
+                <span id="weekly-history-count" class="text-xs text-slate-400"></span>
+              </div>
+              <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                  <thead>
+                    <tr class="bg-slate-50 text-slate-500 text-xs uppercase tracking-wider">
+                      <th class="p-4 font-medium">Fecha</th>
+                      <th class="p-4 font-medium">Dia</th>
+                      <th class="p-4 font-medium text-right">Seguidores</th>
+                      <th class="p-4 font-medium text-right">Δ Seguidores</th>
+                      <th class="p-4 font-medium text-right">Visitas perfil</th>
+                      <th class="p-4 font-medium text-right">Δ Visitas</th>
+                      <th class="p-4 font-medium text-center">Acción</th>
+                    </tr>
+                  </thead>
+                  <tbody id="weekly-table-body" class="text-sm divide-y divide-slate-100">
+                    <tr><td colspan="7" class="p-8 text-center text-slate-400">No hay registros semanales aún.</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+      import {
+        getAuth,
+        onAuthStateChanged,
+        signInWithPopup,
+        GoogleAuthProvider,
+        signOut,
+      } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+      import {
+        getFirestore,
+        collection,
+        onSnapshot,
+        addDoc,
+        deleteDoc,
+        doc,
+      } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+      // ================================================================
+      // FIREBASE CONFIG — REEMPLAZAR CON LA CONFIGURACION DEL CLIENTE
+      // Pasos:
+      //  1. El cliente va a https://console.firebase.google.com/
+      //     e inicia sesion con SU cuenta Google.
+      //  2. Crea un proyecto nuevo (ej. "clubcampestre-metrics").
+      //  3. En el menu: Firestore Database -> Crear base de datos
+      //     -> Modo produccion -> region us-east1.
+      //  4. En Autenticacion -> Comenzar -> habilitar proveedor "Google".
+      //  5. En Configuracion del proyecto -> Tus apps -> agregar app Web (/>)
+      //  6. Copiar el objeto firebaseConfig que aparece y pegarlo abajo.
+      //  7. En Firestore -> Reglas -> pegar estas reglas y publicar:
+      //
+      //  rules_version = '2';
+      //  service cloud.firestore {
+      //    match /databases/{database}/documents {
+      //      match /users/{userId}/{document=**} {
+      //        allow read, write: if request.auth != null && request.auth.uid == userId;
+      //      }
+      //    }
+      //  }
+      // ================================================================
+      const firebaseConfig = {
+        apiKey: "REEMPLAZAR_API_KEY",
+        authDomain: "REEMPLAZAR_AUTH_DOMAIN",
+        projectId: "REEMPLAZAR_PROJECT_ID",
+        storageBucket: "REEMPLAZAR_STORAGE_BUCKET",
+        messagingSenderId: "REEMPLAZAR_MESSAGING_SENDER_ID",
+        appId: "REEMPLAZAR_APP_ID",
+      };
+      // ================================================================
+
+      const DEMO_MODE = firebaseConfig.apiKey === "REEMPLAZAR_API_KEY";
+
+      const form = document.getElementById("stats-form");
+      const btnSubmit = document.getElementById("btn-submit");
+      const tableBody = document.getElementById("table-body");
+      const authStatus = document.getElementById("auth-status");
+      const inputDate = document.getElementById("input-date");
+      const chartFilter = document.getElementById("chart-filter");
+      const btnGoogleLogin = document.getElementById("btn-google-login");
+      const btnLogout = document.getElementById("btn-logout");
+      const btnOpenPostModal = document.getElementById("btn-open-post-modal");
+      const btnAddPostTop = document.getElementById("btn-add-post-top");
+      const modalOverlay = document.getElementById("modal-overlay");
+      const modalClose = document.getElementById("modal-close");
+      const postForm = document.getElementById("post-form");
+      const btnPostSubmit = document.getElementById("btn-post-submit");
+      const historyCount = document.getElementById("history-count");
+      const weeklyForm = document.getElementById("weekly-form");
+      const btnWeeklySubmit = document.getElementById("btn-weekly-submit");
+      const weeklyTableBody = document.getElementById("weekly-table-body");
+
+      inputDate.valueAsDate = new Date();
+      const _nowLocal = () =>
+        new Date(Date.now() - new Date().getTimezoneOffset() * 60000)
+          .toISOString()
+          .slice(0, 16);
+      document.getElementById("post-datetime").value = _nowLocal();
+
+      let db, auth, provider, currentUser;
+      let globalData = [];
+      let globalPosts = [];
+      let globalWeekly = [];
+      let mainChartInstance,
+        followersChartInst,
+        contentTypeChartInst,
+        weeklyEngagementInst;
+
+      if (!DEMO_MODE) {
+        const app = initializeApp(firebaseConfig);
+        auth = getAuth(app);
+        db = getFirestore(app);
+        provider = new GoogleAuthProvider();
+
+        onAuthStateChanged(auth, (user) => {
+          currentUser = user;
+          if (user) {
+            authStatus.innerHTML = `<span class="text-white text-sm hidden sm:inline">${user.displayName || user.email}</span>`;
+            btnGoogleLogin.classList.add("hidden");
+            btnLogout.classList.remove("hidden");
+            enableForms();
+            loadData();
+            loadPosts();
+            loadWeekly();
+          } else {
+            authStatus.innerHTML = `<span class="text-yellow-300 text-sm">No autenticado</span>`;
+            btnGoogleLogin.classList.remove("hidden");
+            btnLogout.classList.add("hidden");
+            disableForms();
+          }
+        });
+
+        btnGoogleLogin.addEventListener("click", () => {
+          signInWithPopup(auth, provider).catch((err) =>
+            showToast("Error: " + err.message, "error"),
+          );
+        });
+        btnLogout.addEventListener("click", () => signOut(auth));
+      } else {
+        authStatus.innerHTML = `<span class="text-yellow-300 text-sm">Modo Demo — Configure Firebase</span>`;
+        // Pre-cargar datos reales del cliente (exportados de Notion)
+        globalPosts = [
+          { id:"n10", date:"2026-04-22", publishedAt:"2026-04-22T10:00", type:"Story",    title:"Copa Camilo Villegas",      vistas:20969, reproducciones:0,    reach:0,     likes:606,  comments:29,   saves:376, compartidos:182, pctSeguidores:0,    pctInteractuantes:0, createdAt:"2026-04-22T10:00:00.000Z" },
+          { id:"n9",  date:"2026-04-21", publishedAt:"2026-04-21T12:00", type:"Story",    title:"Torneo Semana Santa",       vistas:155,   reproducciones:0,    reach:0,     likes:241,  comments:4,    saves:76,  compartidos:43,  pctSeguidores:0,    pctInteractuantes:0, createdAt:"2026-04-21T12:00:00.000Z" },
+          { id:"n8",  date:"2025-03-20", publishedAt:"2025-03-20T00:00", type:"Story",    title:"Merga Kid\u00b4s Water Party",   vistas:13803, reproducciones:0,    reach:0,     likes:667,  comments:1,    saves:112, compartidos:77,  pctSeguidores:0,    pctInteractuantes:0, createdAt:"2025-03-20T00:00:00.000Z" },
+          { id:"n7",  date:"2025-03-18", publishedAt:"2025-03-18T00:00", type:"Carrusel", title:"Post 18",                  vistas:53977, reproducciones:6602, reach:31105, likes:1133, comments:1000, saves:554, compartidos:216, pctSeguidores:32.1, pctInteractuantes:0, createdAt:"2025-03-18T00:00:00.000Z" },
+          { id:"n6",  date:"2025-02-19", publishedAt:"2025-02-19T00:00", type:"Reel",     title:"Post 19",                  vistas:16361, reproducciones:6150, reach:11569, likes:188,  comments:53,   saves:28,  compartidos:5,   pctSeguidores:20.9, pctInteractuantes:0, createdAt:"2025-02-19T00:00:00.000Z" },
+          { id:"n5",  date:"2025-02-17", publishedAt:"2025-02-17T00:00", type:"Reel",     title:"Post 17",                  vistas:12542, reproducciones:3292, reach:9504,  likes:165,  comments:2,    saves:17,  compartidos:7,   pctSeguidores:19.2, pctInteractuantes:0, createdAt:"2025-02-17T00:00:00.000Z" },
+          { id:"n4",  date:"2025-02-16", publishedAt:"2025-02-16T00:00", type:"Carrusel", title:"Post 16",                  vistas:13305, reproducciones:3978, reach:10100, likes:330,  comments:0,    saves:37,  compartidos:16,  pctSeguidores:24,   pctInteractuantes:0, createdAt:"2025-02-16T00:00:00.000Z" },
+          { id:"n3",  date:"2025-02-15", publishedAt:"2025-02-15T00:00", type:"Carrusel", title:"Post 15",                  vistas:16282, reproducciones:0,    reach:9084,  likes:368,  comments:3,    saves:30,  compartidos:78,  pctSeguidores:12,   pctInteractuantes:0, createdAt:"2025-02-15T00:00:00.000Z" },
+          { id:"n2",  date:"2025-02-14", publishedAt:"2025-02-14T00:00", type:"Reel",     title:"Post 14",                  vistas:30611, reproducciones:785,  reach:17708, likes:1250, comments:17,   saves:397, compartidos:477, pctSeguidores:6.3,  pctInteractuantes:0, createdAt:"2025-02-14T00:00:00.000Z" },
+          { id:"n1",  date:"2025-02-13", publishedAt:"2025-02-13T00:00", type:"Carrusel", title:"Post 13",                  vistas:24698, reproducciones:1565, reach:14754, likes:958,  comments:17,   saves:171, compartidos:130, pctSeguidores:57,   pctInteractuantes:0, createdAt:"2025-02-13T00:00:00.000Z" },
+        ];
+        enableForms();
+        updateDashboard();
+      }
+
+      function loadData() {
+        if (!currentUser || !db) return;
+        onSnapshot(
+          collection(db, "users", currentUser.uid, "instagram_stats"),
+          (snap) => {
+            const data = [];
+            snap.forEach((d) => data.push({ id: d.id, ...d.data() }));
+            globalData = data.sort((a, b) => new Date(b.date) - new Date(a.date));
+            updateDashboard();
+          },
+          (err) => console.error(err),
+        );
+      }
+
+      function loadWeekly() {
+        if (!currentUser || !db) return;
+        onSnapshot(
+          collection(db, "users", currentUser.uid, "instagram_weekly"),
+          (snap) => {
+            const data = [];
+            snap.forEach((d) => data.push({ id: d.id, ...d.data() }));
+            globalWeekly = data.sort((a, b) => new Date(b.date) - new Date(a.date));
+            renderWeeklyHistory();
+            calculateKPIs();
+          },
+          (err) => console.error(err),
+        );
+      }
+
+      function loadPosts() {
+        if (!currentUser || !db) return;
+        onSnapshot(
+          collection(db, "users", currentUser.uid, "instagram_posts"),
+          (snap) => {
+            const data = [];
+            snap.forEach((d) => data.push({ id: d.id, ...d.data() }));
+            globalPosts = data.sort(
+              (a, b) => new Date(b.date) - new Date(a.date),
+            );
+            renderPostsGrid();
+            renderInsights();
+          },
+          (err) => console.error(err),
+        );
+      }
+
+      function enableForms() {
+        [btnSubmit, btnOpenPostModal, btnAddPostTop, btnPostSubmit, btnWeeklySubmit].forEach(
+          (b) => (b.disabled = false),
+        );
+      }
+      function disableForms() {
+        [btnSubmit, btnOpenPostModal, btnAddPostTop, btnPostSubmit, btnWeeklySubmit].forEach(
+          (b) => (b.disabled = true),
+        );
+      }
+
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const record = {
+          date: inputDate.value,
+          storyViews: parseInt(document.getElementById("input-story-views").value) || 0,
+          likes: parseInt(document.getElementById("input-likes").value) || 0,
+          comments: parseInt(document.getElementById("input-comments").value) || 0,
+          saves: parseInt(document.getElementById("input-saves").value) || 0,
+          shares: parseInt(document.getElementById("input-shares").value) || 0,
+          createdAt: new Date().toISOString(),
+        };
+        if (!DEMO_MODE && currentUser) {
+          const orig = btnSubmit.innerHTML;
+          btnSubmit.innerHTML = `<div class="loader w-4 h-4 border-2 border-club-dark border-t-transparent mr-2"></div>Guardando...`;
+          btnSubmit.disabled = true;
+          try {
+            await addDoc(
+              collection(db, "users", currentUser.uid, "instagram_stats"),
+              record,
+            );
+            form.reset();
+            inputDate.valueAsDate = new Date();
+            showToast("Metricas guardadas correctamente");
+          } catch (err) {
+            showToast("Error: " + err.message, "error");
+          } finally {
+            btnSubmit.innerHTML = orig;
+            btnSubmit.disabled = false;
+            lucide.createIcons();
+          }
+        } else {
+          record.id = "demo_" + Date.now();
+          globalData.unshift(record);
+          globalData.sort((a, b) => new Date(b.date) - new Date(a.date));
+          form.reset();
+          inputDate.valueAsDate = new Date();
+          updateDashboard();
+          showToast("Metricas guardadas (Demo)");
+        }
+      });
+
+      [btnOpenPostModal, btnAddPostTop].forEach((btn) =>
+        btn.addEventListener("click", () => {
+          modalOverlay.classList.remove("hidden");
+          lucide.createIcons();
+        }),
+      );
+      modalClose.addEventListener("click", () =>
+        modalOverlay.classList.add("hidden"),
+      );
+      modalOverlay.addEventListener("click", (e) => {
+        if (e.target === modalOverlay) modalOverlay.classList.add("hidden");
+      });
+
+      postForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const rawDatetime = document.getElementById("post-datetime").value; // "YYYY-MM-DDTHH:MM"
+        const postRecord = {
+          date: rawDatetime
+            ? rawDatetime.split("T")[0]
+            : new Date().toISOString().split("T")[0],
+          publishedAt: rawDatetime || new Date().toISOString().slice(0, 16),
+          type: document.getElementById("post-type").value,
+          title:
+            document.getElementById("post-title").value || "(Sin descripcion)",
+          vistas: parseInt(document.getElementById("post-vistas").value) || 0,
+          reproducciones:
+            parseInt(document.getElementById("post-reproducciones").value) || 0,
+          reach: parseInt(document.getElementById("post-reach").value) || 0,
+          likes: parseInt(document.getElementById("post-likes").value) || 0,
+          comments:
+            parseInt(document.getElementById("post-comments").value) || 0,
+          saves: parseInt(document.getElementById("post-saves").value) || 0,
+          compartidos:
+            parseInt(document.getElementById("post-compartidos").value) || 0,
+          pctSeguidores:
+            parseFloat(document.getElementById("post-pct-seguidores").value) ||
+            0,
+          pctInteractuantes:
+            parseFloat(
+              document.getElementById("post-pct-interactuantes").value,
+            ) || 0,
+          createdAt: new Date().toISOString(),
+        };
+        if (!DEMO_MODE && currentUser) {
+          const orig = btnPostSubmit.innerHTML;
+          btnPostSubmit.innerHTML = `<div class="loader w-4 h-4 border-2 border-club-dark border-t-transparent mr-2"></div>Guardando...`;
+          btnPostSubmit.disabled = true;
+          try {
+            await addDoc(
+              collection(db, "users", currentUser.uid, "instagram_posts"),
+              postRecord,
+            );
+            postForm.reset();
+            document.getElementById("post-datetime").value = _nowLocal();
+            modalOverlay.classList.add("hidden");
+            showToast("Publicacion registrada");
+          } catch (err) {
+            showToast("Error: " + err.message, "error");
+          } finally {
+            btnPostSubmit.innerHTML = orig;
+            btnPostSubmit.disabled = false;
+            lucide.createIcons();
+          }
+        } else {
+          postRecord.id = "demo_post_" + Date.now();
+          globalPosts.unshift(postRecord);
+          globalPosts.sort(
+            (a, b) =>
+              new Date(b.publishedAt || b.date) -
+              new Date(a.publishedAt || a.date),
+          );
+          renderPostsGrid();
+          renderInsights();
+          postForm.reset();
+          document.getElementById("post-datetime").value = _nowLocal();
+          modalOverlay.classList.add("hidden");
+          showToast("Publicacion registrada (Demo)");
+        }
+      });
+
+      window.deleteRecord = async (id) => {
+        if (!confirm("Eliminar este registro?")) return;
+        if (!DEMO_MODE && currentUser) {
+          await deleteDoc(
+            doc(db, "users", currentUser.uid, "instagram_stats", id),
+          );
+          showToast("Registro eliminado");
+        } else {
+          globalData = globalData.filter((x) => x.id !== id);
+          updateDashboard();
+          showToast("Eliminado (Demo)");
+        }
+      };
+
+      window.deletePost = async (id) => {
+        if (!confirm("Eliminar esta publicacion?")) return;
+        if (!DEMO_MODE && currentUser) {
+          await deleteDoc(
+            doc(db, "users", currentUser.uid, "instagram_posts", id),
+          );
+          showToast("Publicacion eliminada");
+        } else {
+          globalPosts = globalPosts.filter((x) => x.id !== id);
+          renderPostsGrid();
+          renderInsights();
+          showToast("Eliminado (Demo)");
+        }
+      };
+
+      window.deleteWeeklyRecord = async (id) => {
+        if (!confirm("Eliminar este registro semanal?")) return;
+        if (!DEMO_MODE && currentUser) {
+          await deleteDoc(doc(db, "users", currentUser.uid, "instagram_weekly", id));
+          showToast("Registro semanal eliminado");
+        } else {
+          globalWeekly = globalWeekly.filter((x) => x.id !== id);
+          renderWeeklyHistory();
+          calculateKPIs();
+          showToast("Eliminado (Demo)");
+        }
+      };
+
+      weeklyForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const weeklyRecord = {
+          date:      document.getElementById("weekly-date").value,
+          followers: parseInt(document.getElementById("weekly-followers").value) || 0,
+          visits:    parseInt(document.getElementById("weekly-visits").value) || 0,
+          createdAt: new Date().toISOString(),
+        };
+        if (!DEMO_MODE && currentUser) {
+          const orig = btnWeeklySubmit.innerHTML;
+          btnWeeklySubmit.innerHTML = `<div class="loader w-4 h-4 border-2 border-club-dark border-t-transparent mr-2"></div>Guardando...`;
+          btnWeeklySubmit.disabled = true;
+          try {
+            await addDoc(collection(db, "users", currentUser.uid, "instagram_weekly"), weeklyRecord);
+            weeklyForm.reset();
+            document.getElementById("weekly-date").valueAsDate = new Date();
+            showToast("Registro semanal guardado");
+          } catch (err) {
+            showToast("Error: " + err.message, "error");
+          } finally {
+            btnWeeklySubmit.innerHTML = orig;
+            btnWeeklySubmit.disabled = false;
+            lucide.createIcons();
+          }
+        } else {
+          weeklyRecord.id = "demo_w_" + Date.now();
+          globalWeekly.unshift(weeklyRecord);
+          globalWeekly.sort((a, b) => new Date(b.date) - new Date(a.date));
+          weeklyForm.reset();
+          document.getElementById("weekly-date").valueAsDate = new Date();
+          renderWeeklyHistory();
+          calculateKPIs();
+          showToast("Registro semanal guardado (Demo)");
+        }
+      });
+
+      function renderWeeklyHistory() {
+        const countEl = document.getElementById("weekly-history-count");
+        if (!weeklyTableBody) return;
+        if (globalWeekly.length === 0) {
+          weeklyTableBody.innerHTML = `<tr><td colspan="7" class="p-8 text-center text-slate-400">No hay registros semanales aún.</td></tr>`;
+          if (countEl) countEl.textContent = "";
+          return;
+        }
+        if (countEl) countEl.textContent = globalWeekly.length + " registros";
+        const DAYS = ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"];
+        weeklyTableBody.innerHTML = globalWeekly.map((item, idx) => {
+          const d = new Date(item.date + "T00:00:00");
+          const fmtDate = d.toLocaleDateString("es-ES", { day: "2-digit", month: "short", year: "numeric" });
+          const dayName = DAYS[d.getDay()];
+          const prev = globalWeekly[idx + 1];
+          const deltaF = prev ? item.followers - prev.followers : null;
+          const deltaV = prev ? (item.visits || 0) - (prev.visits || 0) : null;
+          const deltaHtml = (d) => d === null
+            ? `<span class="text-slate-300">—</span>`
+            : d > 0 ? `<span class="text-green-600 font-semibold">+${d}</span>`
+            : d < 0 ? `<span class="text-red-500 font-semibold">${d}</span>`
+            : `<span class="text-slate-400">0</span>`;
+          return `<tr class="hover:bg-slate-50 transition-colors">
+            <td class="p-4 font-medium text-slate-700 whitespace-nowrap">${fmtDate}</td>
+            <td class="p-4 text-slate-500 text-xs">${dayName}</td>
+            <td class="p-4 text-right font-semibold text-club-dark">${(item.followers || 0).toLocaleString()}</td>
+            <td class="p-4 text-right">${deltaHtml(deltaF)}</td>
+            <td class="p-4 text-right text-slate-600">${(item.visits || 0).toLocaleString()}</td>
+            <td class="p-4 text-right">${deltaHtml(deltaV)}</td>
+            <td class="p-4 text-center">
+              <button onclick="deleteWeeklyRecord('${item.id}')" class="text-slate-300 hover:text-red-500 transition-colors p-1" title="Eliminar">
+                <i data-lucide="trash-2" class="w-4 h-4"></i>
+              </button>
+            </td>
+          </tr>`;
+        }).join("");
+        lucide.createIcons();
+      }
+
+      chartFilter.addEventListener("change", updateDashboard);
+
+      function updateDashboard() {
+        calculateKPIs();
+        renderTable();
+        renderMainChart();
+        renderFollowersChart();
+        renderInsights();
+        renderWeeklyHistory();
+        lucide.createIcons();
+      }
+
+      function sum(arr, key) {
+        return arr.reduce((s, x) => s + (x[key] || 0), 0);
+      }
+      function sumInteractions(arr) {
+        return arr.reduce(
+          (s, x) => s + (x.likes || 0) + (x.comments || 0) + (x.saves || 0),
+          0,
+        );
+      }
+
+      function calculateKPIs() {
+        const cur7 = globalData.slice(0, 7);
+        const prev7 = globalData.slice(7, 14);
+        // Seguidores: from weekly records
+        const latestWeekly = globalWeekly[0];
+        const prevWeekly   = globalWeekly[1];
+        const latestFollowers = latestWeekly?.followers || 0;
+        const prevFollowers   = prevWeekly?.followers   || latestFollowers;
+        document.getElementById("kpi-followers").textContent = latestFollowers > 0 ? latestFollowers.toLocaleString() : "---";
+        if (latestFollowers > 0) {
+          renderTrend("kpi-followers-trend", latestFollowers, prevFollowers, "vs sem. ant.");
+        } else {
+          document.getElementById("kpi-followers-trend").innerHTML = `<span class="text-slate-400">Esperando datos semanales...</span>`;
+        }
+        // Visitas al perfil: from weekly records
+        const latestVisits = latestWeekly?.visits || 0;
+        const prevVisits   = prevWeekly?.visits   || latestVisits;
+        document.getElementById("kpi-reach").textContent = latestVisits > 0 ? latestVisits.toLocaleString() : "---";
+        if (latestVisits > 0) {
+          renderTrend("kpi-reach-trend", latestVisits, prevVisits, "vs sem. ant.");
+        } else {
+          document.getElementById("kpi-reach-trend").innerHTML = `<span class="text-slate-400">Esperando datos semanales...</span>`;
+        }
+        // Interactions: from daily records
+        if (globalData.length === 0) { resetKPIsInteractions(); return; }
+        const curInt  = sumInteractions(cur7);
+        const prevInt = sumInteractions(prev7);
+        document.getElementById("kpi-interactions").textContent = curInt.toLocaleString();
+        renderTrend("kpi-interactions-trend", curInt, prevInt, "vs sem. ant.");
+        const totalViews = cur7.reduce((s, x) => s + (x.storyViews || 0), 0);
+        const eng = totalViews > 0 ? ((curInt / totalViews) * 100).toFixed(2) : "0.00";
+        document.getElementById("kpi-engagement").textContent = eng + "%";
+      }
+
+      function renderTrend(id, cur, prev, label) {
+        const el = document.getElementById(id);
+        if (!prev || prev === 0) {
+          el.innerHTML = `<span class="text-slate-400">Sin datos previos</span>`;
+          return;
+        }
+        const pct = (((cur - prev) / prev) * 100).toFixed(1);
+        const isPos = cur >= prev;
+        const color = isPos ? "text-green-600" : "text-red-500";
+        const icon = isPos ? "trending-up" : "trending-down";
+        const sign = isPos && pct > 0 ? "+" : "";
+        el.innerHTML = `<i data-lucide="${icon}" class="w-3 h-3 ${color}"></i><span class="${color} font-medium">${sign}${pct}%</span><span class="text-slate-400 ml-1">${label}</span>`;
+      }
+
+      function resetKPIs() {
+        [
+          "kpi-followers",
+          "kpi-reach",
+          "kpi-interactions",
+          "kpi-engagement",
+        ].forEach((id) => (document.getElementById(id).textContent = "---"));
+        [
+          "kpi-followers-trend",
+          "kpi-reach-trend",
+          "kpi-interactions-trend",
+        ].forEach((id) => {
+          document.getElementById(id).innerHTML =
+            `<span class="text-slate-400">Esperando datos...</span>`;
+        });
+      }
+      function resetKPIsInteractions() {
+        ["kpi-interactions", "kpi-engagement"].forEach((id) => (document.getElementById(id).textContent = "---"));
+        document.getElementById("kpi-interactions-trend").innerHTML = `<span class="text-slate-400">Esperando datos...</span>`;
+      }
+
+      function renderTable() {
+        tableBody.innerHTML = "";
+        if (globalData.length === 0) {
+          tableBody.innerHTML = `<tr><td colspan="8" class="p-8 text-center text-slate-400">No hay registros aun.</td></tr>`;
+          historyCount.textContent = "";
+          return;
+        }
+        historyCount.textContent = globalData.length + " registros";
+        const DAYS = ["Dom", "Lun", "Mar", "Mie", "Jue", "Vie", "Sab"];
+        globalData.forEach((item) => {
+          const total = (item.likes || 0) + (item.comments || 0) + (item.saves || 0) + (item.shares || 0);
+          const d = new Date(item.date + "T00:00:00");
+          const fmtDate = d.toLocaleDateString("es-ES", { day: "2-digit", month: "short", year: "numeric" });
+          const dayName = DAYS[d.getDay()];
+          const views = item.storyViews || 0;
+          const eng = views > 0 ? ((total / views) * 100).toFixed(1) : "0.0";
+          const tr = document.createElement("tr");
+          tr.className = "hover:bg-slate-50 transition-colors";
+          tr.innerHTML = `
+            <td class="p-4 font-medium text-slate-700 whitespace-nowrap">${fmtDate}</td>
+            <td class="p-4 text-slate-500 text-xs">${dayName}</td>
+            <td class="p-4 text-right text-slate-600">${views.toLocaleString()}</td>
+            <td class="p-4 text-right text-pink-600">${(item.likes || 0).toLocaleString()}</td>
+            <td class="p-4 text-right text-blue-600">${(item.comments || 0).toLocaleString()}</td>
+            <td class="p-4 text-right text-amber-600">${(item.saves || 0).toLocaleString()}</td>
+            <td class="p-4 text-right text-green-600">${(item.shares || 0).toLocaleString()}</td>
+            <td class="p-4 text-right font-semibold text-club-green">${total.toLocaleString()}</td>
+            <td class="p-4 text-right text-xs text-slate-500">${eng}%</td>
+            <td class="p-4 text-center">
+              <button onclick="deleteRecord('${item.id}')" class="text-slate-300 hover:text-red-500 transition-colors p-1" title="Eliminar">
+                <i data-lucide="trash-2" class="w-4 h-4"></i>
+              </button>
+            </td>`;
+          tableBody.appendChild(tr);
+        });
+      }
+
+      function renderMainChart() {
+        const ctx = document.getElementById("mainChart").getContext("2d");
+        if (mainChartInstance) mainChartInstance.destroy();
+        if (globalData.length === 0) return;
+        const limit =
+          chartFilter.value === "all"
+            ? globalData.length
+            : parseInt(chartFilter.value);
+        const cd = [...globalData].slice(0, limit).reverse();
+        const labels = cd.map((x) => fmtLabel(x.date));
+        mainChartInstance = new Chart(ctx, {
+          type: "line",
+          data: {
+            labels,
+            datasets: [
+              {
+                label: "Interacciones",
+                data: cd.map(
+                  (x) => (x.likes || 0) + (x.comments || 0) + (x.saves || 0),
+                ),
+                borderColor: "#C5A059",
+                backgroundColor: "rgba(197,160,89,0.12)",
+                borderWidth: 2.5,
+                tension: 0.35,
+                fill: true,
+                yAxisID: "y",
+                pointRadius: 3,
+                pointHoverRadius: 6,
+              },
+              {
+                label: "Alcance",
+                data: cd.map((x) => x.reach || 0),
+                borderColor: "#145333",
+                backgroundColor: "transparent",
+                borderWidth: 2,
+                borderDash: [5, 5],
+                tension: 0.35,
+                yAxisID: "y1",
+                pointRadius: 2,
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            interaction: { mode: "index", intersect: false },
+            plugins: {
+              legend: {
+                position: "bottom",
+                labels: {
+                  usePointStyle: true,
+                  boxWidth: 6,
+                  font: { family: "Inter", size: 12 },
+                },
+              },
+              tooltip: tooltipStyle(),
+            },
+            scales: {
+              x: { grid: { display: false } },
+              y: {
+                type: "linear",
+                display: true,
+                position: "left",
+                grid: { color: "#f1f5f9" },
+                title: {
+                  display: true,
+                  text: "Interacciones",
+                  font: { family: "Inter", size: 11 },
+                },
+              },
+              y1: {
+                type: "linear",
+                display: true,
+                position: "right",
+                grid: { display: false },
+                title: {
+                  display: true,
+                  text: "Alcance",
+                  font: { family: "Inter", size: 11 },
+                },
+              },
+            },
+          },
+        });
+      }
+
+      function renderFollowersChart() {
+        const ctx = document.getElementById("followersChart").getContext("2d");
+        if (followersChartInst) followersChartInst.destroy();
+        if (globalData.length < 2) return;
+        const limit =
+          chartFilter.value === "all"
+            ? globalData.length
+            : parseInt(chartFilter.value);
+        const cd = [...globalData].slice(0, limit).reverse();
+        followersChartInst = new Chart(ctx, {
+          type: "line",
+          data: {
+            labels: cd.map((x) => fmtLabel(x.date)),
+            datasets: [
+              {
+                label: "Seguidores",
+                data: cd.map((x) => x.followers || 0),
+                borderColor: "#145333",
+                backgroundColor: "rgba(20,83,51,0.08)",
+                borderWidth: 2.5,
+                tension: 0.35,
+                fill: true,
+                pointRadius: 2,
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false }, tooltip: tooltipStyle() },
+            scales: {
+              x: { grid: { display: false } },
+              y: {
+                grid: { color: "#f1f5f9" },
+                ticks: { callback: (v) => v.toLocaleString() },
+              },
+            },
+          },
+        });
+      }
+
+      function renderInsights() {
+        renderWeekdayBars();
+        renderContentTypeChart();
+        renderWeeklyEngagementChart();
+      }
+
+      function renderWeekdayBars() {
+        const container = document.getElementById("weekday-bars");
+        const DAYS = [
+          "Domingo",
+          "Lunes",
+          "Martes",
+          "Miercoles",
+          "Jueves",
+          "Viernes",
+          "Sabado",
+        ];
+        const sums = Array(7).fill(0),
+          counts = Array(7).fill(0);
+        globalData.forEach((item) => {
+          const day = new Date(item.date + "T00:00:00").getDay();
+          sums[day] +=
+            (item.likes || 0) + (item.comments || 0) + (item.saves || 0);
+          counts[day] += 1;
+        });
+        const avgs = sums.map((s, i) =>
+          counts[i] > 0 ? Math.round(s / counts[i]) : 0,
+        );
+        const maxAvg = Math.max(...avgs) || 1;
+        if (maxAvg === 0) {
+          container.innerHTML = `<p class="text-slate-400 text-sm">No hay datos suficientes.</p>`;
+          return;
+        }
+        const bestIdx = avgs.indexOf(maxAvg);
+        container.innerHTML = avgs
+          .map((avg, i) => {
+            const pct = ((avg / maxAvg) * 100).toFixed(1);
+            const isBest = i === bestIdx;
+            return `<div class="flex items-center gap-3">
+                    <span class="w-24 text-sm ${isBest ? "font-bold text-club-dark" : "font-medium text-slate-600"} shrink-0">${DAYS[i]}</span>
+                    <div class="flex-1 bg-slate-100 rounded-full h-4 overflow-hidden">
+                        <div class="${isBest ? "best-day-bar" : "bg-club-green/60"} h-4 rounded-full" style="width:${pct}%"></div>
+                    </div>
+                    <span class="text-xs text-slate-500 w-20 text-right">${avg} int. ${isBest ? "⭐" : ""}</span>
+                </div>`;
+          })
+          .join("");
+      }
+
+      function renderContentTypeChart() {
+        const ctx = document
+          .getElementById("contentTypeChart")
+          .getContext("2d");
+        if (contentTypeChartInst) contentTypeChartInst.destroy();
+        const typeTable = document.getElementById("content-type-table");
+        if (globalPosts.length === 0) {
+          typeTable.innerHTML = `<p class="text-slate-400">Sin publicaciones registradas.</p>`;
+          return;
+        }
+        const types = {};
+        globalPosts.forEach((p) => {
+          if (!types[p.type])
+            types[p.type] = {
+              count: 0,
+              totalInteractions: 0,
+              totalImpressions: 0,
+            };
+          types[p.type].count++;
+          types[p.type].totalInteractions +=
+            (p.likes || 0) + (p.comments || 0) + (p.saves || 0);
+          types[p.t     = document.getElementById("posts-grid");
+        const tableWrap = document.getElementById("posts-table-wrap");
+
+        if (globalPosts.length === 0) {
+          grid.innerHTML = `<div class="glass-card p-8 col-span-full text-center text-slate-400"><i data-lucide="image" class="w-10 h-10 mx-auto mb-2 opacity-40"></i><p>No hay publicaciones registradas.</p></div>`;
+          tableWrap.innerHTML = '';
+          lucide.createIcons();
+          return;
+        }
+
+        const BADGE = { Reel:"badge-reel", Foto:"badge-foto", Carrusel:"badge-carrusel", Story:"badge-story", Video:"badge-video" };
+
+        // Sort by total interactions desc for cards
+        const sortedByInt = [...globalPosts].sort((a,b) =>
+          ((b.likes||0)+(b.comments||0)+(b.saves||0)) - ((a.likes||0)+(a.comments||0)+(a.saves||0))
+        );
+
+        grid.innerHTML = sortedByInt.map((p, idx) => {
+          const total    = (p.likes||0)+(p.comments||0)+(p.saves||0)+(p.compartidos||0);
+          const d        = new Date(p.date + "T00:00:00");
+          const fmtDate  = d.toLocaleDateString("es-ES", {day:"2-digit",month:"short",year:"numeric"});
+          const timeStr  = p.publishedAt ? p.publishedAt.split("T")[1] : "";
+          const engPost  = p.reach > 0 ? ((total/p.reach)*100).toFixed(1) : (p.vistas > 0 ? ((total/p.vistas)*100).toFixed(1) : "---");
+          const medal    = idx===0?"🥇":idx===1?"🥈":idx===2?"🥉":"";
+          return `<div class="glass-card p-4 flex flex-col gap-3 hover:shadow-md transition-shadow">
+            <div class="flex items-start justify-between">
+              <span class="px-2.5 py-1 rounded-full text-xs font-semibold ${BADGE[p.type]||""}">${p.type}</span>
+              <button onclick="deletePost('${p.id}')" class="text-slate-300 hover:text-red-500 transition-colors p-1"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
+            </div>
+            <p class="text-sm font-medium text-slate-700 leading-snug">${medal} ${p.title}</p>
+            <p class="text-xs text-slate-400">${fmtDate}${timeStr ? ' · <b>' + timeStr + '</b>' : ''}</p>
+            <div class="grid grid-cols-3 gap-1.5 pt-2 border-t border-slate-100 text-center">
+              <div><p class="text-base font-bold text-club-dark">${(p.vistas||0).toLocaleString()}</p><p class="text-[10px] text-slate-400">Vistas</p></div>
+              <div><p class="text-base font-bold text-club-green">${(p.reach||0).toLocaleString()}</p><p class="text-[10px] text-slate-400">Ctas. alcanz.</p></div>
+              <div><p class="text-base font-bold text-club-gold">${total.toLocaleString()}</p><p class="text-[10px] text-slate-400">Interacc.</p></div>
+            </div>
+            <div class="grid grid-cols-4 gap-1 text-center text-xs text-slate-500">
+              <div><span class="block font-semibold text-slate-700">${(p.likes||0).toLocaleString()}</span>❤️</div>
+              <div><span class="block font-semibold text-slate-700">${(p.comments||0).toLocaleString()}</span>💬</div>
+              <div><span class="block font-semibold text-slate-700">${(p.saves||0).toLocaleString()}</span>🔖</div>
+              <div><span class="block font-semibold text-slate-700">${(p.compartidos||0).toLocaleString()}</span>↗️</div>
+            </div>
+            <div class="flex gap-2 text-xs justify-between bg-slate-50 rounded-lg px-3 py-1.5">
+              <span class="text-slate-500">Eng: <b class="text-club-gold">${engPost}%</b></span>
+              ${p.pctSeguidores ? `<span class="text-slate-500">Seg: <b>${p.pctSeguidores}%</b></span>` : ''}
+              ${p.pctInteractuantes ? `<span class="text-slate-500">Int: <b>${p.pctInteractuantes}%</b></span>` : ''}
+            </div>
+          </div>`;
+        }).join("");
+
+        // ---- Weekly table ----
+        // Sort by publishedAt desc for table
+        const sortedByDate = [...globalPosts].sort((a,b) => new Date(b.publishedAt||b.date) - new Date(a.publishedAt||a.date));
+        const tableRows = sortedByDate.map(p => {
+          const total   = (p.likes||0)+(p.comments||0)+(p.saves||0)+(p.compartidos||0);
+          const d       = new Date(p.date + "T00:00:00");
+          const DAYS    = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
+          const fmtDate = d.toLocaleDateString("es-ES",{day:"2-digit",month:"short"});
+          const timeStr = p.publishedAt ? p.publishedAt.split("T")[1] : "";
+          const engPost = p.reach > 0 ? ((total/p.reach)*100).toFixed(1) : (p.vistas>0?((total/p.vistas)*100).toFixed(1):"---");
+          return `<tr class="hover:bg-slate-50 transition-colors text-sm">
+            <td class="p-3 whitespace-nowrap">
+              <span class="px-2 py-0.5 rounded-full text-xs font-semibold ${BADGE[p.type]||''}">${p.type}</span>
+            </td>
+            <td class="p-3 text-slate-700 max-w-[180px] truncate" title="${p.title}">${p.title}</td>
+            <td class="p-3 text-slate-500 text-xs whitespace-nowrap">${fmtDate} ${DAYS[d.getDay()]}${timeStr ? '<br><span class="font-medium text-slate-600">' + timeStr + '</span>' : ''}</td>
+            <td class="p-3 text-right">${(p.likes||0).toLocaleString()}</td>
+            <td class="p-3 text-right">${(p.comments||0).toLocaleString()}</td>
+            <td class="p-3 text-right">${(p.compartidos||0).toLocaleString()}</td>
+            <td class="p-3 text-right">${(p.saves||0).toLocaleString()}</td>
+            <td class="p-3 text-right">${(p.vistas||0).toLocaleString()}</td>
+            <td class="p-3 text-right">${(p.reproducciones||0).toLocaleString()}</td>
+            <td class="p-3 text-right">${(p.reach||0).toLocaleString()}</td>
+            <td class="p-3 text-right text-xs">${p.pctSeguidores ? p.pctSeguidores+'%' : '—'}</td>
+            <td class="p-3 text-right text-xs">${p.pctInteractuantes ? p.pctInteractuantes+'%' : '—'}</td>
+            <td class="p-3 text-right font-semibold text-club-green">${total.toLocaleString()}</td>
+            <td class="p-3 text-right text-xs text-club-gold font-semibold">${engPost}%</td>
+            <td class="p-3 text-center">
+              <button onclick="deletePost('${p.id}')" class="text-slate-300 hover:text-red-500 transition-colors p-1"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
+            </td>
+          </tr>`;
+        }).join("");
+
+        tableWrap.innerHTML = `
+          <div class="glass-card overflow-hidden mt-2">
+            <div class="p-4 border-b border-slate-100 flex items-center justify-between">
+              <h3 class="font-semibold text-club-dark">Tabla detallada de publicaciones</h3>
+              <span class="text-xs text-slate-400">${globalPosts.length} publicaciones</span>
+            </div>
+            <div class="overflow-x-auto">
+              <table class="w-full text-left border-collapse">
+                <thead>
+                  <tr class="bg-slate-50 text-slate-500 text-xs uppercase tracking-wider">
+                    <th class="p-3 font-medium">Formato</th>
+                    <th class="p-3 font-medium">Descripcion</th>
+                    <th class="p-3 font-medium">Fecha / Hora</th>
+                    <th class="p-3 font-medium text-right">❤️ Likes</th>
+                    <th class="p-3 font-medium text-right">💬 Coment.</th>
+                    <th class="p-3 font-medium text-right">↗️ Compart.</th>
+                    <th class="p-3 font-medium text-right">🔖 Guard.</th>
+                    <th class="p-3 font-medium text-right">👁️ Vistas</th>
+                    <th class="p-3 font-medium text-right">▶️ Reprod.</th>
+                    <th class="p-3 font-medium text-right">👥 Ctas. alc.</th>
+                    <th class="p-3 font-medium text-right">% Seg.</th>
+                    <th class="p-3 font-medium text-right">% Int.</th>
+                    <th class="p-3 font-medium text-right">Total Int.</th>
+                    <th class="p-3 font-medium text-right">Eng.%</th>
+                    <th class="p-3 font-medium text-center">Acción</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100">${tableRows}</tbody>
+              </table>
+            </div>
+          </div>`;
+v>`;
+            })
+            .join("") || `<p class="text-slate-400">Sin datos.</p>`;
+      }
+
+      function renderWeeklyEngagementChart() {
+        const ctx = document
+          .getElementById("weeklyEngagementChart")
+          .getContext("2d");
+        if (weeklyEngagementInst) weeklyEngagementInst.destroy();
+        if (globalData.length < 7) return;
+        const weeks = {};
+        globalData.forEach((item) => {
+          const d = new Date(item.date + "T00:00:00");
+          const wk = getISOWeek(d);
+          const key = d.getFullYear() + "-W" + String(wk).padStart(2, "0");
+          if (!weeks[key]) weeks[key] = { interactions: 0, reach: 0 };
+          weeks[key].interactions +=
+            (item.likes || 0) + (item.comments || 0) + (item.saves || 0);
+          weeks[key].reach += item.reach || 0;
+        });
+        const sortedWeeks = Object.keys(weeks).sort().slice(-8);
+        weeklyEngagementInst = new Chart(ctx, {
+          type: "bar",
+          data: {
+            labels: sortedWeeks,
+            datasets: [
+              {
+                label: "Engagement Rate (%)",
+                data: sortedWeeks.map((wk) => {
+                  const { interactions, reach } = weeks[wk];
+                  return reach > 0
+                    ? parseFloat(((interactions / reach) * 100).toFixed(2))
+                    : 0;
+                }),
+                backgroundColor: "rgba(20,83,51,0.75)",
+                borderRadius: 6,
+                borderWidth: 0,
+                hoverBackgroundColor: "#C5A059",
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false }, tooltip: tooltipStyle() },
+            scales: {
+              x: { grid: { display: false } },
+              y: {
+                grid: { color: "#f1f5f9" },
+                ticks: { callback: (v) => v + "%" },
+              },
+            },
+          },
+        });
+      }
+
+      function renderPostsGrid() {
+        const grid = document.getElementById("posts-grid");
+        const tableWrap = document.getElementById("posts-table-wrap");
+
+        if (globalPosts.length === 0) {
+          grid.innerHTML = `<div class="glass-card p-8 col-span-full text-center text-slate-400"><i data-lucide="image" class="w-10 h-10 mx-auto mb-2 opacity-40"></i><p>No hay publicaciones registradas.</p></div>`;
+          tableWrap.innerHTML = "";
+          lucide.createIcons();
+          return;
+        }
+
+        const BADGE = {
+          Reel: "badge-reel",
+          Foto: "badge-foto",
+          Carrusel: "badge-carrusel",
+          Story: "badge-story",
+          Video: "badge-video",
+        };
+
+        // Sort by total interactions desc for cards
+        const sortedByInt = [...globalPosts].sort(
+          (a, b) =>
+            (b.likes || 0) +
+            (b.comments || 0) +
+            (b.saves || 0) -
+            ((a.likes || 0) + (a.comments || 0) + (a.saves || 0)),
+        );
+
+        grid.innerHTML = sortedByInt
+          .map((p, idx) => {
+            const total =
+              (p.likes || 0) +
+              (p.comments || 0) +
+              (p.saves || 0) +
+              (p.compartidos || 0);
+            const d = new Date(p.date + "T00:00:00");
+            const fmtDate = d.toLocaleDateString("es-ES", {
+              day: "2-digit",
+              month: "short",
+              year: "numeric",
+            });
+            const timeStr = p.publishedAt ? p.publishedAt.split("T")[1] : "";
+            const engPost =
+              p.reach > 0
+                ? ((total / p.reach) * 100).toFixed(1)
+                : p.vistas > 0
+                  ? ((total / p.vistas) * 100).toFixed(1)
+                  : "---";
+            const medal =
+              idx === 0 ? "🥇" : idx === 1 ? "🥈" : idx === 2 ? "🥉" : "";
+            return `<div class="glass-card p-4 flex flex-col gap-3 hover:shadow-md transition-shadow">
+            <div class="flex items-start justify-between">
+              <span class="px-2.5 py-1 rounded-full text-xs font-semibold ${BADGE[p.type] || ""}">${p.type}</span>
+              <button onclick="deletePost('${p.id}')" class="text-slate-300 hover:text-red-500 transition-colors p-1"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
+            </div>
+            <p class="text-sm font-medium text-slate-700 leading-snug">${medal} ${p.title}</p>
+            <p class="text-xs text-slate-400">${fmtDate}${timeStr ? " · <b>" + timeStr + "</b>" : ""}</p>
+            <div class="grid grid-cols-3 gap-1.5 pt-2 border-t border-slate-100 text-center">
+              <div><p class="text-base font-bold text-club-dark">${(p.vistas || 0).toLocaleString()}</p><p class="text-[10px] text-slate-400">Vistas</p></div>
+              <div><p class="text-base font-bold text-club-green">${(p.reach || 0).toLocaleString()}</p><p class="text-[10px] text-slate-400">Ctas. alcanz.</p></div>
+              <div><p class="text-base font-bold text-club-gold">${total.toLocaleString()}</p><p class="text-[10px] text-slate-400">Interacc.</p></div>
+            </div>
+            <div class="grid grid-cols-4 gap-1 text-center text-xs text-slate-500">
+              <div><span class="block font-semibold text-slate-700">${(p.likes || 0).toLocaleString()}</span>❤️</div>
+              <div><span class="block font-semibold text-slate-700">${(p.comments || 0).toLocaleString()}</span>💬</div>
+              <div><span class="block font-semibold text-slate-700">${(p.saves || 0).toLocaleString()}</span>🔖</div>
+              <div><span class="block font-semibold text-slate-700">${(p.compartidos || 0).toLocaleString()}</span>↗️</div>
+            </div>
+            <div class="flex gap-2 text-xs justify-between bg-slate-50 rounded-lg px-3 py-1.5">
+              <span class="text-slate-500">Eng: <b class="text-club-gold">${engPost}%</b></span>
+              ${p.pctSeguidores ? `<span class="text-slate-500">Seg: <b>${p.pctSeguidores}%</b></span>` : ""}
+              ${p.pctInteractuantes ? `<span class="text-slate-500">Int: <b>${p.pctInteractuantes}%</b></span>` : ""}
+            </div>
+          </div>`;
+          })
+          .join("");
+
+        // ---- Weekly table ----
+        // Sort by publishedAt desc for table
+        const sortedByDate = [...globalPosts].sort(
+          (a, b) =>
+            new Date(b.publishedAt || b.date) -
+            new Date(a.publishedAt || a.date),
+        );
+        const tableRows = sortedByDate
+          .map((p) => {
+            const total =
+              (p.likes || 0) +
+              (p.comments || 0) +
+              (p.saves || 0) +
+              (p.compartidos || 0);
+            const d = new Date(p.date + "T00:00:00");
+            const DAYS = ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"];
+            const fmtDate = d.toLocaleDateString("es-ES", {
+              day: "2-digit",
+              month: "short",
+            });
+            const timeStr = p.publishedAt ? p.publishedAt.split("T")[1] : "";
+            const engPost =
+              p.reach > 0
+                ? ((total / p.reach) * 100).toFixed(1)
+                : p.vistas > 0
+                  ? ((total / p.vistas) * 100).toFixed(1)
+                  : "---";
+            return `<tr class="hover:bg-slate-50 transition-colors text-sm">
+            <td class="p-3 whitespace-nowrap">
+              <span class="px-2 py-0.5 rounded-full text-xs font-semibold ${BADGE[p.type] || ""}">${p.type}</span>
+            </td>
+            <td class="p-3 text-slate-700 max-w-[180px] truncate" title="${p.title}">${p.title}</td>
+            <td class="p-3 text-slate-500 text-xs whitespace-nowrap">${fmtDate} ${DAYS[d.getDay()]}${timeStr ? '<br><span class="font-medium text-slate-600">' + timeStr + "</span>" : ""}</td>
+            <td class="p-3 text-right">${(p.likes || 0).toLocaleString()}</td>
+            <td class="p-3 text-right">${(p.comments || 0).toLocaleString()}</td>
+            <td class="p-3 text-right">${(p.compartidos || 0).toLocaleString()}</td>
+            <td class="p-3 text-right">${(p.saves || 0).toLocaleString()}</td>
+            <td class="p-3 text-right">${(p.vistas || 0).toLocaleString()}</td>
+            <td class="p-3 text-right">${(p.reproducciones || 0).toLocaleString()}</td>
+            <td class="p-3 text-right">${(p.reach || 0).toLocaleString()}</td>
+            <td class="p-3 text-right text-xs">${p.pctSeguidores ? p.pctSeguidores + "%" : "—"}</td>
+            <td class="p-3 text-right text-xs">${p.pctInteractuantes ? p.pctInteractuantes + "%" : "—"}</td>
+            <td class="p-3 text-right font-semibold text-club-green">${total.toLocaleString()}</td>
+            <td class="p-3 text-right text-xs text-club-gold font-semibold">${engPost}%</td>
+            <td class="p-3 text-center">
+              <button onclick="deletePost('${p.id}')" class="text-slate-300 hover:text-red-500 transition-colors p-1"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
+            </td>
+          </tr>`;
+          })
+          .join("");
+
+        tableWrap.innerHTML = `
+          <div class="glass-card overflow-hidden mt-2">
+            <div class="p-4 border-b border-slate-100 flex items-center justify-between">
+              <h3 class="font-semibold text-club-dark">Tabla detallada de publicaciones</h3>
+              <span class="text-xs text-slate-400">${globalPosts.length} publicaciones</span>
+            </div>
+            <div class="overflow-x-auto">
+              <table class="w-full text-left border-collapse">
+                <thead>
+                  <tr class="bg-slate-50 text-slate-500 text-xs uppercase tracking-wider">
+                    <th class="p-3 font-medium">Formato</th>
+                    <th class="p-3 font-medium">Descripcion</th>
+                    <th class="p-3 font-medium">Fecha / Hora</th>
+                    <th class="p-3 font-medium text-right">❤️ Likes</th>
+                    <th class="p-3 font-medium text-right">💬 Coment.</th>
+                    <th class="p-3 font-medium text-right">↗️ Compart.</th>
+                    <th class="p-3 font-medium text-right">🔖 Guard.</th>
+                    <th class="p-3 font-medium text-right">👁️ Vistas</th>
+                    <th class="p-3 font-medium text-right">▶️ Reprod.</th>
+                    <th class="p-3 font-medium text-right">👥 Ctas. alc.</th>
+                    <th class="p-3 font-medium text-right">% Seg.</th>
+                    <th class="p-3 font-medium text-right">% Int.</th>
+                    <th class="p-3 font-medium text-right">Total Int.</th>
+                    <th class="p-3 font-medium text-right">Eng.%</th>
+                    <th class="p-3 font-medium text-center">Acción</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100">${tableRows}</tbody>
+              </table>
+            </div>
+          </div>`;
+
+        // ---- Weekly KPI summary ----
+        renderWeeklyPostKPIs();
+
+        lucide.createIcons();
+      }
+
+      function renderWeeklyPostKPIs() {
+        const kpiWrap = document.getElementById("weekly-kpis");
+        if (!kpiWrap) return;
+        if (globalPosts.length === 0) {
+          kpiWrap.innerHTML = "";
+          return;
+        }
+
+        // Current week (Mon-Sun)
+        const now = new Date();
+        const dayOfWeek = (now.getDay() + 6) % 7; // Mon=0 … Sun=6
+        const weekStart = new Date(now);
+        weekStart.setDate(now.getDate() - dayOfWeek);
+        weekStart.setHours(0, 0, 0, 0);
+        const weekEnd = new Date(weekStart);
+        weekEnd.setDate(weekStart.getDate() + 6);
+        weekEnd.setHours(23, 59, 59, 999);
+
+        const thisWeek = globalPosts.filter((p) => {
+          const d = new Date(p.publishedAt || p.date + "T00:00:00");
+          return d >= weekStart && d <= weekEnd;
+        });
+        const prevWeekStart = new Date(weekStart);
+        prevWeekStart.setDate(weekStart.getDate() - 7);
+        const prevWeekEnd = new Date(weekEnd);
+        prevWeekEnd.setDate(weekEnd.getDate() - 7);
+        const prevWeek = globalPosts.filter((p) => {
+          const d = new Date(p.publishedAt || p.date + "T00:00:00");
+          return d >= prevWeekStart && d <= prevWeekEnd;
+        });
+
+        const wkInteract = thisWeek.reduce(
+          (s, p) =>
+            s +
+            (p.likes || 0) +
+            (p.comments || 0) +
+            (p.saves || 0) +
+            (p.compartidos || 0),
+          0,
+        );
+        const pwInteract = prevWeek.reduce(
+          (s, p) =>
+            s +
+            (p.likes || 0) +
+            (p.comments || 0) +
+            (p.saves || 0) +
+            (p.compartidos || 0),
+          0,
+        );
+        const wkLikes = thisWeek.reduce((s, p) => s + (p.likes || 0), 0);
+        const wkVistas = thisWeek.reduce((s, p) => s + (p.vistas || 0), 0);
+        const wkAlcance = thisWeek.reduce((s, p) => s + (p.reach || 0), 0);
+
+        const trendHtml = (cur, prev) => {
+          if (!prev) return "";
+          const pct = (((cur - prev) / prev) * 100).toFixed(1);
+          const pos = cur >= prev;
+          return `<span class="${pos ? "text-green-600" : "text-red-500"} text-xs font-medium">${pos && pct > 0 ? "+" : ""}${pct}% vs sem. ant.</span>`;
+        };
+
+        kpiWrap.innerHTML = `
+          <div class="glass-card p-4">
+            <p class="text-xs text-slate-500 uppercase tracking-wide mb-1">Posts esta semana</p>
+            <p class="text-2xl font-bold text-club-dark">${thisWeek.length}</p>
+            <p class="text-xs text-slate-400 mt-1">${prevWeek.length} la semana pasada</p>
+          </div>
+          <div class="glass-card p-4">
+            <p class="text-xs text-slate-500 uppercase tracking-wide mb-1">Interacciones semana</p>
+            <p class="text-2xl font-bold text-club-dark">${wkInteract.toLocaleString()}</p>
+            <div class="mt-1">${trendHtml(wkInteract, pwInteract)}</div>
+          </div>
+          <div class="glass-card p-4">
+            <p class="text-xs text-slate-500 uppercase tracking-wide mb-1">Likes semana</p>
+            <p class="text-2xl font-bold text-club-dark">${wkLikes.toLocaleString()}</p>
+            <p class="text-xs text-slate-400 mt-1">Vistas: ${wkVistas.toLocaleString()}</p>
+          </div>
+          <div class="glass-card p-4">
+            <p class="text-xs text-slate-500 uppercase tracking-wide mb-1">Cuentas alcanzadas</p>
+            <p class="text-2xl font-bold text-club-dark">${wkAlcance.toLocaleString()}</p>
+            <p class="text-xs text-slate-400 mt-1">Semana actual</p>
+          </div>`;
+      }
+
+      document.querySelectorAll(".tab-btn").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          document
+            .querySelectorAll(".tab-btn")
+            .forEach((b) => b.classList.remove("active"));
+          btn.classList.add("active");
+          const tab = btn.dataset.tab;
+          document.querySelectorAll("main > section").forEach((s) => {
+            s.classList.add("hidden");
+            s.classList.remove("flex");
+          });
+          const section = document.getElementById("tab-" + tab);
+          section.classList.remove("hidden");
+          section.classList.add("flex");
+          if (tab === "insights") {
+            renderInsights();
+          }
+          if (tab === "posts") {
+            renderPostsGrid();
+          }
+          if (tab === "weekly") {
+            renderWeeklyHistory();
+          }
+          lucide.createIcons();
+        });
+      });
+
+      function fmtLabel(dateStr) {
+        const d = new Date(dateStr + "T00:00:00");
+        return d.toLocaleDateString("es-ES", {
+          day: "2-digit",
+          month: "short",
+        });
+      }
+      function tooltipStyle() {
+        return {
+          backgroundColor: "rgba(11,47,29,0.92)",
+          titleFont: { family: "Inter" },
+          bodyFont: { family: "Inter" },
+          padding: 10,
+          cornerRadius: 8,
+        };
+      }
+      function getISOWeek(date) {
+        const d = new Date(
+          Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()),
+        );
+        d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay() || 7));
+        const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+        return Math.ceil(((d - yearStart) / 86400000 + 1) / 7);
+      }
+      function showToast(msg, type = "success") {
+        const t = document.getElementById("toast");
+        t.textContent = msg;
+        t.style.background = type === "error" ? "#7f1d1d" : "#0D3341";
+        t.classList.remove("hide");
+        setTimeout(() => t.classList.add("hide"), 3500);
+      }
+
+      function generateMockData() {
+        const mock = [];
+        let f = 5200;
+        const today = new Date();
+        for (let i = 0; i < 30; i++) {
+          const d = new Date(today);
+          d.setDate(today.getDate() - i);
+          const reach = Math.floor(Math.random() * 900) + 1000;
+          f -= Math.floor(Math.random() * 8);
+          mock.push({
+            id: "mock_" + i,
+            date: d.toISOString().split("T")[0],
+            followers: f,
+            reach,
+            likes: Math.floor(Math.random() * 160) + 80,
+            comments: Math.floor(Math.random() * 25) + 3,
+            saves: Math.floor(Math.random() * 15) + 2,
+            createdAt: d.toISOString(),
+          });
+        }
+        return mock;
+      }
+      function generateMockPosts() {
+        const types = ["Reel", "Foto", "Carrusel", "Story", "Video"];
+        const titles = [
+          "Tarde de golf en el Club",
+          "Restaurante La Lena: nuevo menu",
+          "Piscina y relax fin de semana",
+          "Torneo de tenis",
+          "Eventos corporativos",
+          "Noche de gala anual",
+          "Clases de natacion",
+          "Brunch dominical",
+        ];
+        const today = new Date();
+        return Array.from({ length: 8 }, (_, i) => {
+          const d = new Date(today);
+          d.setDate(today.getDate() - i * 4);
+          const impressions = Math.floor(Math.random() * 5000) + 800;
+          return {
+            id: "mock_post_" + i,
+            date: d.toISOString().split("T")[0],
+            type: types[i % types.length],
+            title: titles[i % titles.length],
+            impressions,
+            reach: Math.floor(impressions * 0.75),
+            likes: Math.floor(Math.random() * 300) + 50,
+            comments: Math.floor(Math.random() * 30) + 5,
+            saves: Math.floor(Math.random() * 50) + 5,
+            createdAt: d.toISOString(),
+          };
+        });
+      }
+
+      lucide.createIcons();
+      window.addEventListener("scroll", () => {
+        document
+          .getElementById("main-header")
+          .classList.toggle("scrolled", window.scrollY > 10);
+      });
+    </script>
+  </body>
+</html>
