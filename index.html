@@ -978,7 +978,6 @@
       document.getElementById("post-datetime").value = _nowLocal();
 
       let db, auth, provider, currentUser;
-      let globalData = [];
       let globalWeekly = [];
       let mainChartInstance,
         followersChartInst,
@@ -986,6 +985,13 @@
         weeklyEngagementInst;
 
       // Datos históricos de Notion — siempre visibles, sin necesidad de login
+      // Registros diarios derivados de los Stories de Notion
+      const NOTION_DAILY = [
+        { id:"d10", date:"2026-04-22", storyViews:20969, likes:606, comments:29, saves:376, shares:182, createdAt:"2026-04-22T10:00:00.000Z" },
+        { id:"d9",  date:"2026-04-21", storyViews:155,   likes:241, comments:4,  saves:76,  shares:43,  createdAt:"2026-04-21T12:00:00.000Z" },
+        { id:"d8",  date:"2025-03-20", storyViews:13803, likes:667, comments:1,  saves:112, shares:77,  createdAt:"2025-03-20T00:00:00.000Z" },
+      ];
+
       const NOTION_POSTS = [
         { id:"n10", date:"2026-04-22", publishedAt:"2026-04-22T10:00", type:"Story",    title:"Copa Camilo Villegas",    vistas:20969, reproducciones:0,    reach:0,     likes:606,  comments:29,   saves:376, compartidos:182, pctSeguidores:0,    pctInteractuantes:0, createdAt:"2026-04-22T10:00:00.000Z" },
         { id:"n9",  date:"2026-04-21", publishedAt:"2026-04-21T12:00", type:"Story",    title:"Torneo Semana Santa",     vistas:155,   reproducciones:0,    reach:0,     likes:241,  comments:4,    saves:76,  compartidos:43,  pctSeguidores:0,    pctInteractuantes:0, createdAt:"2026-04-21T12:00:00.000Z" },
@@ -999,6 +1005,7 @@
         { id:"n1",  date:"2025-02-13", publishedAt:"2025-02-13T00:00", type:"Carrusel", title:"Post 13",                 vistas:24698, reproducciones:1565, reach:14754, likes:958,  comments:17,   saves:171, compartidos:130, pctSeguidores:57,   pctInteractuantes:0, createdAt:"2025-02-13T00:00:00.000Z" },
       ];
       let globalPosts = [...NOTION_POSTS];
+      let globalData   = [...NOTION_DAILY].sort((a, b) => new Date(b.date) - new Date(a.date));
 
       // Mostrar datos inmediatamente al cargar
       updateDashboard();
@@ -1056,9 +1063,12 @@
         onSnapshot(
           collection(db, "users", currentUser.uid, "instagram_stats"),
           (snap) => {
-            const data = [];
-            snap.forEach((d) => data.push({ id: d.id, ...d.data() }));
-            globalData = data.sort((a, b) => new Date(b.date) - new Date(a.date));
+            const fbData = [];
+            snap.forEach((d) => fbData.push({ id: d.id, ...d.data() }));
+            // Fusionar: Firebase primero, luego base Notion sin duplicados por fecha
+            const fbDates = new Set(fbData.map(r => r.date));
+            const notionOnly = NOTION_DAILY.filter(r => !fbDates.has(r.date));
+            globalData = [...fbData, ...notionOnly].sort((a, b) => new Date(b.date) - new Date(a.date));
             updateDashboard();
           },
           (err) => console.error(err),
@@ -1357,6 +1367,7 @@
         renderMainChart();
         renderFollowersChart();
         renderInsights();
+        renderPostsGrid();
         renderWeeklyHistory();
         lucide.createIcons();
       }
