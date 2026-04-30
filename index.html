@@ -116,22 +116,43 @@
       .badge-reel {
         background: #e1d3b8;
         color: #5c4a2a;
+        font-weight: 600;
       }
       .badge-foto {
         background: #0d3341;
         color: #ffffff;
+        font-weight: 600;
       }
       .badge-carrusel {
         background: #0d3341;
         color: #ffffff;
+        font-weight: 600;
       }
       .badge-story {
         background: #aea468;
         color: #ffffff;
+        font-weight: 600;
       }
       .badge-video {
         background: #0d3341;
         color: #ffffff;
+        font-weight: 600;
+      }
+
+      /* Fix: prevent Lucide SVG icons from overflowing inside flex buttons */
+      button svg,
+      a svg {
+        width: 1em;
+        height: 1em;
+        flex-shrink: 0;
+        display: inline-block;
+        vertical-align: middle;
+      }
+      button .w-4,
+      button .w-3\.5 {
+        width: 1rem !important;
+        height: 1rem !important;
+        flex-shrink: 0 !important;
       }
 
       /* Toast notification */
@@ -826,9 +847,7 @@
                   </p>
                   <div class="grid grid-cols-4 gap-2">
                     <div>
-                      <label class="block text-xs text-slate-600 mb-1"
-                        >❤️ Likes</label
-                      >
+                      <label class="block text-xs text-slate-600 mb-1">Likes</label>
                       <input
                         type="number"
                         id="panel-post-likes"
@@ -838,9 +857,7 @@
                       />
                     </div>
                     <div>
-                      <label class="block text-xs text-slate-600 mb-1"
-                        >💬 Coment.</label
-                      >
+                      <label class="block text-xs text-slate-600 mb-1">Coment.</label>
                       <input
                         type="number"
                         id="panel-post-comments"
@@ -850,9 +867,7 @@
                       />
                     </div>
                     <div>
-                      <label class="block text-xs text-slate-600 mb-1"
-                        >🔖 Guard.</label
-                      >
+                      <label class="block text-xs text-slate-600 mb-1">Guard.</label>
                       <input
                         type="number"
                         id="panel-post-saves"
@@ -862,9 +877,7 @@
                       />
                     </div>
                     <div>
-                      <label class="block text-xs text-slate-600 mb-1"
-                        >↗️ Compart.</label
-                      >
+                      <label class="block text-xs text-slate-600 mb-1">Compart.</label>
                       <input
                         type="number"
                         id="panel-post-compartidos"
@@ -2791,24 +2804,49 @@
       function renderRecentPostsOverview() {
         const el = document.getElementById("overview-recent-posts");
         if (!el) return;
-        const BADGE = { Reel:"badge-reel", Foto:"badge-foto", Carrusel:"badge-carrusel", Story:"badge-story", Video:"badge-video" };
+        const BADGE = {
+          Reel: "badge-reel",
+          Foto: "badge-foto",
+          Carrusel: "badge-carrusel",
+          Story: "badge-story",
+          Video: "badge-video",
+        };
         const recent = [...globalPosts]
-          .sort((a, b) => new Date(b.publishedAt || b.date) - new Date(a.publishedAt || a.date))
+          .sort(
+            (a, b) =>
+              new Date(b.publishedAt || b.date) -
+              new Date(a.publishedAt || a.date),
+          )
           .slice(0, 5);
         if (!recent.length) {
           el.innerHTML = `<p class="text-slate-400 text-sm py-2">Sin publicaciones registradas aún.</p>`;
           return;
         }
-        el.innerHTML = recent.map(p => {
-          const total = (p.likes||0)+(p.comments||0)+(p.saves||0)+(p.compartidos||0);
-          const dateStr = (p.publishedAt||p.date||"").split("T")[0];
-          const timeStr = p.publishedAt ? (p.publishedAt.split("T")[1]||"").slice(0,5) : "";
-          const d = new Date(dateStr + "T00:00:00");
-          const fmtDate = d.toLocaleDateString("es-ES", {day:"2-digit", month:"short"});
-          const engPost = p.reach > 0 ? ((total/p.reach)*100).toFixed(1) : p.vistas > 0 ? ((total/p.vistas)*100).toFixed(1) : null;
-          return `<div class="flex items-center justify-between py-2 border-b border-slate-100 last:border-0 gap-2">
+        el.innerHTML = recent
+          .map((p) => {
+            const total =
+              (p.likes || 0) +
+              (p.comments || 0) +
+              (p.saves || 0) +
+              (p.compartidos || 0);
+            const dateStr = (p.publishedAt || p.date || "").split("T")[0];
+            const timeStr = p.publishedAt
+              ? (p.publishedAt.split("T")[1] || "").slice(0, 5)
+              : "";
+            const d = new Date(dateStr + "T00:00:00");
+            const fmtDate = d.toLocaleDateString("es-ES", {
+              day: "2-digit",
+              month: "short",
+            });
+            const engPost =
+              p.reach > 0
+                ? ((total / p.reach) * 100).toFixed(1)
+                : p.vistas > 0
+                  ? ((total / p.vistas) * 100).toFixed(1)
+                  : null;
+            return `<div class="flex items-center justify-between py-2 border-b border-slate-100 last:border-0 gap-2">
             <div class="flex items-center gap-2 min-w-0">
-              <span class="px-1.5 py-0.5 rounded text-[10px] font-semibold ${BADGE[p.type]||"bg-slate-100 text-slate-600"} shrink-0">${p.type}</span>
+              <span class="px-1.5 py-0.5 rounded text-[10px] font-semibold ${BADGE[p.type] || "bg-slate-100 text-slate-600"} shrink-0">${p.type}</span>
               <span class="text-sm text-slate-700 truncate">${p.title}</span>
             </div>
             <div class="flex items-center gap-2 text-xs shrink-0 ml-1">
@@ -2817,7 +2855,8 @@
               ${engPost ? `<span class="text-club-gold font-medium">${engPost}%</span>` : ""}
             </div>
           </div>`;
-        }).join("");
+          })
+          .join("");
       }
 
       function sum(arr, key) {
