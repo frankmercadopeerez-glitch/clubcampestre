@@ -756,8 +756,19 @@
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div class="lg:col-span-1 flex flex-col gap-8">
-            <!-- hidden: kept for JS compatibility -->
+            <!-- hidden stubs: kept for JS compatibility -->
             <button id="btn-open-post-modal" class="hidden"></button>
+            <form id="stats-form" class="hidden">
+              <input type="date" id="input-date" />
+              <input type="time" id="input-time" />
+              <input type="number" id="input-story-views" />
+              <input type="text" id="input-story-name" />
+              <input type="number" id="input-likes" />
+              <input type="number" id="input-comments" />
+              <input type="number" id="input-shares" />
+              <div id="edit-daily-banner"></div>
+              <button type="submit" id="btn-submit"></button>
+            </form>
 
             <!-- Post / Reel inline registration -->
             <div class="glass-card p-5">
