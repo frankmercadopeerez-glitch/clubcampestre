@@ -2352,7 +2352,12 @@
       window.deleteRecord = async (id) => {
         if (!confirm("\u00bfEliminar este registro?")) return;
         if (id.startsWith("d") || id.startsWith("n")) {
-          showToast("Los registros históricos no se pueden eliminar", "error");
+          // In-memory record — remove from globalData array
+          globalData = globalData.filter((r) => r.id !== id);
+          renderTable();
+          renderPostsGrid();
+          renderInsights();
+          showToast("Registro eliminado");
           return;
         }
         try {
@@ -2365,8 +2370,12 @@
 
       window.deletePost = async (id) => {
         if (!confirm("\u00bfEliminar esta publicación?")) return;
-        if (id.startsWith("n")) {
-          showToast("Los registros históricos no se pueden eliminar", "error");
+        if (id.startsWith("p") || id.startsWith("n")) {
+          // In-memory record — remove from globalPosts array
+          globalPosts = globalPosts.filter((p) => p.id !== id);
+          renderPostsGrid();
+          renderInsights();
+          showToast("Publicacion eliminada");
           return;
         }
         try {
