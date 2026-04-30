@@ -305,6 +305,33 @@
         background: #f1f5f9;
         color: #64748b;
       }
+      /* ── Chart legend spacing ─────────────────────────────── */
+      /* Chart.js default legend box is too close to label text */
+
+      /* ── Mobile-first adjustments ──────────────────────────── */
+      @media (max-width: 640px) {
+        .kpi-card {
+          padding: 1rem;
+        }
+        .kpi-card .kpi-value {
+          font-size: 1.35rem;
+        }
+        .tab-btn {
+          padding: 0.5rem 0.75rem;
+          font-size: 0.75rem;
+        }
+        main {
+          padding-left: 0.75rem;
+          padding-right: 0.75rem;
+        }
+      }
+
+      /* Stack post cards nicely on small screens */
+      @media (max-width: 480px) {
+        .kpi-card .kpi-value {
+          font-size: 1.2rem;
+        }
+      }
     </style>
   </head>
   <body class="text-slate-800 antialiased min-h-screen flex flex-col">
@@ -636,7 +663,7 @@
       class="bg-white border-b-2 border-slate-100 sticky top-14 z-40 shadow-sm"
     >
       <div
-        class="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8 flex overflow-x-auto scrollbar-none"
+        class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 flex overflow-x-auto scrollbar-none"
       >
         <button
           class="tab-btn active flex items-center gap-1.5 text-sm whitespace-nowrap"
@@ -655,12 +682,6 @@
           data-tab="posts"
         >
           <i data-lucide="grid" class="w-4 h-4"></i> Publicaciones
-        </button>
-        <button
-          class="tab-btn flex items-center gap-1.5 text-sm whitespace-nowrap"
-          data-tab="history"
-        >
-          <i data-lucide="clock" class="w-4 h-4"></i> Historial
         </button>
         <button
           class="tab-btn flex items-center gap-1.5 text-sm whitespace-nowrap"
@@ -1201,29 +1222,18 @@
 
         <!-- Tabla detallada (se inyecta por JS) -->
         <div id="posts-table-wrap"></div>
-      </section>
 
-      <!-- TAB: HISTORIAL -->
-      <section id="tab-history" class="hidden flex-col gap-6">
-        <!-- Page title -->
-        <div>
-          <h2 class="text-xl font-bold text-slate-800">
-            Historial de métricas
-          </h2>
-          <p class="text-sm text-slate-400 mt-0.5">
-            Registro completo de historias publicadas
-          </p>
-        </div>
+        <!-- Historial de métricas diarias / semanales / mensuales -->
         <div class="glass-card overflow-hidden">
           <div
             class="p-4 md:p-6 border-b border-slate-100 flex flex-wrap items-center justify-between gap-3"
           >
             <div>
               <h2 class="text-base sm:text-lg font-semibold text-slate-800">
-                Registro de historias
+                Historial de stories
               </h2>
               <p class="text-xs text-slate-400 mt-0.5">
-                Vistas e interacciones diarias
+                Vistas e interacciones — Diario / Semanal / Mensual
               </p>
             </div>
             <div class="flex items-center gap-3">
@@ -1272,7 +1282,7 @@
               </thead>
               <tbody id="table-body" class="text-sm divide-y divide-slate-100">
                 <tr>
-                  <td colspan="11" class="p-8 text-center text-slate-400">
+                  <td colspan="10" class="p-8 text-center text-slate-400">
                     <div class="flex flex-col items-center">
                       <i
                         data-lucide="database"
@@ -1612,6 +1622,59 @@
       // ================================================================
 
       const DEMO_MODE = firebaseConfig.apiKey === "REEMPLAZAR_API_KEY";
+
+      // ── Chart.js global defaults ─────────────────────────────────────────
+      Chart.defaults.font.family = "'Poppins', sans-serif";
+      Chart.defaults.plugins.legend.labels.padding = 16;
+      Chart.defaults.plugins.legend.labels.boxWidth = 10;
+      Chart.defaults.plugins.legend.labels.boxHeight = 10;
+      Chart.defaults.plugins.legend.labels.usePointStyle = true;
+      Chart.defaults.plugins.legend.labels.pointStyleWidth = 10;
+
+      // ── Week label helper ─────────────────────────────────────────────────
+      // Converts an ISO week date object to "20-27 abr" style label
+      const MONTHS_SHORT = [
+        "ene",
+        "feb",
+        "mar",
+        "abr",
+        "may",
+        "jun",
+        "jul",
+        "ago",
+        "sep",
+        "oct",
+        "nov",
+        "dic",
+      ];
+      function isoWeekMonday(year, week) {
+        // Get the Thursday of that ISO week (ISO weeks start on Monday)
+        const jan4 = new Date(year, 0, 4);
+        const dayOfWeek = jan4.getDay() || 7; // Mon=1 … Sun=7
+        const monday = new Date(jan4);
+        monday.setDate(jan4.getDate() - dayOfWeek + 1 + (week - 1) * 7);
+        return monday;
+      }
+      function weekNumToLabel(year, week) {
+        const monday = isoWeekMonday(year, week);
+        const sunday = new Date(monday);
+        sunday.setDate(monday.getDate() + 6);
+        const fromDay = monday.getDate();
+        const toDay = sunday.getDate();
+        const toMonth = MONTHS_SHORT[sunday.getMonth()];
+        // If month changes across the week, show both months
+        if (monday.getMonth() !== sunday.getMonth()) {
+          const fromMonth = MONTHS_SHORT[monday.getMonth()];
+          return `${fromDay} ${fromMonth} – ${toDay} ${toMonth}`;
+        }
+        return `${fromDay}-${toDay} ${toMonth}`;
+      }
+      // Parse "YYYY-W##" or "YYYY-S##" key and return readable label
+      function weekKeyToLabel(key) {
+        const m = key.match(/^(\d{4})[–\-][WS](\d+)$/i);
+        if (!m) return key;
+        return weekNumToLabel(parseInt(m[1]), parseInt(m[2]));
+      }
 
       const form = document.getElementById("stats-form");
       const btnSubmit = document.getElementById("btn-submit");
@@ -2570,7 +2633,8 @@
           monthData.forEach((r) => {
             const d = new Date(r.date + "T00:00:00");
             const wk = getISOWeek(d);
-            const key = "Sem " + wk;
+            const yr = d.getFullYear();
+            const key = yr + "-W" + String(wk).padStart(2, "0");
             if (!weeks[key])
               weeks[key] = {
                 views: 0,
@@ -2587,14 +2651,8 @@
             weeks[key].shares += r.shares || 0;
             weeks[key].days++;
           });
-          const wKeys = Object.keys(weeks);
-          const wInts = wKeys.map(
-            (k) =>
-              weeks[k].likes +
-              weeks[k].comments +
-              weeks[k].saves +
-              weeks[k].shares,
-          );
+          const wKeys = Object.keys(weeks).sort();
+          const wLabels = wKeys.map((k) => weekKeyToLabel(k));
           const METRIC_DEFS_W = {
             interacciones: {
               label: "Interacciones",
@@ -2676,7 +2734,7 @@
           monthlyChartInst = new Chart(ctx, {
             type: "bar",
             data: {
-              labels: wKeys,
+              labels: wLabels,
               datasets: wDatasets.length
                 ? wDatasets
                 : [{ label: "Sin datos", data: wKeys.map(() => 0) }],
@@ -2688,7 +2746,7 @@
               plugins: {
                 legend: {
                   position: "bottom",
-                  labels: { usePointStyle: true, boxWidth: 6 },
+                  labels: { usePointStyle: true, boxWidth: 10, padding: 16 },
                 },
                 tooltip: tooltipStyle(),
               },
@@ -2706,7 +2764,8 @@
                 const total = v.likes + v.comments + v.saves + v.shares;
                 const eng =
                   v.views > 0 ? ((total / v.views) * 100).toFixed(1) : "0.0";
-                return `<tr class="hover:bg-slate-50"><td class="p-3 font-medium text-club-dark">${k}</td><td class="p-3 text-right text-slate-500">${v.days}</td><td class="p-3 text-right">${v.views.toLocaleString()}</td><td class="p-3 text-right text-pink-600">${v.likes.toLocaleString()}</td><td class="p-3 text-right text-blue-600">${v.comments.toLocaleString()}</td><td class="p-3 text-right text-amber-600">${v.saves.toLocaleString()}</td><td class="p-3 text-right text-green-600">${v.shares.toLocaleString()}</td><td class="p-3 text-right font-bold text-club-green">${total.toLocaleString()}</td><td class="p-3 text-right text-xs text-slate-500">${eng}%</td></tr>`;
+                const lbl = weekKeyToLabel(k);
+                return `<tr class="hover:bg-slate-50"><td class="p-3 font-medium text-club-dark">${lbl}</td><td class="p-3 text-right text-slate-500">${v.days}</td><td class="p-3 text-right">${v.views.toLocaleString()}</td><td class="p-3 text-right text-pink-600">${v.likes.toLocaleString()}</td><td class="p-3 text-right text-blue-600">${v.comments.toLocaleString()}</td><td class="p-3 text-right text-amber-600">${v.saves.toLocaleString()}</td><td class="p-3 text-right text-green-600">${v.shares.toLocaleString()}</td><td class="p-3 text-right font-bold text-club-green">${total.toLocaleString()}</td><td class="p-3 text-right text-xs text-slate-500">${eng}%</td></tr>`;
               })
               .join("") ||
             `<tr><td colspan="9" class="p-8 text-center text-slate-400">Sin datos para este mes.</td></tr>`;
@@ -3161,7 +3220,7 @@
             const key = yr + "-S" + String(wk).padStart(2, "0");
             if (!weeks[key])
               weeks[key] = {
-                label: "Sem " + wk + " / " + yr,
+                label: weekNumToLabel(yr, wk),
                 views: 0,
                 likes: 0,
                 comments: 0,
@@ -3187,7 +3246,7 @@
             if (weeks[key]) weeks[key].posts++;
             else {
               weeks[key] = {
-                label: "Sem " + wk + " / " + yr,
+                label: weekNumToLabel(yr, wk),
                 views: 0,
                 likes: 0,
                 comments: 0,
@@ -3357,7 +3416,8 @@
                 position: "bottom",
                 labels: {
                   usePointStyle: true,
-                  boxWidth: 6,
+                  boxWidth: 10,
+                  padding: 16,
                   font: { family: "Inter", size: 12 },
                 },
               },
@@ -3707,7 +3767,7 @@
         weeklyEngagementInst = new Chart(ctx, {
           type: "bar",
           data: {
-            labels: sortedWeeks,
+            labels: sortedWeeks.map((k) => weekKeyToLabel(k)),
             datasets: [
               {
                 label: "Engagement Rate (%)",
@@ -4013,6 +4073,7 @@
           }
           if (tab === "posts") {
             renderPostsGrid();
+            renderTable();
           }
           if (tab === "weekly") {
             renderWeeklyHistory();
