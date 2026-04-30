@@ -33,7 +33,7 @@
           extend: {
             colors: {
               club: {
-                dark: "#1A6E8E",
+                dark: "#0F4C62",
                 green: "#145333",
                 light: "#E8F1EC",
                 gold: "#C5A059",
@@ -548,14 +548,17 @@
                   <span>Editando registro existente</span>
                   <button type="button" onclick="cancelEditDaily()" class="ml-auto text-amber-500 hover:text-amber-700 font-semibold">Cancelar</button>
                 </div>
-                <div>
-                  <label class="block text-sm font-medium text-slate-700 mb-1">Fecha</label>
-                  <input
-                    type="date"
-                    id="input-date"
-                    required
-                    class="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-club-green/50 text-slate-700"
-                  />
+                <div class="grid grid-cols-2 gap-2">
+                  <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Fecha</label>
+                    <input type="date" id="input-date" required
+                      class="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-club-green/50 text-slate-700" />
+                  </div>
+                  <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Hora</label>
+                    <input type="time" id="input-time"
+                      class="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-club-green/50 text-slate-700" />
+                  </div>
                 </div>
                 <div>
                   <label class="block text-sm font-medium text-slate-700 mb-1">👁️ Vistas de la Historia</label>
@@ -602,17 +605,14 @@
                   <i data-lucide="save" class="w-4 h-4"></i> Guardar Metricas
                 </button>
               </form>
-              <div class="mt-4 pt-4 border-t border-slate-100">
+              <div class="mt-4 pt-4 border-t border-slate-100 space-y-2">
+                <p class="text-xs text-slate-400 font-medium uppercase tracking-wide">Tambien puedes registrar</p>
                 <button
                   id="btn-open-post-modal"
-                  disabled
-                  class="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium py-2.5 px-4 rounded-lg transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                  class="w-full bg-club-dark hover:bg-[#155f7a] text-white font-medium py-2.5 px-4 rounded-lg transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  <i
-                    data-lucide="image-plus"
-                    class="w-4 h-4 text-club-green"
-                  ></i>
-                  + Registrar Publicacion
+                  <i data-lucide="image-plus" class="w-4 h-4"></i>
+                  Registrar Post / Reel
                 </button>
               </div>
             </div>
@@ -746,13 +746,23 @@
       <!-- TAB: HISTORIAL -->
       <section id="tab-history" class="hidden flex-col gap-6">
         <div class="glass-card overflow-hidden">
-          <div class="p-4 md:p-6 border-b border-slate-100 flex items-center justify-between">
-            <h2 class="text-base sm:text-lg font-semibold text-club-dark">Historial diario de Historias</h2>
-            <span id="history-count" class="text-xs text-slate-400"></span>
+          <div class="p-4 md:p-6 border-b border-slate-100 flex flex-wrap items-center justify-between gap-3">
+            <div>
+              <h2 class="text-base sm:text-lg font-semibold text-club-dark">Historial de metricas</h2>
+              <p class="text-xs text-slate-400 mt-0.5">Historias y Publicaciones</p>
+            </div>
+            <div class="flex items-center gap-3">
+              <select id="history-filter" class="text-sm border border-slate-200 rounded-md px-3 py-1.5 text-slate-600 focus:outline-none">
+                <option value="daily">Diario</option>
+                <option value="weekly">Semanal</option>
+                <option value="monthly">Mensual</option>
+              </select>
+              <span id="history-count" class="text-xs text-slate-400"></span>
+            </div>
           </div>
           <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse">
-              <thead>
+              <thead id="history-thead">
                 <tr class="bg-slate-50 text-slate-500 text-xs uppercase tracking-wider">
                   <th class="p-2 sm:p-4 font-medium">Fecha</th>
                   <th class="p-2 sm:p-4 font-medium hidden sm:table-cell">Dia</th>
@@ -970,6 +980,8 @@
       const weeklyTableBody = document.getElementById("weekly-table-body");
 
       inputDate.valueAsDate = new Date();
+      const inputTime = document.getElementById("input-time");
+      inputTime.value = new Date().toTimeString().slice(0, 5);
       const _nowLocal = () =>
         new Date(Date.now() - new Date().getTimezoneOffset() * 60000)
           .toISOString()
@@ -986,22 +998,41 @@
       // Datos históricos de Notion — siempre visibles, sin necesidad de login
       // Registros diarios derivados de los Stories de Notion
       const NOTION_DAILY = [
-        { id:"d10", date:"2026-04-22", storyViews:20969, likes:606, comments:29, saves:376, shares:182, createdAt:"2026-04-22T10:00:00.000Z" },
-        { id:"d9",  date:"2026-04-21", storyViews:155,   likes:241, comments:4,  saves:76,  shares:43,  createdAt:"2026-04-21T12:00:00.000Z" },
-        { id:"d8",  date:"2025-03-20", storyViews:13803, likes:667, comments:1,  saves:112, shares:77,  createdAt:"2025-03-20T00:00:00.000Z" },
+        { id:"d28", date:"2026-04-28", time:"09:15", storyViews:1890, likes:152, comments:8,  saves:45,  shares:19,  createdAt:"2026-04-28T09:15:00.000Z" },
+        { id:"d27", date:"2026-04-27", time:"10:30", storyViews:1430, likes:108, comments:5,  saves:29,  shares:11,  createdAt:"2026-04-27T10:30:00.000Z" },
+        { id:"d26", date:"2026-04-26", time:"11:00", storyViews:2780, likes:221, comments:15, saves:71,  shares:33,  createdAt:"2026-04-26T11:00:00.000Z" },
+        { id:"d25", date:"2026-04-25", time:"10:45", storyViews:3120, likes:267, comments:19, saves:84,  shares:41,  createdAt:"2026-04-25T10:45:00.000Z" },
+        { id:"d24", date:"2026-04-24", time:"09:00", storyViews:2340, likes:189, comments:11, saves:62,  shares:26,  createdAt:"2026-04-24T09:00:00.000Z" },
+        { id:"d23", date:"2026-04-23", time:"14:20", storyViews:1680, likes:134, comments:7,  saves:41,  shares:17,  createdAt:"2026-04-23T14:20:00.000Z" },
+        { id:"d10", date:"2026-04-22", time:"10:00", storyViews:20969, likes:606, comments:29, saves:376, shares:182, createdAt:"2026-04-22T10:00:00.000Z" },
+        { id:"d9",  date:"2026-04-21", time:"12:00", storyViews:155,  likes:241, comments:4,  saves:76,  shares:43,  createdAt:"2026-04-21T12:00:00.000Z" },
+        { id:"d20", date:"2026-04-20", time:"08:50", storyViews:1520, likes:112, comments:6,  saves:34,  shares:14,  createdAt:"2026-04-20T08:50:00.000Z" },
+        { id:"d19", date:"2026-04-19", time:"11:30", storyViews:2670, likes:198, comments:14, saves:67,  shares:28,  createdAt:"2026-04-19T11:30:00.000Z" },
+        { id:"d18", date:"2026-04-18", time:"09:45", storyViews:3450, likes:312, comments:24, saves:95,  shares:48,  createdAt:"2026-04-18T09:45:00.000Z" },
+        { id:"d17", date:"2026-04-17", time:"10:10", storyViews:2890, likes:243, comments:18, saves:78,  shares:35,  createdAt:"2026-04-17T10:10:00.000Z" },
+        { id:"d16", date:"2026-04-16", time:"13:00", storyViews:1750, likes:156, comments:9,  saves:38,  shares:15,  createdAt:"2026-04-16T13:00:00.000Z" },
+        { id:"d15", date:"2026-04-15", time:"09:20", storyViews:2100, likes:187, comments:12, saves:55,  shares:22,  createdAt:"2026-04-15T09:20:00.000Z" },
+        { id:"d14", date:"2026-04-14", time:"11:15", storyViews:1340, likes:98,  comments:5,  saves:28,  shares:12,  createdAt:"2026-04-14T11:15:00.000Z" },
+        { id:"d13", date:"2026-04-13", time:"10:00", storyViews:1890, likes:145, comments:8,  saves:42,  shares:18,  createdAt:"2026-04-13T10:00:00.000Z" },
+        { id:"d8",  date:"2025-03-20", time:"",      storyViews:13803, likes:667, comments:1, saves:112, shares:77,  createdAt:"2025-03-20T00:00:00.000Z" },
       ];
 
       const NOTION_POSTS = [
-        { id:"n10", date:"2026-04-22", publishedAt:"2026-04-22T10:00", type:"Story",    title:"Copa Camilo Villegas",    vistas:20969, reproducciones:0,    reach:0,     likes:606,  comments:29,   saves:376, compartidos:182, pctSeguidores:0,    pctInteractuantes:0, createdAt:"2026-04-22T10:00:00.000Z" },
-        { id:"n9",  date:"2026-04-21", publishedAt:"2026-04-21T12:00", type:"Story",    title:"Torneo Semana Santa",     vistas:155,   reproducciones:0,    reach:0,     likes:241,  comments:4,    saves:76,  compartidos:43,  pctSeguidores:0,    pctInteractuantes:0, createdAt:"2026-04-21T12:00:00.000Z" },
-        { id:"n8",  date:"2025-03-20", publishedAt:"2025-03-20T00:00", type:"Story",    title:"Merga Kid´s Water Party", vistas:13803, reproducciones:0,    reach:0,     likes:667,  comments:1,    saves:112, compartidos:77,  pctSeguidores:0,    pctInteractuantes:0, createdAt:"2025-03-20T00:00:00.000Z" },
-        { id:"n7",  date:"2025-03-18", publishedAt:"2025-03-18T00:00", type:"Carrusel", title:"Post 18",                 vistas:53977, reproducciones:6602, reach:31105, likes:1133, comments:1000, saves:554, compartidos:216, pctSeguidores:32.1, pctInteractuantes:0, createdAt:"2025-03-18T00:00:00.000Z" },
-        { id:"n6",  date:"2025-02-19", publishedAt:"2025-02-19T00:00", type:"Reel",     title:"Post 19",                 vistas:16361, reproducciones:6150, reach:11569, likes:188,  comments:53,   saves:28,  compartidos:5,   pctSeguidores:20.9, pctInteractuantes:0, createdAt:"2025-02-19T00:00:00.000Z" },
-        { id:"n5",  date:"2025-02-17", publishedAt:"2025-02-17T00:00", type:"Reel",     title:"Post 17",                 vistas:12542, reproducciones:3292, reach:9504,  likes:165,  comments:2,    saves:17,  compartidos:7,   pctSeguidores:19.2, pctInteractuantes:0, createdAt:"2025-02-17T00:00:00.000Z" },
-        { id:"n4",  date:"2025-02-16", publishedAt:"2025-02-16T00:00", type:"Carrusel", title:"Post 16",                 vistas:13305, reproducciones:3978, reach:10100, likes:330,  comments:0,    saves:37,  compartidos:16,  pctSeguidores:24,   pctInteractuantes:0, createdAt:"2025-02-16T00:00:00.000Z" },
-        { id:"n3",  date:"2025-02-15", publishedAt:"2025-02-15T00:00", type:"Carrusel", title:"Post 15",                 vistas:16282, reproducciones:0,    reach:9084,  likes:368,  comments:3,    saves:30,  compartidos:78,  pctSeguidores:12,   pctInteractuantes:0, createdAt:"2025-02-15T00:00:00.000Z" },
-        { id:"n2",  date:"2025-02-14", publishedAt:"2025-02-14T00:00", type:"Reel",     title:"Post 14",                 vistas:30611, reproducciones:785,  reach:17708, likes:1250, comments:17,   saves:397, compartidos:477, pctSeguidores:6.3,  pctInteractuantes:0, createdAt:"2025-02-14T00:00:00.000Z" },
-        { id:"n1",  date:"2025-02-13", publishedAt:"2025-02-13T00:00", type:"Carrusel", title:"Post 13",                 vistas:24698, reproducciones:1565, reach:14754, likes:958,  comments:17,   saves:171, compartidos:130, pctSeguidores:57,   pctInteractuantes:0, createdAt:"2025-02-13T00:00:00.000Z" },
+        { id:"n14", date:"2026-04-26", publishedAt:"2026-04-26T11:00", type:"Carrusel", title:"Agenda de eventos — ultima semana de abril", vistas:4820,  reproducciones:0,    reach:3210,  likes:312,  comments:22,   saves:89,  compartidos:41,  pctSeguidores:28.4, pctInteractuantes:9.2,  createdAt:"2026-04-26T11:00:00.000Z" },
+        { id:"n13", date:"2026-04-24", publishedAt:"2026-04-24T09:00", type:"Foto",     title:"Puesta de sol en el campo de golf",          vistas:3190,  reproducciones:0,    reach:2450,  likes:287,  comments:18,   saves:74,  compartidos:22,  pctSeguidores:22.1, pctInteractuantes:11.3, createdAt:"2026-04-24T09:00:00.000Z" },
+        { id:"n12", date:"2026-04-18", publishedAt:"2026-04-18T09:45", type:"Reel",     title:"Resumen torneo Copa Campestre",              vistas:8740,  reproducciones:5120, reach:6380,  likes:541,  comments:38,   saves:132, compartidos:67,  pctSeguidores:35.2, pctInteractuantes:13.1, createdAt:"2026-04-18T09:45:00.000Z" },
+        { id:"n11", date:"2026-04-16", publishedAt:"2026-04-16T13:00", type:"Carrusel", title:"Instalaciones renovadas — area de tenis",      vistas:5630,  reproducciones:0,    reach:4120,  likes:398,  comments:27,   saves:108, compartidos:34,  pctSeguidores:31.8, pctInteractuantes:10.5, createdAt:"2026-04-16T13:00:00.000Z" },
+        { id:"np1", date:"2026-04-14", publishedAt:"2026-04-14T11:15", type:"Reel",     title:"Tips de golf para principiantes",            vistas:11250, reproducciones:7840, reach:8970,  likes:623,  comments:45,   saves:178, compartidos:89,  pctSeguidores:42.3, pctInteractuantes:15.2, createdAt:"2026-04-14T11:15:00.000Z" },
+        { id:"n10", date:"2026-04-22", publishedAt:"2026-04-22T10:00", type:"Story",    title:"Copa Camilo Villegas",                       vistas:20969, reproducciones:0,    reach:0,     likes:606,  comments:29,   saves:376, compartidos:182, pctSeguidores:0,    pctInteractuantes:0,    createdAt:"2026-04-22T10:00:00.000Z" },
+        { id:"n9",  date:"2026-04-21", publishedAt:"2026-04-21T12:00", type:"Story",    title:"Torneo Semana Santa",                        vistas:155,   reproducciones:0,    reach:0,     likes:241,  comments:4,    saves:76,  compartidos:43,  pctSeguidores:0,    pctInteractuantes:0,    createdAt:"2026-04-21T12:00:00.000Z" },
+        { id:"n8",  date:"2025-03-20", publishedAt:"2025-03-20T00:00", type:"Story",    title:"Merga Kid\u00b4s Water Party",              vistas:13803, reproducciones:0,    reach:0,     likes:667,  comments:1,    saves:112, compartidos:77,  pctSeguidores:0,    pctInteractuantes:0,    createdAt:"2025-03-20T00:00:00.000Z" },
+        { id:"n7",  date:"2025-03-18", publishedAt:"2025-03-18T00:00", type:"Carrusel", title:"Post 18",                                    vistas:53977, reproducciones:6602, reach:31105, likes:1133, comments:1000, saves:554, compartidos:216, pctSeguidores:32.1, pctInteractuantes:0,    createdAt:"2025-03-18T00:00:00.000Z" },
+        { id:"n6",  date:"2025-02-19", publishedAt:"2025-02-19T00:00", type:"Reel",     title:"Post 19",                                   vistas:16361, reproducciones:6150, reach:11569, likes:188,  comments:53,   saves:28,  compartidos:5,   pctSeguidores:20.9, pctInteractuantes:0,    createdAt:"2025-02-19T00:00:00.000Z" },
+        { id:"n5",  date:"2025-02-17", publishedAt:"2025-02-17T00:00", type:"Reel",     title:"Post 17",                                   vistas:12542, reproducciones:3292, reach:9504,  likes:165,  comments:2,    saves:17,  compartidos:7,   pctSeguidores:19.2, pctInteractuantes:0,    createdAt:"2025-02-17T00:00:00.000Z" },
+        { id:"n4",  date:"2025-02-16", publishedAt:"2025-02-16T00:00", type:"Carrusel", title:"Post 16",                                   vistas:13305, reproducciones:3978, reach:10100, likes:330,  comments:0,    saves:37,  compartidos:16,  pctSeguidores:24,   pctInteractuantes:0,    createdAt:"2025-02-16T00:00:00.000Z" },
+        { id:"n3",  date:"2025-02-15", publishedAt:"2025-02-15T00:00", type:"Carrusel", title:"Post 15",                                   vistas:16282, reproducciones:0,    reach:9084,  likes:368,  comments:3,    saves:30,  compartidos:78,  pctSeguidores:12,   pctInteractuantes:0,    createdAt:"2025-02-15T00:00:00.000Z" },
+        { id:"n2",  date:"2025-02-14", publishedAt:"2025-02-14T00:00", type:"Reel",     title:"Post 14",                                   vistas:30611, reproducciones:785,  reach:17708, likes:1250, comments:17,   saves:397, compartidos:477, pctSeguidores:6.3,  pctInteractuantes:0,    createdAt:"2025-02-14T00:00:00.000Z" },
+        { id:"n1",  date:"2025-02-13", publishedAt:"2025-02-13T00:00", type:"Carrusel", title:"Post 13",                                   vistas:24698, reproducciones:1565, reach:14754, likes:958,  comments:17,   saves:171, compartidos:130, pctSeguidores:57,   pctInteractuantes:0,    createdAt:"2025-02-13T00:00:00.000Z" },
       ];
       let globalPosts = [...NOTION_POSTS];
       let globalData   = [...NOTION_DAILY].sort((a, b) => new Date(b.date) - new Date(a.date));
@@ -1118,6 +1149,7 @@
         editingDailyId = null;
         form.reset();
         inputDate.valueAsDate = new Date();
+        inputTime.value = new Date().toTimeString().slice(0, 5);
         document.getElementById("edit-daily-banner").classList.add("hidden");
         btnSubmit.innerHTML = `<i data-lucide="save" class="w-4 h-4"></i> Guardar Metricas`;
         lucide.createIcons();
@@ -1128,6 +1160,7 @@
         if (!item) return;
         editingDailyId = id;
         inputDate.value = item.date;
+        inputTime.value = item.time || "";
         document.getElementById("input-story-views").value = item.storyViews || 0;
         document.getElementById("input-likes").value = item.likes || 0;
         document.getElementById("input-comments").value = item.comments || 0;
@@ -1148,6 +1181,7 @@
         e.preventDefault();
         const record = {
           date: inputDate.value,
+          time: inputTime.value || "",
           storyViews: parseInt(document.getElementById("input-story-views").value) || 0,
           likes: parseInt(document.getElementById("input-likes").value) || 0,
           comments: parseInt(document.getElementById("input-comments").value) || 0,
@@ -1155,6 +1189,7 @@
           shares: parseInt(document.getElementById("input-shares").value) || 0,
         };
         const origBtnHTML = `<i data-lucide="save" class="w-4 h-4"></i> Guardar Metricas`;
+        const _resetForm = () => { form.reset(); inputDate.valueAsDate = new Date(); inputTime.value = new Date().toTimeString().slice(0,5); };
         if (editingDailyId) {
           // UPDATE MODE
           if (!DEMO_MODE && currentUser && !editingDailyId.startsWith("demo_") && !editingDailyId.startsWith("d")) {
@@ -1173,8 +1208,7 @@
           editingDailyId = null;
           document.getElementById("edit-daily-banner").classList.add("hidden");
           btnSubmit.innerHTML = origBtnHTML;
-          form.reset();
-          inputDate.valueAsDate = new Date();
+          _resetForm();
           lucide.createIcons();
           return;
         }
@@ -1185,8 +1219,7 @@
           btnSubmit.disabled = true;
           try {
             await addDoc(collection(db, "users", currentUser.uid, "instagram_stats"), record);
-            form.reset();
-            inputDate.valueAsDate = new Date();
+            _resetForm();
             showToast("Metricas guardadas correctamente");
           } catch (err) {
             showToast("Error: " + err.message, "error");
@@ -1199,8 +1232,7 @@
           record.id = "demo_" + Date.now();
           globalData.unshift(record);
           globalData.sort((a, b) => new Date(b.date) - new Date(a.date));
-          form.reset();
-          inputDate.valueAsDate = new Date();
+          _resetForm();
           updateDashboard();
           showToast("Metricas guardadas");
         }
@@ -1601,46 +1633,156 @@
         document.getElementById("kpi-interactions-trend").innerHTML = `<span class="text-slate-400">Esperando datos...</span>`;
       }
 
+      document.getElementById("history-filter").addEventListener("change", renderTable);
+
       function renderTable() {
         tableBody.innerHTML = "";
-        if (globalData.length === 0) {
-          tableBody.innerHTML = `<tr><td colspan="8" class="p-8 text-center text-slate-400">No hay registros aun.</td></tr>`;
-          historyCount.textContent = "";
-          return;
+        const filter = document.getElementById("history-filter")?.value || "daily";
+        const thead  = document.getElementById("history-thead");
+
+        if (filter === "daily") {
+          thead.innerHTML = `<tr class="bg-slate-50 text-slate-500 text-xs uppercase tracking-wider">
+            <th class="p-2 sm:p-4 font-medium">Fecha</th>
+            <th class="p-2 sm:p-4 font-medium hidden sm:table-cell">Hora</th>
+            <th class="p-2 sm:p-4 font-medium text-right">Vistas Historia</th>
+            <th class="p-2 sm:p-4 font-medium text-right">❤️</th>
+            <th class="p-2 sm:p-4 font-medium text-right hidden sm:table-cell">💬</th>
+            <th class="p-2 sm:p-4 font-medium text-right hidden sm:table-cell">🔖</th>
+            <th class="p-2 sm:p-4 font-medium text-right hidden sm:table-cell">↗️</th>
+            <th class="p-2 sm:p-4 font-medium text-right">Total</th>
+            <th class="p-2 sm:p-4 font-medium text-right">Eng%</th>
+            <th class="p-2 sm:p-4 font-medium text-center">Accion</th>
+          </tr>`;
+          if (globalData.length === 0) {
+            tableBody.innerHTML = `<tr><td colspan="10" class="p-8 text-center text-slate-400">No hay registros aun.</td></tr>`;
+            historyCount.textContent = "";
+            return;
+          }
+          historyCount.textContent = globalData.length + " registros";
+          globalData.forEach((item) => {
+            const total = (item.likes || 0) + (item.comments || 0) + (item.saves || 0) + (item.shares || 0);
+            const d = new Date(item.date + "T00:00:00");
+            const fmtDate = d.toLocaleDateString("es-ES", { day: "2-digit", month: "short", year: "numeric" });
+            const views = item.storyViews || 0;
+            const eng = views > 0 ? ((total / views) * 100).toFixed(1) : "0.0";
+            const timeStr = item.time ? item.time : `<span class="text-slate-300">—</span>`;
+            const tr = document.createElement("tr");
+            tr.className = "hover:bg-slate-50 transition-colors";
+            tr.innerHTML = `
+              <td class="p-2 sm:p-4 font-medium text-slate-700 whitespace-nowrap text-xs sm:text-sm">${fmtDate}</td>
+              <td class="p-2 sm:p-4 text-slate-400 text-xs hidden sm:table-cell">${timeStr}</td>
+              <td class="p-2 sm:p-4 text-right text-slate-600 text-xs sm:text-sm">${views.toLocaleString()}</td>
+              <td class="p-2 sm:p-4 text-right text-pink-600 text-xs sm:text-sm">${(item.likes || 0).toLocaleString()}</td>
+              <td class="p-2 sm:p-4 text-right text-blue-600 text-xs sm:text-sm hidden sm:table-cell">${(item.comments || 0).toLocaleString()}</td>
+              <td class="p-2 sm:p-4 text-right text-amber-600 text-xs sm:text-sm hidden sm:table-cell">${(item.saves || 0).toLocaleString()}</td>
+              <td class="p-2 sm:p-4 text-right text-green-600 text-xs sm:text-sm hidden sm:table-cell">${(item.shares || 0).toLocaleString()}</td>
+              <td class="p-2 sm:p-4 text-right font-semibold text-club-green text-xs sm:text-sm">${total.toLocaleString()}</td>
+              <td class="p-2 sm:p-4 text-right text-xs text-slate-500">${eng}%</td>
+              <td class="p-2 sm:p-4 text-center">
+                <div class="flex items-center justify-center gap-1">
+                  <button onclick="editRecord('${item.id}')" class="text-slate-300 hover:text-blue-500 transition-colors p-1" title="Editar"><i data-lucide="pencil" class="w-3.5 h-3.5"></i></button>
+                  <button onclick="deleteRecord('${item.id}')" class="text-slate-300 hover:text-red-500 transition-colors p-1" title="Eliminar"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
+                </div>
+              </td>`;
+            tableBody.appendChild(tr);
+          });
+
+        } else if (filter === "weekly") {
+          thead.innerHTML = `<tr class="bg-slate-50 text-slate-500 text-xs uppercase tracking-wider">
+            <th class="p-2 sm:p-4 font-medium">Semana</th>
+            <th class="p-2 sm:p-4 font-medium text-right">Historias</th>
+            <th class="p-2 sm:p-4 font-medium text-right">Posts</th>
+            <th class="p-2 sm:p-4 font-medium text-right">Vistas Historia</th>
+            <th class="p-2 sm:p-4 font-medium text-right">❤️</th>
+            <th class="p-2 sm:p-4 font-medium text-right hidden sm:table-cell">💬</th>
+            <th class="p-2 sm:p-4 font-medium text-right hidden sm:table-cell">🔖</th>
+            <th class="p-2 sm:p-4 font-medium text-right">Total Int.</th>
+            <th class="p-2 sm:p-4 font-medium text-right">Eng%</th>
+          </tr>`;
+          const weeks = {};
+          globalData.forEach(r => {
+            const d = new Date(r.date + "T00:00:00"); const wk = getISOWeek(d); const yr = d.getFullYear();
+            const key = yr + "-S" + String(wk).padStart(2, "0");
+            if (!weeks[key]) weeks[key] = { label: "Sem " + wk + " / " + yr, views: 0, likes: 0, comments: 0, saves: 0, shares: 0, stories: 0, posts: 0 };
+            weeks[key].views += r.storyViews || 0; weeks[key].likes += r.likes || 0;
+            weeks[key].comments += r.comments || 0; weeks[key].saves += r.saves || 0;
+            weeks[key].shares += r.shares || 0; weeks[key].stories++;
+          });
+          globalPosts.forEach(p => {
+            const dateStr = (p.date || (p.publishedAt || "").split("T")[0] || "");
+            if (!dateStr) return;
+            const d = new Date(dateStr + "T00:00:00"); const wk = getISOWeek(d); const yr = d.getFullYear();
+            const key = yr + "-S" + String(wk).padStart(2, "0");
+            if (weeks[key]) weeks[key].posts++;
+            else { weeks[key] = { label: "Sem " + wk + " / " + yr, views: 0, likes: 0, comments: 0, saves: 0, shares: 0, stories: 0, posts: 1 }; }
+          });
+          const sorted = Object.entries(weeks).sort((a, b) => b[0].localeCompare(a[0]));
+          historyCount.textContent = sorted.length + " semanas";
+          if (!sorted.length) { tableBody.innerHTML = `<tr><td colspan="9" class="p-8 text-center text-slate-400">Sin datos.</td></tr>`; }
+          sorted.forEach(([, v]) => {
+            const total = v.likes + v.comments + v.saves + v.shares;
+            const eng = v.views > 0 ? ((total / v.views) * 100).toFixed(1) : "0.0";
+            const tr = document.createElement("tr"); tr.className = "hover:bg-slate-50";
+            tr.innerHTML = `
+              <td class="p-2 sm:p-4 font-semibold text-club-dark text-sm">${v.label}</td>
+              <td class="p-2 sm:p-4 text-right text-slate-500 text-sm">${v.stories}</td>
+              <td class="p-2 sm:p-4 text-right text-club-dark font-medium text-sm">${v.posts}</td>
+              <td class="p-2 sm:p-4 text-right text-slate-600 text-sm">${v.views.toLocaleString()}</td>
+              <td class="p-2 sm:p-4 text-right text-pink-600 text-sm">${v.likes.toLocaleString()}</td>
+              <td class="p-2 sm:p-4 text-right text-blue-600 text-sm hidden sm:table-cell">${v.comments.toLocaleString()}</td>
+              <td class="p-2 sm:p-4 text-right text-amber-600 text-sm hidden sm:table-cell">${v.saves.toLocaleString()}</td>
+              <td class="p-2 sm:p-4 text-right font-bold text-club-green text-sm">${total.toLocaleString()}</td>
+              <td class="p-2 sm:p-4 text-right text-xs text-slate-500">${eng}%</td>`;
+            tableBody.appendChild(tr);
+          });
+
+        } else { // monthly
+          thead.innerHTML = `<tr class="bg-slate-50 text-slate-500 text-xs uppercase tracking-wider">
+            <th class="p-2 sm:p-4 font-medium">Mes</th>
+            <th class="p-2 sm:p-4 font-medium text-right">Historias</th>
+            <th class="p-2 sm:p-4 font-medium text-right">Posts</th>
+            <th class="p-2 sm:p-4 font-medium text-right">Vistas Historia</th>
+            <th class="p-2 sm:p-4 font-medium text-right">❤️</th>
+            <th class="p-2 sm:p-4 font-medium text-right hidden sm:table-cell">💬</th>
+            <th class="p-2 sm:p-4 font-medium text-right hidden sm:table-cell">🔖</th>
+            <th class="p-2 sm:p-4 font-medium text-right">Total Int.</th>
+            <th class="p-2 sm:p-4 font-medium text-right">Eng%</th>
+          </tr>`;
+          const months = {};
+          globalData.forEach(r => {
+            const key = (r.date || "2000-01").slice(0, 7);
+            if (!months[key]) months[key] = { views: 0, likes: 0, comments: 0, saves: 0, shares: 0, stories: 0, posts: 0 };
+            months[key].views += r.storyViews || 0; months[key].likes += r.likes || 0;
+            months[key].comments += r.comments || 0; months[key].saves += r.saves || 0;
+            months[key].shares += r.shares || 0; months[key].stories++;
+          });
+          globalPosts.forEach(p => {
+            const key = ((p.date || (p.publishedAt || "").split("T")[0]) || "2000-01").slice(0, 7);
+            if (months[key]) months[key].posts++;
+            else { months[key] = { views: 0, likes: 0, comments: 0, saves: 0, shares: 0, stories: 0, posts: 1 }; }
+          });
+          const sorted = Object.entries(months).sort((a, b) => b[0].localeCompare(a[0]));
+          historyCount.textContent = sorted.length + " meses";
+          if (!sorted.length) { tableBody.innerHTML = `<tr><td colspan="9" class="p-8 text-center text-slate-400">Sin datos.</td></tr>`; }
+          sorted.forEach(([key, v]) => {
+            const [yr, mo] = key.split("-"); const label = MESES_ES[parseInt(mo) - 1] + " " + yr;
+            const total = v.likes + v.comments + v.saves + v.shares;
+            const eng = v.views > 0 ? ((total / v.views) * 100).toFixed(1) : "0.0";
+            const tr = document.createElement("tr"); tr.className = "hover:bg-slate-50";
+            tr.innerHTML = `
+              <td class="p-2 sm:p-4 font-semibold text-club-dark text-sm capitalize">${label}</td>
+              <td class="p-2 sm:p-4 text-right text-slate-500 text-sm">${v.stories}</td>
+              <td class="p-2 sm:p-4 text-right text-club-dark font-medium text-sm">${v.posts}</td>
+              <td class="p-2 sm:p-4 text-right text-slate-600 text-sm">${v.views.toLocaleString()}</td>
+              <td class="p-2 sm:p-4 text-right text-pink-600 text-sm">${v.likes.toLocaleString()}</td>
+              <td class="p-2 sm:p-4 text-right text-blue-600 text-sm hidden sm:table-cell">${v.comments.toLocaleString()}</td>
+              <td class="p-2 sm:p-4 text-right text-amber-600 text-sm hidden sm:table-cell">${v.saves.toLocaleString()}</td>
+              <td class="p-2 sm:p-4 text-right font-bold text-club-green text-sm">${total.toLocaleString()}</td>
+              <td class="p-2 sm:p-4 text-right text-xs text-slate-500">${eng}%</td>`;
+            tableBody.appendChild(tr);
+          });
         }
-        historyCount.textContent = globalData.length + " registros";
-        const DAYS = ["Dom", "Lun", "Mar", "Mie", "Jue", "Vie", "Sab"];
-        globalData.forEach((item) => {
-          const total = (item.likes || 0) + (item.comments || 0) + (item.saves || 0) + (item.shares || 0);
-          const d = new Date(item.date + "T00:00:00");
-          const fmtDate = d.toLocaleDateString("es-ES", { day: "2-digit", month: "short", year: "numeric" });
-          const dayName = DAYS[d.getDay()];
-          const views = item.storyViews || 0;
-          const eng = views > 0 ? ((total / views) * 100).toFixed(1) : "0.0";
-          const tr = document.createElement("tr");
-          tr.className = "hover:bg-slate-50 transition-colors";
-          tr.innerHTML = `
-            <td class="p-2 sm:p-4 font-medium text-slate-700 whitespace-nowrap text-xs sm:text-sm">${fmtDate}</td>
-            <td class="p-2 sm:p-4 text-slate-500 text-xs hidden sm:table-cell">${dayName}</td>
-            <td class="p-2 sm:p-4 text-right text-slate-600 text-xs sm:text-sm">${views.toLocaleString()}</td>
-            <td class="p-2 sm:p-4 text-right text-pink-600 text-xs sm:text-sm">${(item.likes || 0).toLocaleString()}</td>
-            <td class="p-2 sm:p-4 text-right text-blue-600 text-xs sm:text-sm hidden sm:table-cell">${(item.comments || 0).toLocaleString()}</td>
-            <td class="p-2 sm:p-4 text-right text-amber-600 text-xs sm:text-sm hidden sm:table-cell">${(item.saves || 0).toLocaleString()}</td>
-            <td class="p-2 sm:p-4 text-right text-green-600 text-xs sm:text-sm hidden sm:table-cell">${(item.shares || 0).toLocaleString()}</td>
-            <td class="p-2 sm:p-4 text-right font-semibold text-club-green text-xs sm:text-sm">${total.toLocaleString()}</td>
-            <td class="p-2 sm:p-4 text-right text-xs text-slate-500">${eng}%</td>
-            <td class="p-2 sm:p-4 text-center">
-              <div class="flex items-center justify-center gap-1">
-                <button onclick="editRecord('${item.id}')" class="text-slate-300 hover:text-blue-500 transition-colors p-1" title="Editar">
-                  <i data-lucide="pencil" class="w-3.5 h-3.5"></i>
-                </button>
-                <button onclick="deleteRecord('${item.id}')" class="text-slate-300 hover:text-red-500 transition-colors p-1" title="Eliminar">
-                  <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
-                </button>
-              </div>
-            </td>`;
-          tableBody.appendChild(tr);
-        });
+        lucide.createIcons();
       }
 
       function renderMainChart() {
