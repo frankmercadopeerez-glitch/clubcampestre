@@ -2770,27 +2770,52 @@
               weeks[k].saves +
               weeks[k].shares,
           );
+          const METRIC_DEFS_W = {
+            interacciones: { label: "Interacciones", type: "bar",  color: "rgba(20,83,51,0.75)", fn: (v) => v.likes + v.comments + v.saves + v.shares },
+            vistas:        { label: "Vistas Historia", type: "line", color: "#145333", fn: (v) => v.views },
+            likes:         { label: "Likes",           type: "line", color: "#e11d48", fn: (v) => v.likes },
+            comentarios:   { label: "Comentarios",     type: "line", color: "#2563eb", fn: (v) => v.comments },
+            compartidos:   { label: "Compartidos",     type: "line", color: "#0891b2", fn: (v) => v.shares },
+            guardados:     { label: "Guardados",       type: "line", color: "#d97706", fn: (v) => v.saves },
+          };
+          const activeMetrics = [...document.querySelectorAll(".monthly-metric-btn.active")]
+            .map(b => b.dataset.metric).filter(m => METRIC_DEFS_W[m]);
+          const hasBar  = activeMetrics.some(m => METRIC_DEFS_W[m].type === "bar");
+          const hasLine = activeMetrics.some(m => METRIC_DEFS_W[m].type === "line");
+          const wDatasets = activeMetrics.map(m => {
+            const def = METRIC_DEFS_W[m];
+            const isBar = def.type === "bar";
+            return {
+              label: def.label,
+              data: wKeys.map(k => def.fn(weeks[k])),
+              type: def.type,
+              backgroundColor: isBar ? def.color : "transparent",
+              borderColor: isBar ? undefined : def.color,
+              borderWidth: isBar ? 0 : 2,
+              borderRadius: isBar ? 6 : undefined,
+              pointRadius: isBar ? undefined : 3,
+              pointBackgroundColor: isBar ? undefined : def.color,
+              tension: 0.3,
+              yAxisID: hasBar && hasLine ? (isBar ? "y" : "y1") : "y",
+              order: isBar ? 2 : 1,
+            };
+          });
+          const wScales = {
+            x: { grid: { display: false } },
+            y: { grid: { color: "#f1f5f9" } },
+          };
+          if (hasBar && hasLine) {
+            wScales.y1 = { type: "linear", position: "right", grid: { display: false } };
+          }
           monthlyChartInst = new Chart(ctx, {
             type: "bar",
-            data: {
-              labels: wKeys,
-              datasets: [
-                {
-                  label: "Interacciones",
-                  data: wInts,
-                  backgroundColor: "rgba(20,83,51,0.75)",
-                  borderRadius: 6,
-                },
-              ],
-            },
+            data: { labels: wKeys, datasets: wDatasets.length ? wDatasets : [{ label: "Sin datos", data: wKeys.map(() => 0) }] },
             options: {
               responsive: true,
               maintainAspectRatio: false,
-              plugins: { legend: { display: false }, tooltip: tooltipStyle() },
-              scales: {
-                x: { grid: { display: false } },
-                y: { grid: { color: "#f1f5f9" } },
-              },
+              interaction: { mode: "index", intersect: false },
+              plugins: { legend: { position: "bottom", labels: { usePointStyle: true, boxWidth: 6 } }, tooltip: tooltipStyle() },
+              scales: wScales,
             },
           });
           document.getElementById("monthly-record-count").textContent =
@@ -3012,8 +3037,14 @@
           title: p.title || "(Sin título)",
           sortKey: p.publishedAt || p.date || "",
           dateStr: (p.publishedAt || p.date || "").split("T")[0],
-          timeStr: p.publishedAt ? (p.publishedAt.split("T")[1] || "").slice(0, 5) : "",
-          total: (p.likes || 0) + (p.comments || 0) + (p.saves || 0) + (p.compartidos || 0),
+          timeStr: p.publishedAt
+            ? (p.publishedAt.split("T")[1] || "").slice(0, 5)
+            : "",
+          total:
+            (p.likes || 0) +
+            (p.comments || 0) +
+            (p.saves || 0) +
+            (p.compartidos || 0),
           reach: p.reach || p.vistas || 0,
         }));
 
@@ -3023,7 +3054,7 @@
           return {
             _src: "story",
             type: "Story",
-            title: r.storyName || ("Historia · " + r.date),
+            title: r.storyName || "Historia · " + r.date,
             sortKey: dt,
             dateStr: r.date,
             timeStr: r.time || "",
@@ -3043,8 +3074,12 @@
         el.innerHTML = recent
           .map((p) => {
             const d = new Date(p.dateStr + "T00:00:00");
-            const fmtDate = d.toLocaleDateString("es-ES", { day: "2-digit", month: "short" });
-            const engPost = p.reach > 0 ? ((p.total / p.reach) * 100).toFixed(1) : null;
+            const fmtDate = d.toLocaleDateString("es-ES", {
+              day: "2-digit",
+              month: "short",
+            });
+            const engPost =
+              p.reach > 0 ? ((p.total / p.reach) * 100).toFixed(1) : null;
             return `<div class="flex items-center justify-between py-2 border-b border-slate-100 last:border-0 gap-2">
             <div class="flex items-center gap-2 min-w-0">
               <span class="px-1.5 py-0.5 rounded text-[10px] font-semibold ${BADGE[p.type] || "bg-slate-100 text-slate-600"} shrink-0">${p.type}</span>
