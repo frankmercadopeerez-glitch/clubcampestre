@@ -610,7 +610,9 @@
               </div>
               <form id="stats-form" class="space-y-4">
                 <div>
-                  <label class="block text-sm font-medium text-slate-700 mb-1">Nombre de la Historia</label>
+                  <label class="block text-sm font-medium text-slate-700 mb-1"
+                    >Nombre de la Historia</label
+                  >
                   <input
                     type="text"
                     id="input-story-name"
@@ -676,7 +678,9 @@
                   </p>
                   <div class="grid grid-cols-3 gap-2">
                     <div>
-                      <label class="block text-xs text-slate-600 mb-1">Likes</label>
+                      <label class="block text-xs text-slate-600 mb-1"
+                        >Likes</label
+                      >
                       <input
                         type="number"
                         id="input-likes"
@@ -686,7 +690,9 @@
                       />
                     </div>
                     <div>
-                      <label class="block text-xs text-slate-600 mb-1">Coment.</label>
+                      <label class="block text-xs text-slate-600 mb-1"
+                        >Coment.</label
+                      >
                       <input
                         type="number"
                         id="input-comments"
@@ -696,7 +702,9 @@
                       />
                     </div>
                     <div>
-                      <label class="block text-xs text-slate-600 mb-1">Compart.</label>
+                      <label class="block text-xs text-slate-600 mb-1"
+                        >Compart.</label
+                      >
                       <input
                         type="number"
                         id="input-shares"
@@ -1182,6 +1190,18 @@
                 al perfil para medir el crecimiento.
               </p>
               <form id="weekly-form" class="space-y-4">
+                <div
+                  id="edit-weekly-banner"
+                  class="hidden bg-amber-50 border border-amber-200 rounded-lg px-3 py-2 text-xs text-amber-700 flex items-center gap-2"
+                >
+                  <i data-lucide="pencil" class="w-3.5 h-3.5 flex-shrink-0"></i>
+                  <span>Editando registro existente</span>
+                  <button
+                    type="button"
+                    onclick="cancelEditWeekly()"
+                    class="ml-auto text-amber-500 hover:text-amber-700 font-semibold"
+                  >Cancelar</button>
+                </div>
                 <div>
                   <label class="block text-sm font-medium text-slate-700 mb-1"
                     >Fecha de registro</label
@@ -1224,8 +1244,7 @@
                   disabled
                   class="w-full bg-club-gold hover:bg-club-goldhover text-club-dark font-semibold py-2.5 px-4 rounded-lg transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  <i data-lucide="save" class="w-4 h-4"></i> Guardar registro
-                  semanal
+                  Guardar registro semanal
                 </button>
               </form>
             </div>
@@ -1916,6 +1935,7 @@
         (a, b) => new Date(b.date) - new Date(a.date),
       );
       let editingDailyId = null;
+      let editingWeeklyId = null;
       const MESES_ES = [
         "Enero",
         "Febrero",
@@ -2108,7 +2128,9 @@
         const record = {
           date: inputDate.value,
           time: inputTime.value || "",
-          storyName: (document.getElementById("input-story-name")?.value || "").trim(),
+          storyName: (
+            document.getElementById("input-story-name")?.value || ""
+          ).trim(),
           storyViews:
             parseInt(document.getElementById("input-story-views").value) || 0,
           likes: parseInt(document.getElementById("input-likes").value) || 0,
@@ -2396,6 +2418,28 @@
         }
       };
 
+      window.editWeeklyRecord = (id) => {
+        const item = globalWeekly.find((x) => x.id === id);
+        if (!item) return;
+        editingWeeklyId = id;
+        document.getElementById("weekly-date").value = item.date;
+        document.getElementById("weekly-followers").value = item.followers || 0;
+        document.getElementById("weekly-visits").value = item.visits || 0;
+        document.getElementById("edit-weekly-banner").classList.remove("hidden");
+        btnWeeklySubmit.textContent = "Actualizar registro";
+        btnWeeklySubmit.disabled = false;
+        document.getElementById("weekly-form").scrollIntoView({ behavior: "smooth", block: "center" });
+      };
+
+      window.cancelEditWeekly = () => {
+        editingWeeklyId = null;
+        weeklyForm.reset();
+        document.getElementById("weekly-date").valueAsDate = new Date();
+        document.getElementById("edit-weekly-banner").classList.add("hidden");
+        btnWeeklySubmit.textContent = "Guardar registro semanal";
+        btnWeeklySubmit.disabled = false;
+      };
+
       window.deleteWeeklyRecord = async (id) => {
         if (!confirm("Eliminar este registro semanal?")) return;
         if (!DEMO_MODE && currentUser) {
@@ -2418,8 +2462,38 @@
           followers:
             parseInt(document.getElementById("weekly-followers").value) || 0,
           visits: parseInt(document.getElementById("weekly-visits").value) || 0,
-          createdAt: new Date().toISOString(),
         };
+        if (editingWeeklyId) {
+          // UPDATE existing
+          if (!DEMO_MODE && currentUser) {
+            const orig = btnWeeklySubmit.textContent;
+            btnWeeklySubmit.textContent = "Guardando...";
+            btnWeeklySubmit.disabled = true;
+            try {
+              await setDoc(
+                doc(db, "users", currentUser.uid, "instagram_weekly", editingWeeklyId),
+                { ...weeklyRecord, updatedAt: new Date().toISOString() },
+                { merge: true }
+              );
+              showToast("Registro semanal actualizado");
+            } catch (err) {
+              showToast("Error: " + err.message, "error");
+            } finally {
+              btnWeeklySubmit.textContent = orig;
+              btnWeeklySubmit.disabled = false;
+            }
+          } else {
+            const idx = globalWeekly.findIndex((x) => x.id === editingWeeklyId);
+            if (idx !== -1) globalWeekly[idx] = { ...globalWeekly[idx], ...weeklyRecord };
+            globalWeekly.sort((a, b) => new Date(b.date) - new Date(a.date));
+            renderWeeklyHistory();
+            calculateKPIs();
+            showToast("Registro actualizado (Demo)");
+          }
+          cancelEditWeekly();
+          return;
+        }
+        weeklyRecord.createdAt = new Date().toISOString();
         if (!DEMO_MODE && currentUser) {
           const orig = btnWeeklySubmit.innerHTML;
           btnWeeklySubmit.innerHTML = `<div class="loader w-4 h-4 border-2 border-club-dark border-t-transparent mr-2"></div>Guardando...`;
@@ -2491,9 +2565,14 @@
             <td class="p-4 text-right text-slate-600">${(item.visits || 0).toLocaleString()}</td>
             <td class="p-4 text-right">${deltaHtml(deltaV)}</td>
             <td class="p-4 text-center">
-              <button onclick="deleteWeeklyRecord('${item.id}')" class="text-slate-300 hover:text-red-500 transition-colors p-1" title="Eliminar">
-                <i data-lucide="trash-2" class="w-4 h-4"></i>
-              </button>
+              <div class="flex items-center justify-center gap-1">
+                <button onclick="editWeeklyRecord('${item.id}')" class="text-slate-300 hover:text-blue-500 transition-colors p-1" title="Editar">
+                  <i data-lucide="pencil" class="w-4 h-4"></i>
+                </button>
+                <button onclick="deleteWeeklyRecord('${item.id}')" class="text-slate-300 hover:text-red-500 transition-colors p-1" title="Eliminar">
+                  <i data-lucide="trash-2" class="w-4 h-4"></i>
+                </button>
+              </div>
             </td>
           </tr>`;
           })
