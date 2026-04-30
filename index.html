@@ -1331,12 +1331,19 @@
 
         <!-- Grafico de barras del mes -->
         <div class="glass-card p-4 md:p-6">
-          <h2
-            class="text-base sm:text-lg font-semibold text-club-dark mb-4"
-            id="monthly-chart-title"
-          >
-            Interacciones del mes
-          </h2>
+          <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+            <h2 class="text-base sm:text-lg font-semibold text-club-dark" id="monthly-chart-title">
+              Interacciones del mes
+            </h2>
+            <div id="monthly-metric-toggles" class="flex flex-wrap gap-2">
+              <button data-metric="interacciones" class="monthly-metric-btn active text-xs px-3 py-1 rounded-full border font-medium transition-colors" style="background:#C5A059;color:#fff;border-color:#C5A059">Interacciones</button>
+              <button data-metric="vistas" class="monthly-metric-btn active text-xs px-3 py-1 rounded-full border font-medium transition-colors" style="background:#145333;color:#fff;border-color:#145333">Vistas Historia</button>
+              <button data-metric="likes" class="monthly-metric-btn text-xs px-3 py-1 rounded-full border font-medium transition-colors bg-white text-slate-500 border-slate-300">Likes</button>
+              <button data-metric="comentarios" class="monthly-metric-btn text-xs px-3 py-1 rounded-full border font-medium transition-colors bg-white text-slate-500 border-slate-300">Comentarios</button>
+              <button data-metric="compartidos" class="monthly-metric-btn text-xs px-3 py-1 rounded-full border font-medium transition-colors bg-white text-slate-500 border-slate-300">Compartidos</button>
+              <button data-metric="guardados" class="monthly-metric-btn text-xs px-3 py-1 rounded-full border font-medium transition-colors bg-white text-slate-500 border-slate-300">Guardados</button>
+            </div>
+          </div>
           <div class="w-full h-72 relative">
             <canvas id="monthlyChart"></canvas>
           </div>
@@ -2773,81 +2780,88 @@
             MESES_ES[monthlyMonth] +
             " " +
             monthlyYear;
-          document.getElementById("monthly-table-title").textContent =
-            "Detalle diario";
+          document.getElementById("monthly-table-title").textContent = "Detalle diario";
           const DAYS = ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"];
           const labels = monthData.map((r) => {
             const d = new Date(r.date + "T00:00:00");
             return d.getDate() + " " + DAYS[d.getDay()];
           });
-          const ints = monthData.map(
-            (r) =>
-              (r.likes || 0) +
-              (r.comments || 0) +
-              (r.saves || 0) +
-              (r.shares || 0),
-          );
-          const views = monthData.map((r) => r.storyViews || 0);
+
+          // Metric definitions
+          const METRIC_DEFS = {
+            interacciones: { label: "Interacciones", type: "bar",  color: "rgba(197,160,89,0.85)", axis: "y",  fn: r => (r.likes||0)+(r.comments||0)+(r.saves||0)+(r.shares||0) },
+            vistas:        { label: "Vistas Historia", type: "line", color: "#145333",              axis: "y1", fn: r => r.storyViews||0 },
+            likes:         { label: "Likes",           type: "line", color: "#e11d48",              axis: "y1", fn: r => r.likes||0 },
+            comentarios:   { label: "Comentarios",     type: "line", color: "#2563eb",              axis: "y1", fn: r => r.comments||0 },
+            compartidos:   { label: "Compartidos",     type: "line", color: "#0891b2",              axis: "y1", fn: r => r.shares||0 },
+            guardados:     { label: "Guardados",       type: "line", color: "#d97706",              axis: "y1", fn: r => r.saves||0 },
+          };
+
+          // Read active toggles
+          const activeMetrics = [...document.querySelectorAll(".monthly-metric-btn.active")]
+            .map(b => b.dataset.metric)
+            .filter(m => METRIC_DEFS[m]);
+
+          const hasBar  = activeMetrics.some(m => METRIC_DEFS[m].type === "bar");
+          const hasLine = activeMetrics.some(m => METRIC_DEFS[m].type === "line");
+
+          const datasets = activeMetrics.map((m, i) => {
+            const def = METRIC_DEFS[m];
+            const isBar = def.type === "bar";
+            return {
+              label: def.label,
+              data: monthData.map(def.fn),
+              type: def.type,
+              backgroundColor: isBar ? def.color : "transparent",
+              borderColor: isBar ? undefined : def.color,
+              borderWidth: isBar ? 0 : 2,
+              borderRadius: isBar ? 5 : undefined,
+              pointRadius: isBar ? undefined : 3,
+              pointBackgroundColor: isBar ? undefined : def.color,
+              tension: 0.3,
+              yAxisID: hasBar && hasLine ? def.axis : "y",
+              order: isBar ? 2 : 1,
+            };
+          });
+
+          const scalesConfig = {
+            x: { grid: { display: false } },
+            y: { type: "linear", position: "left", grid: { color: "#f1f5f9" } },
+          };
+          if (hasBar && hasLine) {
+            scalesConfig.y.title = { display: true, text: "Interacciones", font: { size: 11 } };
+            scalesConfig.y1 = { type: "linear", position: "right", grid: { display: false }, title: { display: true, text: "Métricas", font: { size: 11 } } };
+          }
+
           monthlyChartInst = new Chart(ctx, {
             type: "bar",
-            data: {
-              labels,
-              datasets: [
-                {
-                  label: "Interacciones",
-                  data: ints,
-                  backgroundColor: "rgba(197,160,89,0.8)",
-                  borderRadius: 5,
-                  yAxisID: "y",
-                  order: 2,
-                },
-                {
-                  label: "Vistas",
-                  data: views,
-                  type: "line",
-                  borderColor: "#145333",
-                  backgroundColor: "transparent",
-                  borderWidth: 2.5,
-                  pointRadius: 3,
-                  pointBackgroundColor: "#145333",
-                  tension: 0.3,
-                  yAxisID: "y1",
-                  order: 1,
-                },
-              ],
-            },
+            data: { labels, datasets },
             options: {
               responsive: true,
               maintainAspectRatio: false,
               interaction: { mode: "index", intersect: false },
               plugins: {
-                legend: {
-                  position: "bottom",
-                  labels: { usePointStyle: true, boxWidth: 6 },
-                },
+                legend: { position: "bottom", labels: { usePointStyle: true, boxWidth: 6 } },
                 tooltip: tooltipStyle(),
               },
-              scales: {
-                x: { grid: { display: false } },
-                y: {
-                  type: "linear",
-                  position: "left",
-                  grid: { color: "#f1f5f9" },
-                  title: {
-                    display: true,
-                    text: "Interacciones",
-                    font: { size: 11 },
-                  },
-                },
-                y1: {
-                  type: "linear",
-                  position: "right",
-                  grid: { display: false },
-                  title: { display: true, text: "Vistas", font: { size: 11 } },
-                },
-              },
+              scales: scalesConfig,
             },
           });
+
+          // Wire toggle buttons
+          document.querySelectorAll(".monthly-metric-btn").forEach(btn => {
+            btn.onclick = () => {
+              const metric = btn.dataset.metric;
+              const def = METRIC_DEFS[metric];
+              btn.classList.toggle("active");
+              const on = btn.classList.contains("active");
+              btn.style.background = on ? def.color : "white";
+              btn.style.color = on ? "#fff" : "#64748b";
+              btn.style.borderColor = on ? def.color : "#cbd5e1";
+              renderMonthly();
+            };
+          });
+
           document.getElementById("monthly-record-count").textContent =
             monthData.length + " registros";
           document.getElementById("monthly-table-head").innerHTML =
@@ -3478,13 +3492,21 @@
         const labels = Object.keys(types);
         const TYPE_COLORS = {
           Carrusel: "#C5A059",
-          Foto:     "#0D3341",
-          Reel:     "#E1D3B8",
-          Story:    "#145333",
-          Video:    "#0D3341",
+          Foto: "#0D3341",
+          Reel: "#E1D3B8",
+          Story: "#145333",
+          Video: "#0D3341",
         };
-        const fallbackColors = ["#C5A059","#0D3341","#E1D3B8","#145333","#6B7280"];
-        const bgColors = labels.map((t, i) => TYPE_COLORS[t] || fallbackColors[i] || "#9CA3AF");
+        const fallbackColors = [
+          "#C5A059",
+          "#0D3341",
+          "#E1D3B8",
+          "#145333",
+          "#6B7280",
+        ];
+        const bgColors = labels.map(
+          (t, i) => TYPE_COLORS[t] || fallbackColors[i] || "#9CA3AF",
+        );
         contentTypeChartInst = new Chart(ctx, {
           type: "doughnut",
           data: {
