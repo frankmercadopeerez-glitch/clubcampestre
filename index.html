@@ -1332,16 +1332,51 @@
         <!-- Grafico de barras del mes -->
         <div class="glass-card p-4 md:p-6">
           <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
-            <h2 class="text-base sm:text-lg font-semibold text-club-dark" id="monthly-chart-title">
+            <h2
+              class="text-base sm:text-lg font-semibold text-club-dark"
+              id="monthly-chart-title"
+            >
               Interacciones del mes
             </h2>
             <div id="monthly-metric-toggles" class="flex flex-wrap gap-2">
-              <button data-metric="interacciones" class="monthly-metric-btn active text-xs px-3 py-1 rounded-full border font-medium transition-colors" style="background:#C5A059;color:#fff;border-color:#C5A059">Interacciones</button>
-              <button data-metric="vistas" class="monthly-metric-btn active text-xs px-3 py-1 rounded-full border font-medium transition-colors" style="background:#145333;color:#fff;border-color:#145333">Vistas Historia</button>
-              <button data-metric="likes" class="monthly-metric-btn text-xs px-3 py-1 rounded-full border font-medium transition-colors bg-white text-slate-500 border-slate-300">Likes</button>
-              <button data-metric="comentarios" class="monthly-metric-btn text-xs px-3 py-1 rounded-full border font-medium transition-colors bg-white text-slate-500 border-slate-300">Comentarios</button>
-              <button data-metric="compartidos" class="monthly-metric-btn text-xs px-3 py-1 rounded-full border font-medium transition-colors bg-white text-slate-500 border-slate-300">Compartidos</button>
-              <button data-metric="guardados" class="monthly-metric-btn text-xs px-3 py-1 rounded-full border font-medium transition-colors bg-white text-slate-500 border-slate-300">Guardados</button>
+              <button
+                data-metric="interacciones"
+                class="monthly-metric-btn active text-xs px-3 py-1 rounded-full border font-medium transition-colors"
+                style="background: #c5a059; color: #fff; border-color: #c5a059"
+              >
+                Interacciones
+              </button>
+              <button
+                data-metric="vistas"
+                class="monthly-metric-btn active text-xs px-3 py-1 rounded-full border font-medium transition-colors"
+                style="background: #145333; color: #fff; border-color: #145333"
+              >
+                Vistas Historia
+              </button>
+              <button
+                data-metric="likes"
+                class="monthly-metric-btn text-xs px-3 py-1 rounded-full border font-medium transition-colors bg-white text-slate-500 border-slate-300"
+              >
+                Likes
+              </button>
+              <button
+                data-metric="comentarios"
+                class="monthly-metric-btn text-xs px-3 py-1 rounded-full border font-medium transition-colors bg-white text-slate-500 border-slate-300"
+              >
+                Comentarios
+              </button>
+              <button
+                data-metric="compartidos"
+                class="monthly-metric-btn text-xs px-3 py-1 rounded-full border font-medium transition-colors bg-white text-slate-500 border-slate-300"
+              >
+                Compartidos
+              </button>
+              <button
+                data-metric="guardados"
+                class="monthly-metric-btn text-xs px-3 py-1 rounded-full border font-medium transition-colors bg-white text-slate-500 border-slate-300"
+              >
+                Guardados
+              </button>
             </div>
           </div>
           <div class="w-full h-72 relative">
@@ -2019,6 +2054,7 @@
               (a, b) => new Date(b.date) - new Date(a.date),
             );
             updateDashboard();
+            renderRecentPostsOverview();
           },
           (err) => console.error(err),
         );
@@ -2149,8 +2185,7 @@
           if (
             !DEMO_MODE &&
             currentUser &&
-            !editingDailyId.startsWith("demo_") &&
-            !editingDailyId.startsWith("d")
+            !editingDailyId.startsWith("demo_")
           ) {
             try {
               btnSubmit.disabled = true;
@@ -2780,7 +2815,8 @@
             MESES_ES[monthlyMonth] +
             " " +
             monthlyYear;
-          document.getElementById("monthly-table-title").textContent = "Detalle diario";
+          document.getElementById("monthly-table-title").textContent =
+            "Detalle diario";
           const DAYS = ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"];
           const labels = monthData.map((r) => {
             const d = new Date(r.date + "T00:00:00");
@@ -2789,21 +2825,67 @@
 
           // Metric definitions
           const METRIC_DEFS = {
-            interacciones: { label: "Interacciones", type: "bar",  color: "rgba(197,160,89,0.85)", axis: "y",  fn: r => (r.likes||0)+(r.comments||0)+(r.saves||0)+(r.shares||0) },
-            vistas:        { label: "Vistas Historia", type: "line", color: "#145333",              axis: "y1", fn: r => r.storyViews||0 },
-            likes:         { label: "Likes",           type: "line", color: "#e11d48",              axis: "y1", fn: r => r.likes||0 },
-            comentarios:   { label: "Comentarios",     type: "line", color: "#2563eb",              axis: "y1", fn: r => r.comments||0 },
-            compartidos:   { label: "Compartidos",     type: "line", color: "#0891b2",              axis: "y1", fn: r => r.shares||0 },
-            guardados:     { label: "Guardados",       type: "line", color: "#d97706",              axis: "y1", fn: r => r.saves||0 },
+            interacciones: {
+              label: "Interacciones",
+              type: "bar",
+              color: "rgba(197,160,89,0.85)",
+              axis: "y",
+              fn: (r) =>
+                (r.likes || 0) +
+                (r.comments || 0) +
+                (r.saves || 0) +
+                (r.shares || 0),
+            },
+            vistas: {
+              label: "Vistas Historia",
+              type: "line",
+              color: "#145333",
+              axis: "y1",
+              fn: (r) => r.storyViews || 0,
+            },
+            likes: {
+              label: "Likes",
+              type: "line",
+              color: "#e11d48",
+              axis: "y1",
+              fn: (r) => r.likes || 0,
+            },
+            comentarios: {
+              label: "Comentarios",
+              type: "line",
+              color: "#2563eb",
+              axis: "y1",
+              fn: (r) => r.comments || 0,
+            },
+            compartidos: {
+              label: "Compartidos",
+              type: "line",
+              color: "#0891b2",
+              axis: "y1",
+              fn: (r) => r.shares || 0,
+            },
+            guardados: {
+              label: "Guardados",
+              type: "line",
+              color: "#d97706",
+              axis: "y1",
+              fn: (r) => r.saves || 0,
+            },
           };
 
           // Read active toggles
-          const activeMetrics = [...document.querySelectorAll(".monthly-metric-btn.active")]
-            .map(b => b.dataset.metric)
-            .filter(m => METRIC_DEFS[m]);
+          const activeMetrics = [
+            ...document.querySelectorAll(".monthly-metric-btn.active"),
+          ]
+            .map((b) => b.dataset.metric)
+            .filter((m) => METRIC_DEFS[m]);
 
-          const hasBar  = activeMetrics.some(m => METRIC_DEFS[m].type === "bar");
-          const hasLine = activeMetrics.some(m => METRIC_DEFS[m].type === "line");
+          const hasBar = activeMetrics.some(
+            (m) => METRIC_DEFS[m].type === "bar",
+          );
+          const hasLine = activeMetrics.some(
+            (m) => METRIC_DEFS[m].type === "line",
+          );
 
           const datasets = activeMetrics.map((m, i) => {
             const def = METRIC_DEFS[m];
@@ -2829,8 +2911,17 @@
             y: { type: "linear", position: "left", grid: { color: "#f1f5f9" } },
           };
           if (hasBar && hasLine) {
-            scalesConfig.y.title = { display: true, text: "Interacciones", font: { size: 11 } };
-            scalesConfig.y1 = { type: "linear", position: "right", grid: { display: false }, title: { display: true, text: "Métricas", font: { size: 11 } } };
+            scalesConfig.y.title = {
+              display: true,
+              text: "Interacciones",
+              font: { size: 11 },
+            };
+            scalesConfig.y1 = {
+              type: "linear",
+              position: "right",
+              grid: { display: false },
+              title: { display: true, text: "Métricas", font: { size: 11 } },
+            };
           }
 
           monthlyChartInst = new Chart(ctx, {
@@ -2841,7 +2932,10 @@
               maintainAspectRatio: false,
               interaction: { mode: "index", intersect: false },
               plugins: {
-                legend: { position: "bottom", labels: { usePointStyle: true, boxWidth: 6 } },
+                legend: {
+                  position: "bottom",
+                  labels: { usePointStyle: true, boxWidth: 6 },
+                },
                 tooltip: tooltipStyle(),
               },
               scales: scalesConfig,
@@ -2849,7 +2943,7 @@
           });
 
           // Wire toggle buttons
-          document.querySelectorAll(".monthly-metric-btn").forEach(btn => {
+          document.querySelectorAll(".monthly-metric-btn").forEach((btn) => {
             btn.onclick = () => {
               const metric = btn.dataset.metric;
               const def = METRIC_DEFS[metric];
@@ -2910,47 +3004,55 @@
           Story: "badge-story",
           Video: "badge-video",
         };
-        const recent = [...globalPosts]
-          .sort(
-            (a, b) =>
-              new Date(b.publishedAt || b.date) -
-              new Date(a.publishedAt || a.date),
-          )
+
+        // Build unified list: posts + stories from globalData
+        const postItems = globalPosts.map((p) => ({
+          _src: "post",
+          type: p.type,
+          title: p.title || "(Sin título)",
+          sortKey: p.publishedAt || p.date || "",
+          dateStr: (p.publishedAt || p.date || "").split("T")[0],
+          timeStr: p.publishedAt ? (p.publishedAt.split("T")[1] || "").slice(0, 5) : "",
+          total: (p.likes || 0) + (p.comments || 0) + (p.saves || 0) + (p.compartidos || 0),
+          reach: p.reach || p.vistas || 0,
+        }));
+
+        const storyItems = globalData.map((r) => {
+          const total = (r.likes || 0) + (r.comments || 0) + (r.shares || 0);
+          const dt = r.date + (r.time ? "T" + r.time : "T00:00");
+          return {
+            _src: "story",
+            type: "Story",
+            title: r.storyName || ("Historia · " + r.date),
+            sortKey: dt,
+            dateStr: r.date,
+            timeStr: r.time || "",
+            total,
+            reach: r.storyViews || 0,
+          };
+        });
+
+        const recent = [...postItems, ...storyItems]
+          .sort((a, b) => new Date(b.sortKey) - new Date(a.sortKey))
           .slice(0, 5);
+
         if (!recent.length) {
           el.innerHTML = `<p class="text-slate-400 text-sm py-2">Sin publicaciones registradas aún.</p>`;
           return;
         }
         el.innerHTML = recent
           .map((p) => {
-            const total =
-              (p.likes || 0) +
-              (p.comments || 0) +
-              (p.saves || 0) +
-              (p.compartidos || 0);
-            const dateStr = (p.publishedAt || p.date || "").split("T")[0];
-            const timeStr = p.publishedAt
-              ? (p.publishedAt.split("T")[1] || "").slice(0, 5)
-              : "";
-            const d = new Date(dateStr + "T00:00:00");
-            const fmtDate = d.toLocaleDateString("es-ES", {
-              day: "2-digit",
-              month: "short",
-            });
-            const engPost =
-              p.reach > 0
-                ? ((total / p.reach) * 100).toFixed(1)
-                : p.vistas > 0
-                  ? ((total / p.vistas) * 100).toFixed(1)
-                  : null;
+            const d = new Date(p.dateStr + "T00:00:00");
+            const fmtDate = d.toLocaleDateString("es-ES", { day: "2-digit", month: "short" });
+            const engPost = p.reach > 0 ? ((p.total / p.reach) * 100).toFixed(1) : null;
             return `<div class="flex items-center justify-between py-2 border-b border-slate-100 last:border-0 gap-2">
             <div class="flex items-center gap-2 min-w-0">
               <span class="px-1.5 py-0.5 rounded text-[10px] font-semibold ${BADGE[p.type] || "bg-slate-100 text-slate-600"} shrink-0">${p.type}</span>
               <span class="text-sm text-slate-700 truncate">${p.title}</span>
             </div>
             <div class="flex items-center gap-2 text-xs shrink-0 ml-1">
-              <span class="text-slate-400">${fmtDate}${timeStr ? " · " + timeStr : ""}</span>
-              <span class="font-bold text-club-green">${total.toLocaleString()} int.</span>
+              <span class="text-slate-400">${fmtDate}${p.timeStr ? " · " + p.timeStr : ""}</span>
+              <span class="font-bold text-club-green">${p.total.toLocaleString()} int.</span>
               ${engPost ? `<span class="text-club-gold font-medium">${engPost}%</span>` : ""}
             </div>
           </div>`;
