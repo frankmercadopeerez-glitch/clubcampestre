@@ -563,6 +563,20 @@
               </div>
             </div>
           </div>
+          <!-- Seguidores opcionales -->
+          <div class="pt-2 border-t border-slate-100">
+            <label class="block text-sm font-medium text-slate-700 mb-1">
+              👥 Seguidores actuales <span class="text-slate-400 font-normal text-xs">(opcional)</span>
+            </label>
+            <input
+              type="number"
+              id="post-followers"
+              min="0"
+              placeholder="Dejar vacío si no cambió"
+              class="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-club-green/50"
+            />
+            <p class="text-xs text-slate-400 mt-1">Si lo ingresas se registra automáticamente el crecimiento</p>
+          </div>
           <button
             type="submit"
             id="btn-post-submit"
@@ -647,15 +661,9 @@
         </button>
         <button
           class="tab-btn flex items-center gap-1.5 text-sm whitespace-nowrap"
-          data-tab="weekly"
-        >
-          <i data-lucide="calendar-days" class="w-4 h-4"></i> Seguimiento
-        </button>
-        <button
-          class="tab-btn flex items-center gap-1.5 text-sm whitespace-nowrap"
           data-tab="monthly"
         >
-          <i data-lucide="bar-chart" class="w-4 h-4"></i> Mensual
+          <i data-lucide="layers" class="w-4 h-4"></i> Estadísticas
         </button>
       </div>
     </nav>
@@ -989,6 +997,20 @@
                     </div>
                   </div>
                 </div>
+                <!-- Seguidores opcionales -->
+                <div class="pt-1 border-t border-slate-100">
+                  <label class="block text-xs font-medium text-slate-700 mb-1">
+                    👥 Seguidores actuales <span class="text-slate-400 font-normal">(opcional)</span>
+                  </label>
+                  <input
+                    type="number"
+                    id="panel-post-followers"
+                    min="0"
+                    placeholder="Dejar vacío si no cambió"
+                    class="w-full px-2 py-1.5 text-sm border border-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-club-green/50"
+                  />
+                  <p class="text-[10px] text-slate-400 mt-1">Si lo ingresas se registra el crecimiento de la cuenta</p>
+                </div>
                 <button
                   type="submit"
                   id="btn-panel-post-submit"
@@ -1077,6 +1099,8 @@
             Patrones de publicación y rendimiento por tipo de contenido
           </p>
         </div>
+        <!-- Summary KPIs -->
+        <div id="insights-kpis" class="grid grid-cols-2 sm:grid-cols-4 gap-3"></div>
         <div class="glass-card p-5 md:p-6">
           <div class="flex items-center gap-2 mb-5">
             <i data-lucide="calendar-check" class="w-5 h-5 text-club-gold"></i>
@@ -1403,9 +1427,9 @@
       <section id="tab-monthly" class="hidden flex-col gap-6">
         <!-- Page title -->
         <div>
-          <h2 class="text-xl font-bold text-slate-800">Vista mensual</h2>
+          <h2 class="text-xl font-bold text-slate-800">Estadísticas</h2>
           <p class="text-sm text-slate-400 mt-0.5">
-            Agrupación y tendencias por mes
+            Resumen semanal y mensual de todas las métricas
           </p>
         </div>
         <!-- Selector de mes -->
@@ -2073,6 +2097,7 @@
           p.pctSeguidores || 0;
         document.getElementById("post-pct-interactuantes").value =
           p.pctInteractuantes || 0;
+        document.getElementById("post-followers").value = p.followers || "";
         document.getElementById("edit-post-banner").classList.remove("hidden");
         document.getElementById("modal-post-title").textContent =
           "Editar Publicacion";
@@ -2112,6 +2137,8 @@
             ) || 0,
           createdAt: new Date().toISOString(),
         };
+        const postFollowers = parseInt(document.getElementById("post-followers").value) || 0;
+        if (postFollowers > 0) postRecord.followers = postFollowers;
         const orig = btnPostSubmit.innerHTML;
         btnPostSubmit.innerHTML = `<div class="loader w-4 h-4 border-2 border-club-dark border-t-transparent mr-2"></div>Guardando...`;
         btnPostSubmit.disabled = true;
@@ -2132,6 +2159,15 @@
             showToast("Publicación actualizada");
           } else {
             await addDoc(collection(db, "instagram_posts"), postRecord);
+            // Auto-save followers as weekly tracking record
+            if (postFollowers > 0) {
+              await setDoc(doc(db, "instagram_weekly", postDate), {
+                date: postDate,
+                followers: postFollowers,
+                visits: 0,
+                createdAt: new Date().toISOString(),
+              }, { merge: true });
+            }
             showToast("Publicacion registrada");
           }
           editingPostId = null;
@@ -2195,6 +2231,8 @@
             0,
           createdAt: new Date().toISOString(),
         };
+        const panelFollowers = parseInt(document.getElementById("panel-post-followers").value) || 0;
+        if (panelFollowers > 0) panelRecord.followers = panelFollowers;
         const _resetPanelForm = () => {
           panelPostForm.reset();
           document.getElementById("panel-post-date").value = new Date()
@@ -2209,6 +2247,15 @@
         btnPanelPostSubmit.disabled = true;
         try {
           await addDoc(collection(db, "instagram_posts"), panelRecord);
+          // Auto-save followers as weekly tracking record
+          if (panelFollowers > 0) {
+            await setDoc(doc(db, "instagram_weekly", panelDate), {
+              date: panelDate,
+              followers: panelFollowers,
+              visits: 0,
+              createdAt: new Date().toISOString(),
+            }, { merge: true });
+          }
           _resetPanelForm();
           showToast("Publicación registrada");
         } catch (err) {
@@ -3370,6 +3417,7 @@
       }
 
       function renderInsights() {
+        renderInsightsKPIs();
         renderWeekdayBars();
         renderContentTypeChart();
         renderWeeklyEngagementChart();
@@ -3476,22 +3524,87 @@
             maintainAspectRatio: false,
             plugins: {
               legend: { position: "bottom" },
-              tooltip: tooltipStyle(),
+              tooltip: {
+                ...tooltipStyle(),
+                callbacks: {
+                  label: (ctx) => {
+                    const total = ctx.dataset.data.reduce((a, b) => a + b, 0);
+                    const pct = total > 0 ? ((ctx.raw / total) * 100).toFixed(1) : 0;
+                    return ` ${ctx.label}: ${ctx.raw.toLocaleString()} int. (${pct}%)`;
+                  },
+                },
+              },
             },
           },
         });
+        const grandTotal = labels.reduce((s, t) => s + types[t].totalInteractions, 0);
         typeTable.innerHTML =
           labels
+            .sort((a, b) => types[b].totalInteractions - types[a].totalInteractions)
             .map((t) => {
               const v = types[t];
-              const avgInt =
-                v.count > 0 ? Math.round(v.totalInteractions / v.count) : 0;
-              return `<div class="flex items-center justify-between py-2 border-b border-slate-100 last:border-0">
-            <span class="font-medium text-slate-700">${t}</span>
-            <span class="text-xs text-slate-500">${v.count} pub · avg ${avgInt} int.</span>
+              const avgInt = v.count > 0 ? Math.round(v.totalInteractions / v.count) : 0;
+              const avgEng = v.totalImpressions > 0 ? ((v.totalInteractions / v.totalImpressions) * 100).toFixed(1) : "--";
+              const pct = grandTotal > 0 ? ((v.totalInteractions / grandTotal) * 100).toFixed(1) : 0;
+              const barW = grandTotal > 0 ? ((v.totalInteractions / grandTotal) * 100).toFixed(1) : 0;
+              return `<div class="py-3 border-b border-slate-100 last:border-0">
+            <div class="flex items-center justify-between mb-1">
+              <span class="font-semibold text-slate-700 text-sm">${t}</span>
+              <span class="text-xs font-bold text-club-gold">${pct}%</span>
+            </div>
+            <div class="w-full bg-slate-100 rounded-full h-1.5 mb-1.5">
+              <div class="bg-club-gold h-1.5 rounded-full" style="width:${barW}%"></div>
+            </div>
+            <div class="flex gap-4 text-xs text-slate-500">
+              <span>${v.count} pub.</span>
+              <span>Prom. <b class="text-slate-700">${avgInt}</b> int.</span>
+              <span>Eng. <b class="text-slate-700">${avgEng}%</b></span>
+            </div>
           </div>`;
             })
             .join("") || `<p class="text-slate-400">Sin datos.</p>`;
+      }
+
+      function renderInsightsKPIs() {
+        const el = document.getElementById("insights-kpis");
+        if (!el) return;
+        if (globalPosts.length === 0) {
+          el.innerHTML = "";
+          return;
+        }
+        const totalPosts = globalPosts.length;
+        let totalEng = 0, engCount = 0;
+        let bestFormat = "", bestFormatEng = 0;
+        const typeEng = {};
+        globalPosts.forEach((p) => {
+          const inter = (p.likes || 0) + (p.comments || 0) + (p.saves || 0) + (p.compartidos || 0);
+          const denom = p.reach || p.vistas || 0;
+          if (denom > 0) { totalEng += (inter / denom) * 100; engCount++; }
+          if (!typeEng[p.type]) typeEng[p.type] = { sum: 0, n: 0 };
+          if (denom > 0) { typeEng[p.type].sum += (inter / denom) * 100; typeEng[p.type].n++; }
+        });
+        Object.entries(typeEng).forEach(([t, v]) => {
+          const avg = v.n > 0 ? v.sum / v.n : 0;
+          if (avg > bestFormatEng) { bestFormatEng = avg; bestFormat = t; }
+        });
+        const avgEng = engCount > 0 ? (totalEng / engCount).toFixed(1) : "--";
+        const avgReach = Math.round(globalPosts.reduce((s, p) => s + (p.reach || 0), 0) / totalPosts);
+        const now = new Date();
+        const weekAgo = new Date(now - 7 * 86400000);
+        const postsThisWeek = globalPosts.filter(p => new Date(p.date + "T00:00:00") >= weekAgo).length;
+        el.innerHTML = [
+          { label: "Total publicaciones", value: totalPosts, icon: "image", color: "text-club-dark" },
+          { label: "Eng. promedio", value: avgEng + "%", icon: "trending-up", color: "text-club-green" },
+          { label: "Mejor formato", value: bestFormat || "--", icon: "award", color: "text-club-gold" },
+          { label: "Alcance promedio", value: avgReach.toLocaleString(), icon: "users", color: "text-slate-600" },
+        ].map(k => `<div class="glass-card p-4">
+          <div class="flex items-center gap-2 mb-2">
+            <i data-lucide="${k.icon}" class="w-4 h-4 ${k.color}"></i>
+            <span class="text-xs text-slate-400">${k.label}</span>
+          </div>
+          <p class="text-2xl font-bold text-slate-800">${k.value}</p>
+        </div>`).join("");
+        lucide.createIcons();
       }
 
       function renderWeeklyEngagementChart() {
