@@ -114,45 +114,44 @@
       }
       /* Badge colores tipo contenido */
       .badge-reel {
-        background: #e1d3b8;
-        color: #5c4a2a;
+        background: #e1d3b8 !important;
+        color: #5c4a2a !important;
         font-weight: 600;
       }
       .badge-foto {
-        background: #0d3341;
-        color: #ffffff;
+        background: #0d3341 !important;
+        color: #ffffff !important;
         font-weight: 600;
       }
       .badge-carrusel {
-        background: #0d3341;
-        color: #ffffff;
+        background: #0d3341 !important;
+        color: #ffffff !important;
         font-weight: 600;
       }
       .badge-story {
-        background: #aea468;
-        color: #ffffff;
+        background: #aea468 !important;
+        color: #ffffff !important;
         font-weight: 600;
       }
       .badge-video {
-        background: #0d3341;
-        color: #ffffff;
+        background: #0d3341 !important;
+        color: #ffffff !important;
         font-weight: 600;
       }
 
-      /* Fix: prevent Lucide SVG icons from overflowing inside flex buttons */
+      /* Fix: constrain Lucide SVG icons inside buttons to 16px */
       button svg,
-      a svg {
-        width: 1em;
-        height: 1em;
-        flex-shrink: 0;
-        display: inline-block;
-        vertical-align: middle;
-      }
-      button .w-4,
-      button .w-3\.5 {
-        width: 1rem !important;
-        height: 1rem !important;
+      a svg,
+      .lucide {
+        width: 16px !important;
+        height: 16px !important;
+        min-width: 16px !important;
+        min-height: 16px !important;
         flex-shrink: 0 !important;
+        display: block !important;
+      }
+      button {
+        overflow: visible;
       }
 
       /* Toast notification */
@@ -847,7 +846,9 @@
                   </p>
                   <div class="grid grid-cols-4 gap-2">
                     <div>
-                      <label class="block text-xs text-slate-600 mb-1">Likes</label>
+                      <label class="block text-xs text-slate-600 mb-1"
+                        >Likes</label
+                      >
                       <input
                         type="number"
                         id="panel-post-likes"
@@ -857,7 +858,9 @@
                       />
                     </div>
                     <div>
-                      <label class="block text-xs text-slate-600 mb-1">Coment.</label>
+                      <label class="block text-xs text-slate-600 mb-1"
+                        >Coment.</label
+                      >
                       <input
                         type="number"
                         id="panel-post-comments"
@@ -867,7 +870,9 @@
                       />
                     </div>
                     <div>
-                      <label class="block text-xs text-slate-600 mb-1">Guard.</label>
+                      <label class="block text-xs text-slate-600 mb-1"
+                        >Guard.</label
+                      >
                       <input
                         type="number"
                         id="panel-post-saves"
@@ -877,7 +882,9 @@
                       />
                     </div>
                     <div>
-                      <label class="block text-xs text-slate-600 mb-1">Compart.</label>
+                      <label class="block text-xs text-slate-600 mb-1"
+                        >Compart.</label
+                      >
                       <input
                         type="number"
                         id="panel-post-compartidos"
