@@ -446,7 +446,7 @@
           </div>
         </div>
         <div class="flex items-center gap-3">
-          <div id="auth-status" class="text-xs text-club-light/60"></div>
+          <div id="auth-status" class="flex items-center gap-2"></div>
           <button id="btn-google-login" class="hidden"></button>
           <button
             id="btn-logout"
@@ -2005,7 +2005,7 @@
 
         // Fallback: si onAuthStateChanged no responde en 6s, continuar sin auth
         const authTimeout = setTimeout(() => {
-          authStatus.innerHTML = ``;
+          authStatus.innerHTML = `<span class="flex items-center gap-1.5 text-xs text-red-300"><span class="w-2 h-2 rounded-full bg-red-400 inline-block"></span>Sin conexión</span>`;
           disableForms();
         }, 6000);
 
@@ -2015,14 +2015,14 @@
             clearTimeout(authTimeout);
             currentUser = user;
             if (user) {
-              authStatus.innerHTML = `<span class="text-white text-xs">${user.displayName || user.email}</span>`;
+              authStatus.innerHTML = `<span class="flex items-center gap-1.5 text-xs text-white"><span class="w-2 h-2 rounded-full bg-green-400 inline-block animate-pulse"></span>${user.displayName || user.email}</span>`;
               btnLogout.classList.remove("hidden");
               enableForms();
               loadData();
               loadPosts();
               loadWeekly();
             } else {
-              authStatus.innerHTML = ``;
+              authStatus.innerHTML = `<span class="flex items-center gap-1.5 text-xs text-club-light/70"><span class="w-2 h-2 rounded-full bg-slate-400 inline-block"></span>No conectado</span>`;
               btnLogout.classList.add("hidden");
               disableForms();
             }
@@ -2035,7 +2035,7 @@
 
         btnLogout.addEventListener("click", () => signOut(auth));
       } else {
-        authStatus.innerHTML = `<span class="text-yellow-300 text-sm">Modo Demo</span>`;
+        authStatus.innerHTML = `<span class="flex items-center gap-1.5 text-xs text-yellow-300"><span class="w-2 h-2 rounded-full bg-yellow-400 inline-block"></span>Modo Demo</span>`;
         enableForms();
         updateDashboard();
       }
@@ -2243,6 +2243,7 @@
           globalData.sort((a, b) => new Date(b.date) - new Date(a.date));
           _resetForm();
           updateDashboard();
+          renderRecentPostsOverview();
           showToast("Metricas guardadas");
         }
       });
@@ -2771,23 +2772,60 @@
               weeks[k].shares,
           );
           const METRIC_DEFS_W = {
-            interacciones: { label: "Interacciones", type: "bar",  color: "rgba(20,83,51,0.75)", fn: (v) => v.likes + v.comments + v.saves + v.shares },
-            vistas:        { label: "Vistas Historia", type: "line", color: "#145333", fn: (v) => v.views },
-            likes:         { label: "Likes",           type: "line", color: "#e11d48", fn: (v) => v.likes },
-            comentarios:   { label: "Comentarios",     type: "line", color: "#2563eb", fn: (v) => v.comments },
-            compartidos:   { label: "Compartidos",     type: "line", color: "#0891b2", fn: (v) => v.shares },
-            guardados:     { label: "Guardados",       type: "line", color: "#d97706", fn: (v) => v.saves },
+            interacciones: {
+              label: "Interacciones",
+              type: "bar",
+              color: "rgba(20,83,51,0.75)",
+              fn: (v) => v.likes + v.comments + v.saves + v.shares,
+            },
+            vistas: {
+              label: "Vistas Historia",
+              type: "line",
+              color: "#145333",
+              fn: (v) => v.views,
+            },
+            likes: {
+              label: "Likes",
+              type: "line",
+              color: "#e11d48",
+              fn: (v) => v.likes,
+            },
+            comentarios: {
+              label: "Comentarios",
+              type: "line",
+              color: "#2563eb",
+              fn: (v) => v.comments,
+            },
+            compartidos: {
+              label: "Compartidos",
+              type: "line",
+              color: "#0891b2",
+              fn: (v) => v.shares,
+            },
+            guardados: {
+              label: "Guardados",
+              type: "line",
+              color: "#d97706",
+              fn: (v) => v.saves,
+            },
           };
-          const activeMetrics = [...document.querySelectorAll(".monthly-metric-btn.active")]
-            .map(b => b.dataset.metric).filter(m => METRIC_DEFS_W[m]);
-          const hasBar  = activeMetrics.some(m => METRIC_DEFS_W[m].type === "bar");
-          const hasLine = activeMetrics.some(m => METRIC_DEFS_W[m].type === "line");
-          const wDatasets = activeMetrics.map(m => {
+          const activeMetrics = [
+            ...document.querySelectorAll(".monthly-metric-btn.active"),
+          ]
+            .map((b) => b.dataset.metric)
+            .filter((m) => METRIC_DEFS_W[m]);
+          const hasBar = activeMetrics.some(
+            (m) => METRIC_DEFS_W[m].type === "bar",
+          );
+          const hasLine = activeMetrics.some(
+            (m) => METRIC_DEFS_W[m].type === "line",
+          );
+          const wDatasets = activeMetrics.map((m) => {
             const def = METRIC_DEFS_W[m];
             const isBar = def.type === "bar";
             return {
               label: def.label,
-              data: wKeys.map(k => def.fn(weeks[k])),
+              data: wKeys.map((k) => def.fn(weeks[k])),
               type: def.type,
               backgroundColor: isBar ? def.color : "transparent",
               borderColor: isBar ? undefined : def.color,
@@ -2805,16 +2843,31 @@
             y: { grid: { color: "#f1f5f9" } },
           };
           if (hasBar && hasLine) {
-            wScales.y1 = { type: "linear", position: "right", grid: { display: false } };
+            wScales.y1 = {
+              type: "linear",
+              position: "right",
+              grid: { display: false },
+            };
           }
           monthlyChartInst = new Chart(ctx, {
             type: "bar",
-            data: { labels: wKeys, datasets: wDatasets.length ? wDatasets : [{ label: "Sin datos", data: wKeys.map(() => 0) }] },
+            data: {
+              labels: wKeys,
+              datasets: wDatasets.length
+                ? wDatasets
+                : [{ label: "Sin datos", data: wKeys.map(() => 0) }],
+            },
             options: {
               responsive: true,
               maintainAspectRatio: false,
               interaction: { mode: "index", intersect: false },
-              plugins: { legend: { position: "bottom", labels: { usePointStyle: true, boxWidth: 6 } }, tooltip: tooltipStyle() },
+              plugins: {
+                legend: {
+                  position: "bottom",
+                  labels: { usePointStyle: true, boxWidth: 6 },
+                },
+                tooltip: tooltipStyle(),
+              },
               scales: wScales,
             },
           });
