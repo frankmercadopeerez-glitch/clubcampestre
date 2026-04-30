@@ -41,7 +41,7 @@
               },
             },
             fontFamily: {
-              sans: ["Inter", "sans-serif"],
+              sans: ["Poppins", "sans-serif"],
             },
           },
         },
@@ -50,7 +50,7 @@
 
     <!-- Google Fonts -->
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
       rel="stylesheet"
     />
 
@@ -64,7 +64,7 @@
 
     <style>
       body {
-        font-family: "Inter", sans-serif;
+        font-family: "Poppins", sans-serif;
         background-color: #f0f4f8;
       }
       .glass-card {
@@ -114,44 +114,43 @@
       }
       /* Badge colores tipo contenido */
       .badge-reel {
-        background: #e1d3b8 !important;
+        background: #E1D3B8 !important;
         color: #5c4a2a !important;
         font-weight: 600;
       }
       .badge-foto {
-        background: #0d3341 !important;
+        background: #0D3341 !important;
         color: #ffffff !important;
         font-weight: 600;
       }
       .badge-carrusel {
-        background: #0d3341 !important;
+        background: #0D3341 !important;
         color: #ffffff !important;
         font-weight: 600;
       }
       .badge-story {
-        background: #aea468 !important;
+        background: #145333 !important;
         color: #ffffff !important;
         font-weight: 600;
       }
       .badge-video {
-        background: #0d3341 !important;
+        background: #0D3341 !important;
         color: #ffffff !important;
         font-weight: 600;
       }
 
-      /* Fix: constrain Lucide SVG icons inside buttons to 16px */
+      /* Fix: constrain Lucide SVG icons inside buttons */
       button svg,
       a svg,
       .lucide {
-        width: 16px !important;
-        height: 16px !important;
-        min-width: 16px !important;
-        min-height: 16px !important;
+        width: 1rem !important;
+        height: 1rem !important;
+        min-width: 1rem !important;
+        min-height: 1rem !important;
         flex-shrink: 0 !important;
-        display: block !important;
-      }
-      button {
-        overflow: visible;
+        display: inline-block !important;
+        vertical-align: middle !important;
+        overflow: hidden !important;
       }
 
       /* Toast notification */
@@ -721,7 +720,7 @@
                   id="btn-submit"
                   class="w-full mt-1 bg-club-gold hover:bg-club-goldhover text-club-dark font-semibold py-2.5 px-4 rounded-lg transition-colors flex items-center justify-center gap-2"
                 >
-                  <i data-lucide="save" class="w-4 h-4"></i> Guardar Metricas
+                  Guardar Métricas
                 </button>
               </form>
               <!-- hidden: kept for JS compatibility (modal opened from Posts tab) -->
@@ -940,7 +939,7 @@
                   id="btn-panel-post-submit"
                   class="w-full mt-1 bg-club-green hover:bg-[#0e3d26] text-white font-semibold py-2.5 px-4 rounded-lg transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  <i data-lucide="save" class="w-4 h-4"></i> Guardar Publicación
+                  Guardar Publicación
                 </button>
               </form>
             </div>
