@@ -114,23 +114,23 @@
       }
       /* Badge colores tipo contenido */
       .badge-reel {
-        background: #E1D3B8;
+        background: #e1d3b8;
         color: #5c4a2a;
       }
       .badge-foto {
-        background: #0D3341;
+        background: #0d3341;
         color: #ffffff;
       }
       .badge-carrusel {
-        background: #0D3341;
+        background: #0d3341;
         color: #ffffff;
       }
       .badge-story {
-        background: #AEA468;
+        background: #aea468;
         color: #ffffff;
       }
       .badge-video {
-        background: #0D3341;
+        background: #0d3341;
         color: #ffffff;
       }
 
@@ -168,12 +168,12 @@
       class="hide fixed bottom-6 left-1/2 -translate-x-1/2 z-[200] bg-club-dark text-white text-sm font-medium px-5 py-3 rounded-xl shadow-xl flex items-center gap-2"
     ></div>
 
-    <!-- ==================== MODAL NUEVA PUBLICACION ==================== -->
+    <!-- ==================== MODAL NUEVA PUBLICACION (detallado, desde tab Posts) ==================== -->
     <div
       id="modal-overlay"
       class="fixed inset-0 bg-black/50 z-[100] flex items-center justify-center p-4 hidden"
     >
-      <div2xl p-6 relative overflow-y-auto max-h-[92vh]
+      <div
         class="glass-card w-full max-w-2xl p-6 relative overflow-y-auto max-h-[92vh]"
       >
         <button
@@ -187,22 +187,34 @@
         >
           <i data-lucide="image-plus" class="w-5 h-5 text-club-green"></i>
           <h2 class="text-lg font-semibold text-club-dark">
-            Registrar Publicacion
+            Registrar Publicacion (Detallado)
           </h2>
         </div>
         <form id="post-form" class="space-y-4">
           <div class="grid grid-cols-2 gap-4">
             <div>
               <label class="block text-sm font-medium text-slate-700 mb-1"
-                >Fecha y hora de subida</label
+                >Fecha de publicación</label
               >
               <input
-                type="datetime-local"
-                id="post-datetime"
+                type="date"
+                id="post-date"
                 required
                 class="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-club-green/50"
               />
             </div>
+            <div>
+              <label class="block text-sm font-medium text-slate-700 mb-1"
+                >Hora de publicación</label
+              >
+              <input
+                type="time"
+                id="post-time"
+                class="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-club-green/50"
+              />
+            </div>
+          </div>
+          <div class="grid grid-cols-2 gap-4">
             <div>
               <label class="block text-sm font-medium text-slate-700 mb-1"
                 >Tipo de contenido</label
@@ -220,75 +232,75 @@
                 <option value="Video">Video</option>
               </select>
             </div>
+            <div>
+              <label class="block text-sm font-medium text-slate-700 mb-1"
+                >Descripcion / Título</label
+              >
+              <input
+                type="text"
+                id="post-title"
+                placeholder="Ej. Promocion fin de semana"
+                maxlength="120"
+                class="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-club-green/50"
+              />
+            </div>
           </div>
-          <div>
-            <label class="block text-sm font-medium text-slate-700 mb-1"
-              >Descripcion / Titulo del post</label
+          <!-- Visibilidad -->
+          <div class="pt-1 border-t border-slate-100">
+            <p
+              class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2"
             >
-            <input
-              type="text"
-              id="post-title"
-              placeholder="Ej. Promocion fin de semana"
-              maxlength="120"
-              class="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-club-green/50"
-           !-- Visibilidad -->
-          <div class="pt-1">
-            <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Visibilidad</p>
+              Visibilidad
+            </p>
             <div class="grid grid-cols-3 gap-3">
               <div>
-                <label class="block text-xs font-medium text-slate-700 mb-1">👁️ Vistas</label>
-                <input type="number" id="post-vistas" min="0" placeholder="0" class="w-full px-2 py-1.5 text-sm border border-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-club-green/50">
+                <label class="block text-xs font-medium text-slate-700 mb-1"
+                  >👁️ Vistas</label
+                >
+                <input
+                  type="number"
+                  id="post-vistas"
+                  min="0"
+                  placeholder="0"
+                  class="w-full px-2 py-1.5 text-sm border border-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-club-green/50"
+                />
               </div>
               <div>
-                <label class="block text-xs font-medium text-slate-700 mb-1">▶️ Reproducciones</label>
-                <input type="number" id="post-reproducciones" min="0" placeholder="0" class="w-full px-2 py-1.5 text-sm border border-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-club-green/50">
+                <label class="block text-xs font-medium text-slate-700 mb-1"
+                  >▶️ Reproducciones</label
+                >
+                <input
+                  type="number"
+                  id="post-reproducciones"
+                  min="0"
+                  placeholder="0"
+                  class="w-full px-2 py-1.5 text-sm border border-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-club-green/50"
+                />
               </div>
               <div>
-                <label class="block text-xs font-medium text-slate-700 mb-1">👥 Cuentas alcanzadas</label>
-                <input type="number" id="post-reach" min="0" placeholder="0" class="w-full px-2 py-1.5 text-sm border border-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-club-green/50">
+                <label class="block text-xs font-medium text-slate-700 mb-1"
+                  >👥 Cuentas alcanzadas</label
+                >
+                <input
+                  type="number"
+                  id="post-reach"
+                  min="0"
+                  placeholder="0"
+                  class="w-full px-2 py-1.5 text-sm border border-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-club-green/50"
+                />
               </div>
             </div>
           </div>
           <!-- Interacciones -->
           <div class="pt-2 border-t border-slate-100">
-            <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Interacciones</p>
+            <p
+              class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2"
+            >
+              Interacciones
+            </p>
             <div class="grid grid-cols-4 gap-2">
               <div>
-                <label class="block text-xs text-slate-600 mb-1">❤️ Likes</label>
-                <input type="number" id="post-likes" min="0" placeholder="0" class="w-full px-2 py-1.5 text-sm border border-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-club-green/50">
-              </div>
-              <div>
-                <label class="block text-xs text-slate-600 mb-1">💬 Coment.</label>
-                <input type="number" id="post-comments" min="0" placeholder="0" class="w-full px-2 py-1.5 text-sm border border-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-club-green/50">
-              </div>
-              <div>
-                <label class="block text-xs text-slate-600 mb-1">🔖 Guardados</label>
-                <input type="number" id="post-saves" min="0" placeholder="0" class="w-full px-2 py-1.5 text-sm border border-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-club-green/50">
-              </div>
-              <div>
-                <label class="block text-xs text-slate-600 mb-1">↗️ Compartidos</label>
-                <input type="number" id="post-compartidos" min="0" placeholder="0" class="w-full px-2 py-1.5 text-sm border border-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-club-green/50">
-              </div>
-            </div>
-          </div>
-          <!-- Porcentajes -->
-          <div class="pt-2 border-t border-slate-100">
-            <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Porcentajes de audiencia</p>
-            <div class="grid grid-cols-2 gap-3">
-              <div>
-                <label class="block text-xs font-medium text-slate-700 mb-1">% Seguidores en alcance</label>
-                <div class="relative">
-                  <input type="number" id="post-pct-seguidores" min="0" max="100" step="0.1" placeholder="0.0" class="w-full px-2 py-1.5 pr-7 text-sm border border-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-club-green/50">
-                  <span class="absolute right-2 top-1/2 -translate-y-1/2 text-xs text-slate-400">%</span>
-                </div>
-              </div>
-              <div>
-                <label class="block text-xs font-medium text-slate-700 mb-1">% Seguidores que interactúan</label>
-                <div class="relative">
-                  <input type="number" id="post-pct-interactuantes" min="0" max="100" step="0.1" placeholder="0.0" class="w-full px-2 py-1.5 pr-7 text-sm border border-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-club-green/50">
-                  <span class="absolute right-2 top-1/2 -translate-y-1/2 text-xs text-slate-400">%</span>
-                </div>
-              </div <label class="block text-xs text-slate-600 mb-1"
+                <label class="block text-xs text-slate-600 mb-1"
                   >❤️ Likes</label
                 >
                 <input
@@ -421,31 +433,65 @@
         <div class="flex items-center gap-3">
           <div id="auth-status" class="text-xs text-club-light/60"></div>
           <button id="btn-google-login" class="hidden"></button>
-          <button id="btn-logout" class="hidden text-xs text-club-light/70 hover:text-white underline">Cerrar sesion</button>
+          <button
+            id="btn-logout"
+            class="hidden text-xs text-club-light/70 hover:text-white underline"
+          >
+            Cerrar sesion
+          </button>
         </div>
       </div>
     </header>
 
     <!-- Navigation Tabs -->
     <nav class="bg-white border-b border-slate-200 sticky top-16 z-40">
-      <div class="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8 flex gap-0.5 py-1.5 overflow-x-auto scrollbar-none">
-        <button class="tab-btn active flex items-center gap-1 px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg text-xs sm:text-sm font-medium transition-colors text-slate-600 hover:bg-slate-100 whitespace-nowrap" data-tab="overview">
-          <i data-lucide="layout-dashboard" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i> <span>Panel</span>
+      <div
+        class="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8 flex gap-0.5 py-1.5 overflow-x-auto scrollbar-none"
+      >
+        <button
+          class="tab-btn active flex items-center gap-1 px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg text-xs sm:text-sm font-medium transition-colors text-slate-600 hover:bg-slate-100 whitespace-nowrap"
+          data-tab="overview"
+        >
+          <i
+            data-lucide="layout-dashboard"
+            class="w-3.5 h-3.5 sm:w-4 sm:h-4"
+          ></i>
+          <span>Panel</span>
         </button>
-        <button class="tab-btn flex items-center gap-1 px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg text-xs sm:text-sm font-medium transition-colors text-slate-600 hover:bg-slate-100 whitespace-nowrap" data-tab="insights">
-          <i data-lucide="lightbulb" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i> <span>Insights</span>
+        <button
+          class="tab-btn flex items-center gap-1 px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg text-xs sm:text-sm font-medium transition-colors text-slate-600 hover:bg-slate-100 whitespace-nowrap"
+          data-tab="insights"
+        >
+          <i data-lucide="lightbulb" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i>
+          <span>Insights</span>
         </button>
-        <button class="tab-btn flex items-center gap-1 px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg text-xs sm:text-sm font-medium transition-colors text-slate-600 hover:bg-slate-100 whitespace-nowrap" data-tab="posts">
-          <i data-lucide="grid" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i> <span>Posts</span>
+        <button
+          class="tab-btn flex items-center gap-1 px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg text-xs sm:text-sm font-medium transition-colors text-slate-600 hover:bg-slate-100 whitespace-nowrap"
+          data-tab="posts"
+        >
+          <i data-lucide="grid" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i>
+          <span>Posts</span>
         </button>
-        <button class="tab-btn flex items-center gap-1 px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg text-xs sm:text-sm font-medium transition-colors text-slate-600 hover:bg-slate-100 whitespace-nowrap" data-tab="history">
-          <i data-lucide="table" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i> <span>Historial</span>
+        <button
+          class="tab-btn flex items-center gap-1 px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg text-xs sm:text-sm font-medium transition-colors text-slate-600 hover:bg-slate-100 whitespace-nowrap"
+          data-tab="history"
+        >
+          <i data-lucide="table" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i>
+          <span>Historial</span>
         </button>
-        <button class="tab-btn flex items-center gap-1 px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg text-xs sm:text-sm font-medium transition-colors text-slate-600 hover:bg-slate-100 whitespace-nowrap" data-tab="weekly">
-          <i data-lucide="calendar-days" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i> <span>Semanal</span>
+        <button
+          class="tab-btn flex items-center gap-1 px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg text-xs sm:text-sm font-medium transition-colors text-slate-600 hover:bg-slate-100 whitespace-nowrap"
+          data-tab="weekly"
+        >
+          <i data-lucide="calendar-days" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i>
+          <span>Semanal</span>
         </button>
-        <button class="tab-btn flex items-center gap-1 px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg text-xs sm:text-sm font-medium transition-colors text-slate-600 hover:bg-slate-100 whitespace-nowrap" data-tab="monthly">
-          <i data-lucide="calendar" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i> <span>Mensual</span>
+        <button
+          class="tab-btn flex items-center gap-1 px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg text-xs sm:text-sm font-medium transition-colors text-slate-600 hover:bg-slate-100 whitespace-nowrap"
+          data-tab="monthly"
+        >
+          <i data-lucide="calendar" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i>
+          <span>Mensual</span>
         </button>
       </div>
     </nav>
@@ -529,7 +575,8 @@
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div class="lg:col-span-1">
+          <div class="lg:col-span-1 flex flex-col gap-4">
+            <!-- Story registration -->
             <div class="glass-card p-5 lg:sticky lg:top-[7.5rem]">
               <div
                 class="flex items-center gap-2 mb-4 border-b border-slate-100 pb-3"
@@ -543,25 +590,47 @@
                 </h2>
               </div>
               <form id="stats-form" class="space-y-4">
-                <div id="edit-daily-banner" class="hidden bg-amber-50 border border-amber-200 rounded-lg px-3 py-2 text-xs text-amber-700 flex items-center gap-2">
+                <div
+                  id="edit-daily-banner"
+                  class="hidden bg-amber-50 border border-amber-200 rounded-lg px-3 py-2 text-xs text-amber-700 flex items-center gap-2"
+                >
                   <i data-lucide="pencil" class="w-3.5 h-3.5 flex-shrink-0"></i>
                   <span>Editando registro existente</span>
-                  <button type="button" onclick="cancelEditDaily()" class="ml-auto text-amber-500 hover:text-amber-700 font-semibold">Cancelar</button>
+                  <button
+                    type="button"
+                    onclick="cancelEditDaily()"
+                    class="ml-auto text-amber-500 hover:text-amber-700 font-semibold"
+                  >
+                    Cancelar
+                  </button>
                 </div>
                 <div class="grid grid-cols-2 gap-2">
                   <div>
-                    <label class="block text-sm font-medium text-slate-700 mb-1">Fecha</label>
-                    <input type="date" id="input-date" required
-                      class="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-club-green/50 text-slate-700" />
+                    <label class="block text-sm font-medium text-slate-700 mb-1"
+                      >Fecha</label
+                    >
+                    <input
+                      type="date"
+                      id="input-date"
+                      required
+                      class="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-club-green/50 text-slate-700"
+                    />
                   </div>
                   <div>
-                    <label class="block text-sm font-medium text-slate-700 mb-1">Hora</label>
-                    <input type="time" id="input-time"
-                      class="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-club-green/50 text-slate-700" />
+                    <label class="block text-sm font-medium text-slate-700 mb-1"
+                      >Hora</label
+                    >
+                    <input
+                      type="time"
+                      id="input-time"
+                      class="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-club-green/50 text-slate-700"
+                    />
                   </div>
                 </div>
                 <div>
-                  <label class="block text-sm font-medium text-slate-700 mb-1">👁️ Vistas de la Historia</label>
+                  <label class="block text-sm font-medium text-slate-700 mb-1"
+                    >👁️ Vistas de la Historia</label
+                  >
                   <input
                     type="number"
                     id="input-story-views"
@@ -571,29 +640,59 @@
                   />
                 </div>
                 <div class="pt-2 border-t border-slate-100">
-                  <p class="text-xs text-slate-500 font-semibold mb-3 uppercase tracking-wider">
+                  <p
+                    class="text-xs text-slate-500 font-semibold mb-3 uppercase tracking-wider"
+                  >
                     Interacciones
                   </p>
                   <div class="grid grid-cols-2 gap-2">
                     <div>
-                      <label class="block text-xs text-slate-600 mb-1">❤️ Likes</label>
-                      <input type="number" id="input-likes" min="0" placeholder="0"
-                        class="w-full px-2 py-1.5 text-sm border border-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-club-green/50"/>
+                      <label class="block text-xs text-slate-600 mb-1"
+                        >❤️ Likes</label
+                      >
+                      <input
+                        type="number"
+                        id="input-likes"
+                        min="0"
+                        placeholder="0"
+                        class="w-full px-2 py-1.5 text-sm border border-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-club-green/50"
+                      />
                     </div>
                     <div>
-                      <label class="block text-xs text-slate-600 mb-1">💬 Coment.</label>
-                      <input type="number" id="input-comments" min="0" placeholder="0"
-                        class="w-full px-2 py-1.5 text-sm border border-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-club-green/50"/>
+                      <label class="block text-xs text-slate-600 mb-1"
+                        >💬 Coment.</label
+                      >
+                      <input
+                        type="number"
+                        id="input-comments"
+                        min="0"
+                        placeholder="0"
+                        class="w-full px-2 py-1.5 text-sm border border-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-club-green/50"
+                      />
                     </div>
                     <div>
-                      <label class="block text-xs text-slate-600 mb-1">🔖 Guard.</label>
-                      <input type="number" id="input-saves" min="0" placeholder="0"
-                        class="w-full px-2 py-1.5 text-sm border border-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-club-green/50"/>
+                      <label class="block text-xs text-slate-600 mb-1"
+                        >🔖 Guard.</label
+                      >
+                      <input
+                        type="number"
+                        id="input-saves"
+                        min="0"
+                        placeholder="0"
+                        class="w-full px-2 py-1.5 text-sm border border-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-club-green/50"
+                      />
                     </div>
                     <div>
-                      <label class="block text-xs text-slate-600 mb-1">↗️ Compart.</label>
-                      <input type="number" id="input-shares" min="0" placeholder="0"
-                        class="w-full px-2 py-1.5 text-sm border border-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-club-green/50"/>
+                      <label class="block text-xs text-slate-600 mb-1"
+                        >↗️ Compart.</label
+                      >
+                      <input
+                        type="number"
+                        id="input-shares"
+                        min="0"
+                        placeholder="0"
+                        class="w-full px-2 py-1.5 text-sm border border-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-club-green/50"
+                      />
                     </div>
                   </div>
                 </div>
@@ -605,16 +704,225 @@
                   <i data-lucide="save" class="w-4 h-4"></i> Guardar Metricas
                 </button>
               </form>
-              <div class="mt-4 pt-4 border-t border-slate-100 space-y-2">
-                <p class="text-xs text-slate-400 font-medium uppercase tracking-wide">Tambien puedes registrar</p>
-                <button
-                  id="btn-open-post-modal"
-                  class="w-full bg-club-dark hover:bg-[#155f7a] text-white font-medium py-2.5 px-4 rounded-lg transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  <i data-lucide="image-plus" class="w-4 h-4"></i>
-                  Registrar Post / Reel
-                </button>
+              <!-- hidden: kept for JS compatibility (modal opened from Posts tab) -->
+              <button id="btn-open-post-modal" class="hidden"></button>
+            </div>
+
+            <!-- Post / Reel inline registration -->
+            <div class="glass-card p-5">
+              <div
+                class="flex items-center gap-2 mb-4 border-b border-slate-100 pb-3"
+              >
+                <i data-lucide="image-plus" class="w-5 h-5 text-club-green"></i>
+                <h2 class="text-lg font-semibold text-club-dark">
+                  Registrar Publicación
+                </h2>
               </div>
+              <form id="post-form-panel" class="space-y-3">
+                <div class="grid grid-cols-2 gap-2">
+                  <div>
+                    <label class="block text-xs font-medium text-slate-700 mb-1"
+                      >Fecha</label
+                    >
+                    <input
+                      type="date"
+                      id="panel-post-date"
+                      required
+                      class="w-full px-2 py-1.5 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-club-green/50 text-slate-700"
+                    />
+                  </div>
+                  <div>
+                    <label class="block text-xs font-medium text-slate-700 mb-1"
+                      >Hora publicación</label
+                    >
+                    <input
+                      type="time"
+                      id="panel-post-time"
+                      class="w-full px-2 py-1.5 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-club-green/50 text-slate-700"
+                    />
+                  </div>
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                  <div>
+                    <label class="block text-xs font-medium text-slate-700 mb-1"
+                      >Tipo de contenido</label
+                    >
+                    <select
+                      id="panel-post-type"
+                      required
+                      class="w-full px-2 py-1.5 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-club-green/50"
+                    >
+                      <option value="">Seleccionar...</option>
+                      <option value="Reel">Reel</option>
+                      <option value="Foto">Foto</option>
+                      <option value="Carrusel">Carrusel</option>
+                      <option value="Story">Story</option>
+                      <option value="Video">Video</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label class="block text-xs font-medium text-slate-700 mb-1"
+                      >Título / Descripción</label
+                    >
+                    <input
+                      type="text"
+                      id="panel-post-title"
+                      placeholder="Ej. Torneo de golf..."
+                      maxlength="120"
+                      class="w-full px-2 py-1.5 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-club-green/50"
+                    />
+                  </div>
+                </div>
+                <div class="pt-1 border-t border-slate-100">
+                  <p
+                    class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2"
+                  >
+                    Visibilidad
+                  </p>
+                  <div class="grid grid-cols-3 gap-2">
+                    <div>
+                      <label class="block text-xs text-slate-600 mb-1"
+                        >👁️ Vistas</label
+                      >
+                      <input
+                        type="number"
+                        id="panel-post-vistas"
+                        min="0"
+                        placeholder="0"
+                        class="w-full px-2 py-1.5 text-sm border border-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-club-green/50"
+                      />
+                    </div>
+                    <div>
+                      <label class="block text-xs text-slate-600 mb-1"
+                        >▶️ Reprod.</label
+                      >
+                      <input
+                        type="number"
+                        id="panel-post-reproducciones"
+                        min="0"
+                        placeholder="0"
+                        class="w-full px-2 py-1.5 text-sm border border-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-club-green/50"
+                      />
+                    </div>
+                    <div>
+                      <label class="block text-xs text-slate-600 mb-1"
+                        >👥 Alcance</label
+                      >
+                      <input
+                        type="number"
+                        id="panel-post-reach"
+                        min="0"
+                        placeholder="0"
+                        class="w-full px-2 py-1.5 text-sm border border-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-club-green/50"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div class="pt-1 border-t border-slate-100">
+                  <p
+                    class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2"
+                  >
+                    Interacciones
+                  </p>
+                  <div class="grid grid-cols-4 gap-2">
+                    <div>
+                      <label class="block text-xs text-slate-600 mb-1"
+                        >❤️ Likes</label
+                      >
+                      <input
+                        type="number"
+                        id="panel-post-likes"
+                        min="0"
+                        placeholder="0"
+                        class="w-full px-2 py-1.5 text-sm border border-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-club-green/50"
+                      />
+                    </div>
+                    <div>
+                      <label class="block text-xs text-slate-600 mb-1"
+                        >💬 Coment.</label
+                      >
+                      <input
+                        type="number"
+                        id="panel-post-comments"
+                        min="0"
+                        placeholder="0"
+                        class="w-full px-2 py-1.5 text-sm border border-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-club-green/50"
+                      />
+                    </div>
+                    <div>
+                      <label class="block text-xs text-slate-600 mb-1"
+                        >🔖 Guard.</label
+                      >
+                      <input
+                        type="number"
+                        id="panel-post-saves"
+                        min="0"
+                        placeholder="0"
+                        class="w-full px-2 py-1.5 text-sm border border-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-club-green/50"
+                      />
+                    </div>
+                    <div>
+                      <label class="block text-xs text-slate-600 mb-1"
+                        >↗️ Compart.</label
+                      >
+                      <input
+                        type="number"
+                        id="panel-post-compartidos"
+                        min="0"
+                        placeholder="0"
+                        class="w-full px-2 py-1.5 text-sm border border-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-club-green/50"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div class="pt-1 border-t border-slate-100">
+                  <p
+                    class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1"
+                  >
+                    % Audiencia
+                    <span class="font-normal normal-case">(opcional)</span>
+                  </p>
+                  <div class="grid grid-cols-2 gap-2 mt-2">
+                    <div class="relative">
+                      <input
+                        type="number"
+                        id="panel-post-pct-seg"
+                        min="0"
+                        max="100"
+                        step="0.1"
+                        placeholder="% Seguidores"
+                        class="w-full px-2 py-1.5 pr-6 text-sm border border-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-club-green/50"
+                      />
+                      <span
+                        class="absolute right-2 top-1/2 -translate-y-1/2 text-xs text-slate-400"
+                        >%</span
+                      >
+                    </div>
+                    <div class="relative">
+                      <input
+                        type="number"
+                        id="panel-post-pct-int"
+                        min="0"
+                        max="100"
+                        step="0.1"
+                        placeholder="% Interactuantes"
+                        class="w-full px-2 py-1.5 pr-6 text-sm border border-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-club-green/50"
+                      />
+                      <span
+                        class="absolute right-2 top-1/2 -translate-y-1/2 text-xs text-slate-400"
+                        >%</span
+                      >
+                    </div>
+                  </div>
+                </div>
+                <button
+                  type="submit"
+                  id="btn-panel-post-submit"
+                  class="w-full mt-1 bg-club-green hover:bg-[#0e3d26] text-white font-semibold py-2.5 px-4 rounded-lg transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  <i data-lucide="save" class="w-4 h-4"></i> Guardar Publicación
+                </button>
+              </form>
             </div>
           </div>
 
@@ -644,6 +952,28 @@
               </h2>
               <div class="w-full h-52 relative">
                 <canvas id="followersChart"></canvas>
+              </div>
+            </div>
+            <!-- Publicaciones recientes -->
+            <div class="glass-card p-4 md:p-5">
+              <div class="flex items-center justify-between mb-3">
+                <h3
+                  class="text-sm font-semibold text-club-dark flex items-center gap-2"
+                >
+                  <i data-lucide="activity" class="w-4 h-4 text-club-gold"></i>
+                  Publicaciones recientes
+                </h3>
+                <button
+                  onclick="document.querySelector('[data-tab=posts]').click()"
+                  class="text-xs text-club-dark font-medium hover:underline"
+                >
+                  Ver todas →
+                </button>
+              </div>
+              <div id="overview-recent-posts">
+                <p class="text-slate-400 text-sm py-2">
+                  Sin publicaciones registradas aún.
+                </p>
               </div>
             </div>
           </div>
@@ -746,13 +1076,22 @@
       <!-- TAB: HISTORIAL -->
       <section id="tab-history" class="hidden flex-col gap-6">
         <div class="glass-card overflow-hidden">
-          <div class="p-4 md:p-6 border-b border-slate-100 flex flex-wrap items-center justify-between gap-3">
+          <div
+            class="p-4 md:p-6 border-b border-slate-100 flex flex-wrap items-center justify-between gap-3"
+          >
             <div>
-              <h2 class="text-base sm:text-lg font-semibold text-club-dark">Historial de metricas</h2>
-              <p class="text-xs text-slate-400 mt-0.5">Historias y Publicaciones</p>
+              <h2 class="text-base sm:text-lg font-semibold text-club-dark">
+                Historial de metricas
+              </h2>
+              <p class="text-xs text-slate-400 mt-0.5">
+                Historias y Publicaciones
+              </p>
             </div>
             <div class="flex items-center gap-3">
-              <select id="history-filter" class="text-sm border border-slate-200 rounded-md px-3 py-1.5 text-slate-600 focus:outline-none">
+              <select
+                id="history-filter"
+                class="text-sm border border-slate-200 rounded-md px-3 py-1.5 text-slate-600 focus:outline-none"
+              >
                 <option value="daily">Diario</option>
                 <option value="weekly">Semanal</option>
                 <option value="monthly">Mensual</option>
@@ -763,14 +1102,30 @@
           <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse">
               <thead id="history-thead">
-                <tr class="bg-slate-50 text-slate-500 text-xs uppercase tracking-wider">
+                <tr
+                  class="bg-slate-50 text-slate-500 text-xs uppercase tracking-wider"
+                >
                   <th class="p-2 sm:p-4 font-medium">Fecha</th>
-                  <th class="p-2 sm:p-4 font-medium hidden sm:table-cell">Dia</th>
+                  <th class="p-2 sm:p-4 font-medium hidden sm:table-cell">
+                    Dia
+                  </th>
                   <th class="p-2 sm:p-4 font-medium text-right">Vistas</th>
                   <th class="p-2 sm:p-4 font-medium text-right">❤️</th>
-                  <th class="p-2 sm:p-4 font-medium text-right hidden sm:table-cell">💬</th>
-                  <th class="p-2 sm:p-4 font-medium text-right hidden sm:table-cell">🔖</th>
-                  <th class="p-2 sm:p-4 font-medium text-right hidden sm:table-cell">↗️</th>
+                  <th
+                    class="p-2 sm:p-4 font-medium text-right hidden sm:table-cell"
+                  >
+                    💬
+                  </th>
+                  <th
+                    class="p-2 sm:p-4 font-medium text-right hidden sm:table-cell"
+                  >
+                    🔖
+                  </th>
+                  <th
+                    class="p-2 sm:p-4 font-medium text-right hidden sm:table-cell"
+                  >
+                    ↗️
+                  </th>
                   <th class="p-2 sm:p-4 font-medium text-right">Total</th>
                   <th class="p-2 sm:p-4 font-medium text-right">Eng%</th>
                   <th class="p-2 sm:p-4 font-medium text-center">Accion</th>
@@ -800,30 +1155,66 @@
           <!-- Formulario semanal -->
           <div class="lg:col-span-1">
             <div class="glass-card p-5">
-              <div class="flex items-center gap-2 mb-4 border-b border-slate-100 pb-3">
-                <i data-lucide="calendar-days" class="w-5 h-5 text-club-green"></i>
-                <h2 class="text-lg font-semibold text-club-dark">Registro Semanal</h2>
+              <div
+                class="flex items-center gap-2 mb-4 border-b border-slate-100 pb-3"
+              >
+                <i
+                  data-lucide="calendar-days"
+                  class="w-5 h-5 text-club-green"
+                ></i>
+                <h2 class="text-lg font-semibold text-club-dark">
+                  Registro Semanal
+                </h2>
               </div>
-              <p class="text-xs text-slate-500 mb-4">Registra una vez por semana el total de seguidores y las visitas al perfil para medir el crecimiento.</p>
+              <p class="text-xs text-slate-500 mb-4">
+                Registra una vez por semana el total de seguidores y las visitas
+                al perfil para medir el crecimiento.
+              </p>
               <form id="weekly-form" class="space-y-4">
                 <div>
-                  <label class="block text-sm font-medium text-slate-700 mb-1">Fecha de registro</label>
-                  <input type="date" id="weekly-date" required
-                    class="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-club-green/50 text-slate-700"/>
+                  <label class="block text-sm font-medium text-slate-700 mb-1"
+                    >Fecha de registro</label
+                  >
+                  <input
+                    type="date"
+                    id="weekly-date"
+                    required
+                    class="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-club-green/50 text-slate-700"
+                  />
                 </div>
                 <div>
-                  <label class="block text-sm font-medium text-slate-700 mb-1">👥 Total de Seguidores</label>
-                  <input type="number" id="weekly-followers" required min="0" placeholder="0"
-                    class="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-club-green/50"/>
+                  <label class="block text-sm font-medium text-slate-700 mb-1"
+                    >👥 Total de Seguidores</label
+                  >
+                  <input
+                    type="number"
+                    id="weekly-followers"
+                    required
+                    min="0"
+                    placeholder="0"
+                    class="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-club-green/50"
+                  />
                 </div>
                 <div>
-                  <label class="block text-sm font-medium text-slate-700 mb-1">👁️ Visitas al perfil</label>
-                  <input type="number" id="weekly-visits" min="0" placeholder="0"
-                    class="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-club-green/50"/>
+                  <label class="block text-sm font-medium text-slate-700 mb-1"
+                    >👁️ Visitas al perfil</label
+                  >
+                  <input
+                    type="number"
+                    id="weekly-visits"
+                    min="0"
+                    placeholder="0"
+                    class="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-club-green/50"
+                  />
                 </div>
-                <button type="submit" id="btn-weekly-submit" disabled
-                  class="w-full bg-club-gold hover:bg-club-goldhover text-club-dark font-semibold py-2.5 px-4 rounded-lg transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed">
-                  <i data-lucide="save" class="w-4 h-4"></i> Guardar registro semanal
+                <button
+                  type="submit"
+                  id="btn-weekly-submit"
+                  disabled
+                  class="w-full bg-club-gold hover:bg-club-goldhover text-club-dark font-semibold py-2.5 px-4 rounded-lg transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  <i data-lucide="save" class="w-4 h-4"></i> Guardar registro
+                  semanal
                 </button>
               </form>
             </div>
@@ -831,14 +1222,23 @@
           <!-- Historial semanal -->
           <div class="lg:col-span-2">
             <div class="glass-card overflow-hidden">
-              <div class="p-4 border-b border-slate-100 flex items-center justify-between">
-                <h3 class="font-semibold text-club-dark">Historial de seguimiento semanal</h3>
-                <span id="weekly-history-count" class="text-xs text-slate-400"></span>
+              <div
+                class="p-4 border-b border-slate-100 flex items-center justify-between"
+              >
+                <h3 class="font-semibold text-club-dark">
+                  Historial de seguimiento semanal
+                </h3>
+                <span
+                  id="weekly-history-count"
+                  class="text-xs text-slate-400"
+                ></span>
               </div>
               <div class="overflow-x-auto">
                 <table class="w-full text-left border-collapse">
                   <thead>
-                    <tr class="bg-slate-50 text-slate-500 text-xs uppercase tracking-wider">
+                    <tr
+                      class="bg-slate-50 text-slate-500 text-xs uppercase tracking-wider"
+                    >
                       <th class="p-4 font-medium">Fecha</th>
                       <th class="p-4 font-medium">Dia</th>
                       <th class="p-4 font-medium text-right">Seguidores</th>
@@ -848,8 +1248,15 @@
                       <th class="p-4 font-medium text-center">Acción</th>
                     </tr>
                   </thead>
-                  <tbody id="weekly-table-body" class="text-sm divide-y divide-slate-100">
-                    <tr><td colspan="7" class="p-8 text-center text-slate-400">No hay registros semanales aún.</td></tr>
+                  <tbody
+                    id="weekly-table-body"
+                    class="text-sm divide-y divide-slate-100"
+                  >
+                    <tr>
+                      <td colspan="7" class="p-8 text-center text-slate-400">
+                        No hay registros semanales aún.
+                      </td>
+                    </tr>
                   </tbody>
                 </table>
               </div>
@@ -863,26 +1270,46 @@
         <!-- Selector de mes -->
         <div class="flex items-center justify-between">
           <div class="flex items-center gap-2">
-            <button id="btn-month-prev" class="p-2 rounded-lg hover:bg-slate-200 transition">
+            <button
+              id="btn-month-prev"
+              class="p-2 rounded-lg hover:bg-slate-200 transition"
+            >
               <i data-lucide="chevron-left" class="w-5 h-5 text-slate-600"></i>
             </button>
-            <span id="monthly-label" class="text-lg font-bold text-club-dark min-w-[160px] text-center capitalize"></span>
-            <button id="btn-month-next" class="p-2 rounded-lg hover:bg-slate-200 transition">
+            <span
+              id="monthly-label"
+              class="text-lg font-bold text-club-dark min-w-[160px] text-center capitalize"
+            ></span>
+            <button
+              id="btn-month-next"
+              class="p-2 rounded-lg hover:bg-slate-200 transition"
+            >
               <i data-lucide="chevron-right" class="w-5 h-5 text-slate-600"></i>
             </button>
           </div>
-          <select id="monthly-period-filter" class="text-sm border border-slate-200 rounded-md px-3 py-1.5 text-slate-600 focus:outline-none">
+          <select
+            id="monthly-period-filter"
+            class="text-sm border border-slate-200 rounded-md px-3 py-1.5 text-slate-600 focus:outline-none"
+          >
             <option value="month">Vista mensual</option>
             <option value="week">Vista semanal</option>
           </select>
         </div>
 
         <!-- KPIs del mes -->
-        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3" id="monthly-kpis"></div>
+        <div
+          class="grid grid-cols-2 sm:grid-cols-4 gap-3"
+          id="monthly-kpis"
+        ></div>
 
         <!-- Grafico de barras del mes -->
         <div class="glass-card p-4 md:p-6">
-          <h2 class="text-base sm:text-lg font-semibold text-club-dark mb-4" id="monthly-chart-title">Interacciones del mes</h2>
+          <h2
+            class="text-base sm:text-lg font-semibold text-club-dark mb-4"
+            id="monthly-chart-title"
+          >
+            Interacciones del mes
+          </h2>
           <div class="w-full h-72 relative">
             <canvas id="monthlyChart"></canvas>
           </div>
@@ -890,16 +1317,32 @@
 
         <!-- Tabla detalle por semana/dia -->
         <div class="glass-card overflow-hidden">
-          <div class="p-4 border-b border-slate-100 flex items-center justify-between">
-            <h2 class="text-base font-semibold text-club-dark" id="monthly-table-title">Detalle por semana</h2>
-            <span id="monthly-record-count" class="text-xs text-slate-400"></span>
+          <div
+            class="p-4 border-b border-slate-100 flex items-center justify-between"
+          >
+            <h2
+              class="text-base font-semibold text-club-dark"
+              id="monthly-table-title"
+            >
+              Detalle por semana
+            </h2>
+            <span
+              id="monthly-record-count"
+              class="text-xs text-slate-400"
+            ></span>
           </div>
           <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse">
               <thead>
-                <tr class="bg-slate-50 text-slate-500 text-xs uppercase tracking-wider" id="monthly-table-head"></tr>
+                <tr
+                  class="bg-slate-50 text-slate-500 text-xs uppercase tracking-wider"
+                  id="monthly-table-head"
+                ></tr>
               </thead>
-              <tbody id="monthly-table-body" class="text-sm divide-y divide-slate-100"></tbody>
+              <tbody
+                id="monthly-table-body"
+                class="text-sm divide-y divide-slate-100"
+              ></tbody>
             </table>
           </div>
         </div>
@@ -978,15 +1421,28 @@
       const weeklyForm = document.getElementById("weekly-form");
       const btnWeeklySubmit = document.getElementById("btn-weekly-submit");
       const weeklyTableBody = document.getElementById("weekly-table-body");
+      const panelPostForm = document.getElementById("post-form-panel");
+      const btnPanelPostSubmit = document.getElementById(
+        "btn-panel-post-submit",
+      );
 
       inputDate.valueAsDate = new Date();
       const inputTime = document.getElementById("input-time");
       inputTime.value = new Date().toTimeString().slice(0, 5);
-      const _nowLocal = () =>
-        new Date(Date.now() - new Date().getTimezoneOffset() * 60000)
-          .toISOString()
-          .slice(0, 16);
-      document.getElementById("post-datetime").value = _nowLocal();
+      // Modal post form: separate date + time
+      document.getElementById("post-date").value = new Date()
+        .toISOString()
+        .split("T")[0];
+      document.getElementById("post-time").value = new Date()
+        .toTimeString()
+        .slice(0, 5);
+      // Panel post form init
+      document.getElementById("panel-post-date").value = new Date()
+        .toISOString()
+        .split("T")[0];
+      document.getElementById("panel-post-time").value = new Date()
+        .toTimeString()
+        .slice(0, 5);
 
       let db, auth, provider, currentUser;
       let globalWeekly = [];
@@ -998,47 +1454,472 @@
       // Datos históricos de Notion — siempre visibles, sin necesidad de login
       // Registros diarios derivados de los Stories de Notion
       const NOTION_DAILY = [
-        { id:"d28", date:"2026-04-28", time:"09:15", storyViews:1890, likes:152, comments:8,  saves:45,  shares:19,  createdAt:"2026-04-28T09:15:00.000Z" },
-        { id:"d27", date:"2026-04-27", time:"10:30", storyViews:1430, likes:108, comments:5,  saves:29,  shares:11,  createdAt:"2026-04-27T10:30:00.000Z" },
-        { id:"d26", date:"2026-04-26", time:"11:00", storyViews:2780, likes:221, comments:15, saves:71,  shares:33,  createdAt:"2026-04-26T11:00:00.000Z" },
-        { id:"d25", date:"2026-04-25", time:"10:45", storyViews:3120, likes:267, comments:19, saves:84,  shares:41,  createdAt:"2026-04-25T10:45:00.000Z" },
-        { id:"d24", date:"2026-04-24", time:"09:00", storyViews:2340, likes:189, comments:11, saves:62,  shares:26,  createdAt:"2026-04-24T09:00:00.000Z" },
-        { id:"d23", date:"2026-04-23", time:"14:20", storyViews:1680, likes:134, comments:7,  saves:41,  shares:17,  createdAt:"2026-04-23T14:20:00.000Z" },
-        { id:"d10", date:"2026-04-22", time:"10:00", storyViews:20969, likes:606, comments:29, saves:376, shares:182, createdAt:"2026-04-22T10:00:00.000Z" },
-        { id:"d9",  date:"2026-04-21", time:"12:00", storyViews:155,  likes:241, comments:4,  saves:76,  shares:43,  createdAt:"2026-04-21T12:00:00.000Z" },
-        { id:"d20", date:"2026-04-20", time:"08:50", storyViews:1520, likes:112, comments:6,  saves:34,  shares:14,  createdAt:"2026-04-20T08:50:00.000Z" },
-        { id:"d19", date:"2026-04-19", time:"11:30", storyViews:2670, likes:198, comments:14, saves:67,  shares:28,  createdAt:"2026-04-19T11:30:00.000Z" },
-        { id:"d18", date:"2026-04-18", time:"09:45", storyViews:3450, likes:312, comments:24, saves:95,  shares:48,  createdAt:"2026-04-18T09:45:00.000Z" },
-        { id:"d17", date:"2026-04-17", time:"10:10", storyViews:2890, likes:243, comments:18, saves:78,  shares:35,  createdAt:"2026-04-17T10:10:00.000Z" },
-        { id:"d16", date:"2026-04-16", time:"13:00", storyViews:1750, likes:156, comments:9,  saves:38,  shares:15,  createdAt:"2026-04-16T13:00:00.000Z" },
-        { id:"d15", date:"2026-04-15", time:"09:20", storyViews:2100, likes:187, comments:12, saves:55,  shares:22,  createdAt:"2026-04-15T09:20:00.000Z" },
-        { id:"d14", date:"2026-04-14", time:"11:15", storyViews:1340, likes:98,  comments:5,  saves:28,  shares:12,  createdAt:"2026-04-14T11:15:00.000Z" },
-        { id:"d13", date:"2026-04-13", time:"10:00", storyViews:1890, likes:145, comments:8,  saves:42,  shares:18,  createdAt:"2026-04-13T10:00:00.000Z" },
-        { id:"d8",  date:"2025-03-20", time:"",      storyViews:13803, likes:667, comments:1, saves:112, shares:77,  createdAt:"2025-03-20T00:00:00.000Z" },
+        {
+          id: "d28",
+          date: "2026-04-28",
+          time: "09:15",
+          storyViews: 1890,
+          likes: 152,
+          comments: 8,
+          saves: 45,
+          shares: 19,
+          createdAt: "2026-04-28T09:15:00.000Z",
+        },
+        {
+          id: "d27",
+          date: "2026-04-27",
+          time: "10:30",
+          storyViews: 1430,
+          likes: 108,
+          comments: 5,
+          saves: 29,
+          shares: 11,
+          createdAt: "2026-04-27T10:30:00.000Z",
+        },
+        {
+          id: "d26",
+          date: "2026-04-26",
+          time: "11:00",
+          storyViews: 2780,
+          likes: 221,
+          comments: 15,
+          saves: 71,
+          shares: 33,
+          createdAt: "2026-04-26T11:00:00.000Z",
+        },
+        {
+          id: "d25",
+          date: "2026-04-25",
+          time: "10:45",
+          storyViews: 3120,
+          likes: 267,
+          comments: 19,
+          saves: 84,
+          shares: 41,
+          createdAt: "2026-04-25T10:45:00.000Z",
+        },
+        {
+          id: "d24",
+          date: "2026-04-24",
+          time: "09:00",
+          storyViews: 2340,
+          likes: 189,
+          comments: 11,
+          saves: 62,
+          shares: 26,
+          createdAt: "2026-04-24T09:00:00.000Z",
+        },
+        {
+          id: "d23",
+          date: "2026-04-23",
+          time: "14:20",
+          storyViews: 1680,
+          likes: 134,
+          comments: 7,
+          saves: 41,
+          shares: 17,
+          createdAt: "2026-04-23T14:20:00.000Z",
+        },
+        {
+          id: "d10",
+          date: "2026-04-22",
+          time: "10:00",
+          storyViews: 20969,
+          likes: 606,
+          comments: 29,
+          saves: 376,
+          shares: 182,
+          createdAt: "2026-04-22T10:00:00.000Z",
+        },
+        {
+          id: "d9",
+          date: "2026-04-21",
+          time: "12:00",
+          storyViews: 155,
+          likes: 241,
+          comments: 4,
+          saves: 76,
+          shares: 43,
+          createdAt: "2026-04-21T12:00:00.000Z",
+        },
+        {
+          id: "d20",
+          date: "2026-04-20",
+          time: "08:50",
+          storyViews: 1520,
+          likes: 112,
+          comments: 6,
+          saves: 34,
+          shares: 14,
+          createdAt: "2026-04-20T08:50:00.000Z",
+        },
+        {
+          id: "d19",
+          date: "2026-04-19",
+          time: "11:30",
+          storyViews: 2670,
+          likes: 198,
+          comments: 14,
+          saves: 67,
+          shares: 28,
+          createdAt: "2026-04-19T11:30:00.000Z",
+        },
+        {
+          id: "d18",
+          date: "2026-04-18",
+          time: "09:45",
+          storyViews: 3450,
+          likes: 312,
+          comments: 24,
+          saves: 95,
+          shares: 48,
+          createdAt: "2026-04-18T09:45:00.000Z",
+        },
+        {
+          id: "d17",
+          date: "2026-04-17",
+          time: "10:10",
+          storyViews: 2890,
+          likes: 243,
+          comments: 18,
+          saves: 78,
+          shares: 35,
+          createdAt: "2026-04-17T10:10:00.000Z",
+        },
+        {
+          id: "d16",
+          date: "2026-04-16",
+          time: "13:00",
+          storyViews: 1750,
+          likes: 156,
+          comments: 9,
+          saves: 38,
+          shares: 15,
+          createdAt: "2026-04-16T13:00:00.000Z",
+        },
+        {
+          id: "d15",
+          date: "2026-04-15",
+          time: "09:20",
+          storyViews: 2100,
+          likes: 187,
+          comments: 12,
+          saves: 55,
+          shares: 22,
+          createdAt: "2026-04-15T09:20:00.000Z",
+        },
+        {
+          id: "d14",
+          date: "2026-04-14",
+          time: "11:15",
+          storyViews: 1340,
+          likes: 98,
+          comments: 5,
+          saves: 28,
+          shares: 12,
+          createdAt: "2026-04-14T11:15:00.000Z",
+        },
+        {
+          id: "d13",
+          date: "2026-04-13",
+          time: "10:00",
+          storyViews: 1890,
+          likes: 145,
+          comments: 8,
+          saves: 42,
+          shares: 18,
+          createdAt: "2026-04-13T10:00:00.000Z",
+        },
+        {
+          id: "d8",
+          date: "2025-03-20",
+          time: "",
+          storyViews: 13803,
+          likes: 667,
+          comments: 1,
+          saves: 112,
+          shares: 77,
+          createdAt: "2025-03-20T00:00:00.000Z",
+        },
       ];
 
       const NOTION_POSTS = [
-        { id:"n14", date:"2026-04-26", publishedAt:"2026-04-26T11:00", type:"Carrusel", title:"Agenda de eventos — ultima semana de abril", vistas:4820,  reproducciones:0,    reach:3210,  likes:312,  comments:22,   saves:89,  compartidos:41,  pctSeguidores:28.4, pctInteractuantes:9.2,  createdAt:"2026-04-26T11:00:00.000Z" },
-        { id:"n13", date:"2026-04-24", publishedAt:"2026-04-24T09:00", type:"Foto",     title:"Puesta de sol en el campo de golf",          vistas:3190,  reproducciones:0,    reach:2450,  likes:287,  comments:18,   saves:74,  compartidos:22,  pctSeguidores:22.1, pctInteractuantes:11.3, createdAt:"2026-04-24T09:00:00.000Z" },
-        { id:"n12", date:"2026-04-18", publishedAt:"2026-04-18T09:45", type:"Reel",     title:"Resumen torneo Copa Campestre",              vistas:8740,  reproducciones:5120, reach:6380,  likes:541,  comments:38,   saves:132, compartidos:67,  pctSeguidores:35.2, pctInteractuantes:13.1, createdAt:"2026-04-18T09:45:00.000Z" },
-        { id:"n11", date:"2026-04-16", publishedAt:"2026-04-16T13:00", type:"Carrusel", title:"Instalaciones renovadas — area de tenis",      vistas:5630,  reproducciones:0,    reach:4120,  likes:398,  comments:27,   saves:108, compartidos:34,  pctSeguidores:31.8, pctInteractuantes:10.5, createdAt:"2026-04-16T13:00:00.000Z" },
-        { id:"np1", date:"2026-04-14", publishedAt:"2026-04-14T11:15", type:"Reel",     title:"Tips de golf para principiantes",            vistas:11250, reproducciones:7840, reach:8970,  likes:623,  comments:45,   saves:178, compartidos:89,  pctSeguidores:42.3, pctInteractuantes:15.2, createdAt:"2026-04-14T11:15:00.000Z" },
-        { id:"n10", date:"2026-04-22", publishedAt:"2026-04-22T10:00", type:"Story",    title:"Copa Camilo Villegas",                       vistas:20969, reproducciones:0,    reach:0,     likes:606,  comments:29,   saves:376, compartidos:182, pctSeguidores:0,    pctInteractuantes:0,    createdAt:"2026-04-22T10:00:00.000Z" },
-        { id:"n9",  date:"2026-04-21", publishedAt:"2026-04-21T12:00", type:"Story",    title:"Torneo Semana Santa",                        vistas:155,   reproducciones:0,    reach:0,     likes:241,  comments:4,    saves:76,  compartidos:43,  pctSeguidores:0,    pctInteractuantes:0,    createdAt:"2026-04-21T12:00:00.000Z" },
-        { id:"n8",  date:"2025-03-20", publishedAt:"2025-03-20T00:00", type:"Story",    title:"Merga Kid\u00b4s Water Party",              vistas:13803, reproducciones:0,    reach:0,     likes:667,  comments:1,    saves:112, compartidos:77,  pctSeguidores:0,    pctInteractuantes:0,    createdAt:"2025-03-20T00:00:00.000Z" },
-        { id:"n7",  date:"2025-03-18", publishedAt:"2025-03-18T00:00", type:"Carrusel", title:"Post 18",                                    vistas:53977, reproducciones:6602, reach:31105, likes:1133, comments:1000, saves:554, compartidos:216, pctSeguidores:32.1, pctInteractuantes:0,    createdAt:"2025-03-18T00:00:00.000Z" },
-        { id:"n6",  date:"2025-02-19", publishedAt:"2025-02-19T00:00", type:"Reel",     title:"Post 19",                                   vistas:16361, reproducciones:6150, reach:11569, likes:188,  comments:53,   saves:28,  compartidos:5,   pctSeguidores:20.9, pctInteractuantes:0,    createdAt:"2025-02-19T00:00:00.000Z" },
-        { id:"n5",  date:"2025-02-17", publishedAt:"2025-02-17T00:00", type:"Reel",     title:"Post 17",                                   vistas:12542, reproducciones:3292, reach:9504,  likes:165,  comments:2,    saves:17,  compartidos:7,   pctSeguidores:19.2, pctInteractuantes:0,    createdAt:"2025-02-17T00:00:00.000Z" },
-        { id:"n4",  date:"2025-02-16", publishedAt:"2025-02-16T00:00", type:"Carrusel", title:"Post 16",                                   vistas:13305, reproducciones:3978, reach:10100, likes:330,  comments:0,    saves:37,  compartidos:16,  pctSeguidores:24,   pctInteractuantes:0,    createdAt:"2025-02-16T00:00:00.000Z" },
-        { id:"n3",  date:"2025-02-15", publishedAt:"2025-02-15T00:00", type:"Carrusel", title:"Post 15",                                   vistas:16282, reproducciones:0,    reach:9084,  likes:368,  comments:3,    saves:30,  compartidos:78,  pctSeguidores:12,   pctInteractuantes:0,    createdAt:"2025-02-15T00:00:00.000Z" },
-        { id:"n2",  date:"2025-02-14", publishedAt:"2025-02-14T00:00", type:"Reel",     title:"Post 14",                                   vistas:30611, reproducciones:785,  reach:17708, likes:1250, comments:17,   saves:397, compartidos:477, pctSeguidores:6.3,  pctInteractuantes:0,    createdAt:"2025-02-14T00:00:00.000Z" },
-        { id:"n1",  date:"2025-02-13", publishedAt:"2025-02-13T00:00", type:"Carrusel", title:"Post 13",                                   vistas:24698, reproducciones:1565, reach:14754, likes:958,  comments:17,   saves:171, compartidos:130, pctSeguidores:57,   pctInteractuantes:0,    createdAt:"2025-02-13T00:00:00.000Z" },
+        {
+          id: "n14",
+          date: "2026-04-26",
+          publishedAt: "2026-04-26T11:00",
+          type: "Carrusel",
+          title: "Agenda de eventos — ultima semana de abril",
+          vistas: 4820,
+          reproducciones: 0,
+          reach: 3210,
+          likes: 312,
+          comments: 22,
+          saves: 89,
+          compartidos: 41,
+          pctSeguidores: 28.4,
+          pctInteractuantes: 9.2,
+          createdAt: "2026-04-26T11:00:00.000Z",
+        },
+        {
+          id: "n13",
+          date: "2026-04-24",
+          publishedAt: "2026-04-24T09:00",
+          type: "Foto",
+          title: "Puesta de sol en el campo de golf",
+          vistas: 3190,
+          reproducciones: 0,
+          reach: 2450,
+          likes: 287,
+          comments: 18,
+          saves: 74,
+          compartidos: 22,
+          pctSeguidores: 22.1,
+          pctInteractuantes: 11.3,
+          createdAt: "2026-04-24T09:00:00.000Z",
+        },
+        {
+          id: "n12",
+          date: "2026-04-18",
+          publishedAt: "2026-04-18T09:45",
+          type: "Reel",
+          title: "Resumen torneo Copa Campestre",
+          vistas: 8740,
+          reproducciones: 5120,
+          reach: 6380,
+          likes: 541,
+          comments: 38,
+          saves: 132,
+          compartidos: 67,
+          pctSeguidores: 35.2,
+          pctInteractuantes: 13.1,
+          createdAt: "2026-04-18T09:45:00.000Z",
+        },
+        {
+          id: "n11",
+          date: "2026-04-16",
+          publishedAt: "2026-04-16T13:00",
+          type: "Carrusel",
+          title: "Instalaciones renovadas — area de tenis",
+          vistas: 5630,
+          reproducciones: 0,
+          reach: 4120,
+          likes: 398,
+          comments: 27,
+          saves: 108,
+          compartidos: 34,
+          pctSeguidores: 31.8,
+          pctInteractuantes: 10.5,
+          createdAt: "2026-04-16T13:00:00.000Z",
+        },
+        {
+          id: "np1",
+          date: "2026-04-14",
+          publishedAt: "2026-04-14T11:15",
+          type: "Reel",
+          title: "Tips de golf para principiantes",
+          vistas: 11250,
+          reproducciones: 7840,
+          reach: 8970,
+          likes: 623,
+          comments: 45,
+          saves: 178,
+          compartidos: 89,
+          pctSeguidores: 42.3,
+          pctInteractuantes: 15.2,
+          createdAt: "2026-04-14T11:15:00.000Z",
+        },
+        {
+          id: "n10",
+          date: "2026-04-22",
+          publishedAt: "2026-04-22T10:00",
+          type: "Story",
+          title: "Copa Camilo Villegas",
+          vistas: 20969,
+          reproducciones: 0,
+          reach: 0,
+          likes: 606,
+          comments: 29,
+          saves: 376,
+          compartidos: 182,
+          pctSeguidores: 0,
+          pctInteractuantes: 0,
+          createdAt: "2026-04-22T10:00:00.000Z",
+        },
+        {
+          id: "n9",
+          date: "2026-04-21",
+          publishedAt: "2026-04-21T12:00",
+          type: "Story",
+          title: "Torneo Semana Santa",
+          vistas: 155,
+          reproducciones: 0,
+          reach: 0,
+          likes: 241,
+          comments: 4,
+          saves: 76,
+          compartidos: 43,
+          pctSeguidores: 0,
+          pctInteractuantes: 0,
+          createdAt: "2026-04-21T12:00:00.000Z",
+        },
+        {
+          id: "n8",
+          date: "2025-03-20",
+          publishedAt: "2025-03-20T00:00",
+          type: "Story",
+          title: "Merga Kid\u00b4s Water Party",
+          vistas: 13803,
+          reproducciones: 0,
+          reach: 0,
+          likes: 667,
+          comments: 1,
+          saves: 112,
+          compartidos: 77,
+          pctSeguidores: 0,
+          pctInteractuantes: 0,
+          createdAt: "2025-03-20T00:00:00.000Z",
+        },
+        {
+          id: "n7",
+          date: "2025-03-18",
+          publishedAt: "2025-03-18T00:00",
+          type: "Carrusel",
+          title: "Post 18",
+          vistas: 53977,
+          reproducciones: 6602,
+          reach: 31105,
+          likes: 1133,
+          comments: 1000,
+          saves: 554,
+          compartidos: 216,
+          pctSeguidores: 32.1,
+          pctInteractuantes: 0,
+          createdAt: "2025-03-18T00:00:00.000Z",
+        },
+        {
+          id: "n6",
+          date: "2025-02-19",
+          publishedAt: "2025-02-19T00:00",
+          type: "Reel",
+          title: "Post 19",
+          vistas: 16361,
+          reproducciones: 6150,
+          reach: 11569,
+          likes: 188,
+          comments: 53,
+          saves: 28,
+          compartidos: 5,
+          pctSeguidores: 20.9,
+          pctInteractuantes: 0,
+          createdAt: "2025-02-19T00:00:00.000Z",
+        },
+        {
+          id: "n5",
+          date: "2025-02-17",
+          publishedAt: "2025-02-17T00:00",
+          type: "Reel",
+          title: "Post 17",
+          vistas: 12542,
+          reproducciones: 3292,
+          reach: 9504,
+          likes: 165,
+          comments: 2,
+          saves: 17,
+          compartidos: 7,
+          pctSeguidores: 19.2,
+          pctInteractuantes: 0,
+          createdAt: "2025-02-17T00:00:00.000Z",
+        },
+        {
+          id: "n4",
+          date: "2025-02-16",
+          publishedAt: "2025-02-16T00:00",
+          type: "Carrusel",
+          title: "Post 16",
+          vistas: 13305,
+          reproducciones: 3978,
+          reach: 10100,
+          likes: 330,
+          comments: 0,
+          saves: 37,
+          compartidos: 16,
+          pctSeguidores: 24,
+          pctInteractuantes: 0,
+          createdAt: "2025-02-16T00:00:00.000Z",
+        },
+        {
+          id: "n3",
+          date: "2025-02-15",
+          publishedAt: "2025-02-15T00:00",
+          type: "Carrusel",
+          title: "Post 15",
+          vistas: 16282,
+          reproducciones: 0,
+          reach: 9084,
+          likes: 368,
+          comments: 3,
+          saves: 30,
+          compartidos: 78,
+          pctSeguidores: 12,
+          pctInteractuantes: 0,
+          createdAt: "2025-02-15T00:00:00.000Z",
+        },
+        {
+          id: "n2",
+          date: "2025-02-14",
+          publishedAt: "2025-02-14T00:00",
+          type: "Reel",
+          title: "Post 14",
+          vistas: 30611,
+          reproducciones: 785,
+          reach: 17708,
+          likes: 1250,
+          comments: 17,
+          saves: 397,
+          compartidos: 477,
+          pctSeguidores: 6.3,
+          pctInteractuantes: 0,
+          createdAt: "2025-02-14T00:00:00.000Z",
+        },
+        {
+          id: "n1",
+          date: "2025-02-13",
+          publishedAt: "2025-02-13T00:00",
+          type: "Carrusel",
+          title: "Post 13",
+          vistas: 24698,
+          reproducciones: 1565,
+          reach: 14754,
+          likes: 958,
+          comments: 17,
+          saves: 171,
+          compartidos: 130,
+          pctSeguidores: 57,
+          pctInteractuantes: 0,
+          createdAt: "2025-02-13T00:00:00.000Z",
+        },
       ];
       let globalPosts = [...NOTION_POSTS];
-      let globalData   = [...NOTION_DAILY].sort((a, b) => new Date(b.date) - new Date(a.date));
+      let globalData = [...NOTION_DAILY].sort(
+        (a, b) => new Date(b.date) - new Date(a.date),
+      );
       let editingDailyId = null;
-      const MESES_ES = ["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
-      let monthlyYear  = new Date().getFullYear();
+      const MESES_ES = [
+        "Enero",
+        "Febrero",
+        "Marzo",
+        "Abril",
+        "Mayo",
+        "Junio",
+        "Julio",
+        "Agosto",
+        "Septiembre",
+        "Octubre",
+        "Noviembre",
+        "Diciembre",
+      ];
+      let monthlyYear = new Date().getFullYear();
       let monthlyMonth = new Date().getMonth();
       let monthlyChartInst = null;
 
@@ -1058,25 +1939,29 @@
           disableForms();
         }, 6000);
 
-        onAuthStateChanged(auth, (user) => {
-          clearTimeout(authTimeout);
-          currentUser = user;
-          if (user) {
-            authStatus.innerHTML = `<span class="text-white text-xs">${user.displayName || user.email}</span>`;
-            btnLogout.classList.remove("hidden");
-            enableForms();
-            loadData();
-            loadPosts();
-            loadWeekly();
-          } else {
+        onAuthStateChanged(
+          auth,
+          (user) => {
+            clearTimeout(authTimeout);
+            currentUser = user;
+            if (user) {
+              authStatus.innerHTML = `<span class="text-white text-xs">${user.displayName || user.email}</span>`;
+              btnLogout.classList.remove("hidden");
+              enableForms();
+              loadData();
+              loadPosts();
+              loadWeekly();
+            } else {
+              authStatus.innerHTML = ``;
+              btnLogout.classList.add("hidden");
+              disableForms();
+            }
+          },
+          (err) => {
+            clearTimeout(authTimeout);
             authStatus.innerHTML = ``;
-            btnLogout.classList.add("hidden");
-            disableForms();
-          }
-        }, (err) => {
-          clearTimeout(authTimeout);
-          authStatus.innerHTML = ``;
-        });
+          },
+        );
 
         btnLogout.addEventListener("click", () => signOut(auth));
       } else {
@@ -1093,9 +1978,11 @@
             const fbData = [];
             snap.forEach((d) => fbData.push({ id: d.id, ...d.data() }));
             // Fusionar: Firebase primero, luego base Notion sin duplicados por fecha
-            const fbDates = new Set(fbData.map(r => r.date));
-            const notionOnly = NOTION_DAILY.filter(r => !fbDates.has(r.date));
-            globalData = [...fbData, ...notionOnly].sort((a, b) => new Date(b.date) - new Date(a.date));
+            const fbDates = new Set(fbData.map((r) => r.date));
+            const notionOnly = NOTION_DAILY.filter((r) => !fbDates.has(r.date));
+            globalData = [...fbData, ...notionOnly].sort(
+              (a, b) => new Date(b.date) - new Date(a.date),
+            );
             updateDashboard();
           },
           (err) => console.error(err),
@@ -1109,7 +1996,9 @@
           (snap) => {
             const data = [];
             snap.forEach((d) => data.push({ id: d.id, ...d.data() }));
-            globalWeekly = data.sort((a, b) => new Date(b.date) - new Date(a.date));
+            globalWeekly = data.sort(
+              (a, b) => new Date(b.date) - new Date(a.date),
+            );
             renderWeeklyHistory();
             calculateKPIs();
           },
@@ -1125,10 +2014,12 @@
             const firebasePosts = [];
             snap.forEach((d) => firebasePosts.push({ id: d.id, ...d.data() }));
             // Fusionar: Firebase primero, luego los de Notion que no estén duplicados
-            const fbIds = new Set(firebasePosts.map(p => p.id));
-            const notionOnly = NOTION_POSTS.filter(p => !fbIds.has(p.id));
+            const fbIds = new Set(firebasePosts.map((p) => p.id));
+            const notionOnly = NOTION_POSTS.filter((p) => !fbIds.has(p.id));
             globalPosts = [...firebasePosts, ...notionOnly].sort(
-              (a, b) => new Date(b.publishedAt || b.date) - new Date(a.publishedAt || a.date),
+              (a, b) =>
+                new Date(b.publishedAt || b.date) -
+                new Date(a.publishedAt || a.date),
             );
             renderPostsGrid();
             renderInsights();
@@ -1138,15 +2029,27 @@
       }
 
       function enableForms() {
-        [btnSubmit, btnOpenPostModal, btnAddPostTop, btnPostSubmit, btnWeeklySubmit].forEach(
-          (b) => { if (b) b.disabled = false; },
-        );
+        [
+          btnSubmit,
+          btnOpenPostModal,
+          btnAddPostTop,
+          btnPostSubmit,
+          btnPanelPostSubmit,
+          btnWeeklySubmit,
+        ].forEach((b) => {
+          if (b) b.disabled = false;
+        });
       }
       function disableForms() {
         // Only disable post/weekly buttons that require auth; keep daily form always active
-        [btnOpenPostModal, btnAddPostTop, btnPostSubmit].forEach(
-          (b) => { if (b) b.disabled = true; },
-        );
+        [
+          btnOpenPostModal,
+          btnAddPostTop,
+          btnPostSubmit,
+          btnPanelPostSubmit,
+        ].forEach((b) => {
+          if (b) b.disabled = true;
+        });
       }
 
       window.cancelEditDaily = () => {
@@ -1160,12 +2063,13 @@
       };
 
       window.editRecord = (id) => {
-        const item = globalData.find(x => x.id === id);
+        const item = globalData.find((x) => x.id === id);
         if (!item) return;
         editingDailyId = id;
         inputDate.value = item.date;
         inputTime.value = item.time || "";
-        document.getElementById("input-story-views").value = item.storyViews || 0;
+        document.getElementById("input-story-views").value =
+          item.storyViews || 0;
         document.getElementById("input-likes").value = item.likes || 0;
         document.getElementById("input-comments").value = item.comments || 0;
         document.getElementById("input-saves").value = item.saves || 0;
@@ -1174,11 +2078,17 @@
         btnSubmit.innerHTML = `<i data-lucide="check" class="w-4 h-4"></i> Actualizar registro`;
         lucide.createIcons();
         // Go to Panel General tab and scroll to form
-        document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+        document
+          .querySelectorAll(".tab-btn")
+          .forEach((b) => b.classList.remove("active"));
         document.querySelector('[data-tab="overview"]').classList.add("active");
-        document.querySelectorAll("section[id^='tab-']").forEach(s => s.classList.add("hidden"));
+        document
+          .querySelectorAll("section[id^='tab-']")
+          .forEach((s) => s.classList.add("hidden"));
         document.getElementById("tab-overview").classList.remove("hidden");
-        document.getElementById("stats-form").scrollIntoView({ behavior: "smooth", block: "center" });
+        document
+          .getElementById("stats-form")
+          .scrollIntoView({ behavior: "smooth", block: "center" });
       };
 
       form.addEventListener("submit", async (e) => {
@@ -1186,25 +2096,48 @@
         const record = {
           date: inputDate.value,
           time: inputTime.value || "",
-          storyViews: parseInt(document.getElementById("input-story-views").value) || 0,
+          storyViews:
+            parseInt(document.getElementById("input-story-views").value) || 0,
           likes: parseInt(document.getElementById("input-likes").value) || 0,
-          comments: parseInt(document.getElementById("input-comments").value) || 0,
+          comments:
+            parseInt(document.getElementById("input-comments").value) || 0,
           saves: parseInt(document.getElementById("input-saves").value) || 0,
           shares: parseInt(document.getElementById("input-shares").value) || 0,
         };
         const origBtnHTML = `<i data-lucide="save" class="w-4 h-4"></i> Guardar Metricas`;
-        const _resetForm = () => { form.reset(); inputDate.valueAsDate = new Date(); inputTime.value = new Date().toTimeString().slice(0,5); };
+        const _resetForm = () => {
+          form.reset();
+          inputDate.valueAsDate = new Date();
+          inputTime.value = new Date().toTimeString().slice(0, 5);
+        };
         if (editingDailyId) {
           // UPDATE MODE
-          if (!DEMO_MODE && currentUser && !editingDailyId.startsWith("demo_") && !editingDailyId.startsWith("d")) {
+          if (
+            !DEMO_MODE &&
+            currentUser &&
+            !editingDailyId.startsWith("demo_") &&
+            !editingDailyId.startsWith("d")
+          ) {
             try {
               btnSubmit.disabled = true;
-              await updateDoc(doc(db, "users", currentUser.uid, "instagram_stats", editingDailyId), record);
+              await updateDoc(
+                doc(
+                  db,
+                  "users",
+                  currentUser.uid,
+                  "instagram_stats",
+                  editingDailyId,
+                ),
+                record,
+              );
               showToast("Registro actualizado");
-            } catch (err) { showToast("Error: " + err.message, "error"); }
-            finally { btnSubmit.disabled = false; }
+            } catch (err) {
+              showToast("Error: " + err.message, "error");
+            } finally {
+              btnSubmit.disabled = false;
+            }
           } else {
-            const idx = globalData.findIndex(x => x.id === editingDailyId);
+            const idx = globalData.findIndex((x) => x.id === editingDailyId);
             if (idx !== -1) globalData[idx] = { ...globalData[idx], ...record };
             updateDashboard();
             showToast("Registro actualizado");
@@ -1222,7 +2155,10 @@
           btnSubmit.innerHTML = `<div class="loader w-4 h-4 border-2 border-club-dark border-t-transparent mr-2"></div>Guardando...`;
           btnSubmit.disabled = true;
           try {
-            await addDoc(collection(db, "users", currentUser.uid, "instagram_stats"), record);
+            await addDoc(
+              collection(db, "users", currentUser.uid, "instagram_stats"),
+              record,
+            );
             _resetForm();
             showToast("Metricas guardadas correctamente");
           } catch (err) {
@@ -1242,12 +2178,13 @@
         }
       });
 
-      [btnOpenPostModal, btnAddPostTop].forEach((btn) =>
-        btn.addEventListener("click", () => {
-          modalOverlay.classList.remove("hidden");
-          lucide.createIcons();
-        }),
-      );
+      [btnOpenPostModal, btnAddPostTop].forEach((btn) => {
+        if (btn)
+          btn.addEventListener("click", () => {
+            modalOverlay.classList.remove("hidden");
+            lucide.createIcons();
+          });
+      });
       modalClose.addEventListener("click", () =>
         modalOverlay.classList.add("hidden"),
       );
@@ -1257,12 +2194,13 @@
 
       postForm.addEventListener("submit", async (e) => {
         e.preventDefault();
-        const rawDatetime = document.getElementById("post-datetime").value; // "YYYY-MM-DDTHH:MM"
+        const postDate =
+          document.getElementById("post-date").value ||
+          new Date().toISOString().split("T")[0];
+        const postTime = document.getElementById("post-time").value || "00:00";
         const postRecord = {
-          date: rawDatetime
-            ? rawDatetime.split("T")[0]
-            : new Date().toISOString().split("T")[0],
-          publishedAt: rawDatetime || new Date().toISOString().slice(0, 16),
+          date: postDate,
+          publishedAt: postDate + "T" + postTime,
           type: document.getElementById("post-type").value,
           title:
             document.getElementById("post-title").value || "(Sin descripcion)",
@@ -1295,7 +2233,12 @@
               postRecord,
             );
             postForm.reset();
-            document.getElementById("post-datetime").value = _nowLocal();
+            document.getElementById("post-date").value = new Date()
+              .toISOString()
+              .split("T")[0];
+            document.getElementById("post-time").value = new Date()
+              .toTimeString()
+              .slice(0, 5);
             modalOverlay.classList.add("hidden");
             showToast("Publicacion registrada");
           } catch (err) {
@@ -1315,10 +2258,99 @@
           );
           renderPostsGrid();
           renderInsights();
+          renderRecentPostsOverview();
           postForm.reset();
-          document.getElementById("post-datetime").value = _nowLocal();
+          document.getElementById("post-date").value = new Date()
+            .toISOString()
+            .split("T")[0];
+          document.getElementById("post-time").value = new Date()
+            .toTimeString()
+            .slice(0, 5);
           modalOverlay.classList.add("hidden");
           showToast("Publicacion registrada (Demo)");
+        }
+      });
+
+      // ── Panel post form (inline in Panel General) ──
+      panelPostForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const panelDate =
+          document.getElementById("panel-post-date").value ||
+          new Date().toISOString().split("T")[0];
+        const panelTime =
+          document.getElementById("panel-post-time").value || "00:00";
+        const panelRecord = {
+          date: panelDate,
+          publishedAt: panelDate + "T" + panelTime,
+          type: document.getElementById("panel-post-type").value,
+          title:
+            document.getElementById("panel-post-title").value ||
+            "(Sin descripcion)",
+          vistas:
+            parseInt(document.getElementById("panel-post-vistas").value) || 0,
+          reproducciones:
+            parseInt(
+              document.getElementById("panel-post-reproducciones").value,
+            ) || 0,
+          reach:
+            parseInt(document.getElementById("panel-post-reach").value) || 0,
+          likes:
+            parseInt(document.getElementById("panel-post-likes").value) || 0,
+          comments:
+            parseInt(document.getElementById("panel-post-comments").value) || 0,
+          saves:
+            parseInt(document.getElementById("panel-post-saves").value) || 0,
+          compartidos:
+            parseInt(document.getElementById("panel-post-compartidos").value) ||
+            0,
+          pctSeguidores:
+            parseFloat(document.getElementById("panel-post-pct-seg").value) ||
+            0,
+          pctInteractuantes:
+            parseFloat(document.getElementById("panel-post-pct-int").value) ||
+            0,
+          createdAt: new Date().toISOString(),
+        };
+        const _resetPanelForm = () => {
+          panelPostForm.reset();
+          document.getElementById("panel-post-date").value = new Date()
+            .toISOString()
+            .split("T")[0];
+          document.getElementById("panel-post-time").value = new Date()
+            .toTimeString()
+            .slice(0, 5);
+        };
+        if (!DEMO_MODE && currentUser) {
+          const origHTML = btnPanelPostSubmit.innerHTML;
+          btnPanelPostSubmit.innerHTML = `<div class="loader w-4 h-4 border-2 border-white border-t-transparent mr-2"></div>Guardando...`;
+          btnPanelPostSubmit.disabled = true;
+          try {
+            await addDoc(
+              collection(db, "users", currentUser.uid, "instagram_posts"),
+              panelRecord,
+            );
+            _resetPanelForm();
+            showToast("Publicación registrada");
+          } catch (err) {
+            showToast("Error: " + err.message, "error");
+          } finally {
+            btnPanelPostSubmit.innerHTML = origHTML;
+            btnPanelPostSubmit.disabled = false;
+            lucide.createIcons();
+          }
+        } else {
+          panelRecord.id = "demo_post_" + Date.now();
+          globalPosts.unshift(panelRecord);
+          globalPosts.sort(
+            (a, b) =>
+              new Date(b.publishedAt || b.date) -
+              new Date(a.publishedAt || a.date),
+          );
+          renderPostsGrid();
+          renderInsights();
+          renderRecentPostsOverview();
+          _resetPanelForm();
+          showToast("Publicación registrada");
         }
       });
 
@@ -1354,7 +2386,9 @@
       window.deleteWeeklyRecord = async (id) => {
         if (!confirm("Eliminar este registro semanal?")) return;
         if (!DEMO_MODE && currentUser) {
-          await deleteDoc(doc(db, "users", currentUser.uid, "instagram_weekly", id));
+          await deleteDoc(
+            doc(db, "users", currentUser.uid, "instagram_weekly", id),
+          );
           showToast("Registro semanal eliminado");
         } else {
           globalWeekly = globalWeekly.filter((x) => x.id !== id);
@@ -1367,9 +2401,10 @@
       weeklyForm.addEventListener("submit", async (e) => {
         e.preventDefault();
         const weeklyRecord = {
-          date:      document.getElementById("weekly-date").value,
-          followers: parseInt(document.getElementById("weekly-followers").value) || 0,
-          visits:    parseInt(document.getElementById("weekly-visits").value) || 0,
+          date: document.getElementById("weekly-date").value,
+          followers:
+            parseInt(document.getElementById("weekly-followers").value) || 0,
+          visits: parseInt(document.getElementById("weekly-visits").value) || 0,
           createdAt: new Date().toISOString(),
         };
         if (!DEMO_MODE && currentUser) {
@@ -1377,7 +2412,10 @@
           btnWeeklySubmit.innerHTML = `<div class="loader w-4 h-4 border-2 border-club-dark border-t-transparent mr-2"></div>Guardando...`;
           btnWeeklySubmit.disabled = true;
           try {
-            await addDoc(collection(db, "users", currentUser.uid, "instagram_weekly"), weeklyRecord);
+            await addDoc(
+              collection(db, "users", currentUser.uid, "instagram_weekly"),
+              weeklyRecord,
+            );
             weeklyForm.reset();
             document.getElementById("weekly-date").valueAsDate = new Date();
             showToast("Registro semanal guardado");
@@ -1410,19 +2448,29 @@
         }
         if (countEl) countEl.textContent = globalWeekly.length + " registros";
         const DAYS = ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"];
-        weeklyTableBody.innerHTML = globalWeekly.map((item, idx) => {
-          const d = new Date(item.date + "T00:00:00");
-          const fmtDate = d.toLocaleDateString("es-ES", { day: "2-digit", month: "short", year: "numeric" });
-          const dayName = DAYS[d.getDay()];
-          const prev = globalWeekly[idx + 1];
-          const deltaF = prev ? item.followers - prev.followers : null;
-          const deltaV = prev ? (item.visits || 0) - (prev.visits || 0) : null;
-          const deltaHtml = (d) => d === null
-            ? `<span class="text-slate-300">—</span>`
-            : d > 0 ? `<span class="text-green-600 font-semibold">+${d}</span>`
-            : d < 0 ? `<span class="text-red-500 font-semibold">${d}</span>`
-            : `<span class="text-slate-400">0</span>`;
-          return `<tr class="hover:bg-slate-50 transition-colors">
+        weeklyTableBody.innerHTML = globalWeekly
+          .map((item, idx) => {
+            const d = new Date(item.date + "T00:00:00");
+            const fmtDate = d.toLocaleDateString("es-ES", {
+              day: "2-digit",
+              month: "short",
+              year: "numeric",
+            });
+            const dayName = DAYS[d.getDay()];
+            const prev = globalWeekly[idx + 1];
+            const deltaF = prev ? item.followers - prev.followers : null;
+            const deltaV = prev
+              ? (item.visits || 0) - (prev.visits || 0)
+              : null;
+            const deltaHtml = (d) =>
+              d === null
+                ? `<span class="text-slate-300">—</span>`
+                : d > 0
+                  ? `<span class="text-green-600 font-semibold">+${d}</span>`
+                  : d < 0
+                    ? `<span class="text-red-500 font-semibold">${d}</span>`
+                    : `<span class="text-slate-400">0</span>`;
+            return `<tr class="hover:bg-slate-50 transition-colors">
             <td class="p-4 font-medium text-slate-700 whitespace-nowrap">${fmtDate}</td>
             <td class="p-4 text-slate-500 text-xs">${dayName}</td>
             <td class="p-4 text-right font-semibold text-club-dark">${(item.followers || 0).toLocaleString()}</td>
@@ -1435,7 +2483,8 @@
               </button>
             </td>
           </tr>`;
-        }).join("");
+          })
+          .join("");
         lucide.createIcons();
       }
 
@@ -1444,19 +2493,35 @@
       // ─── MENSUAL ───────────────────────────────────────────────────────────
       // (MESES_ES, monthlyYear, monthlyMonth, monthlyChartInst declared above)
 
-      document.getElementById("btn-month-prev").addEventListener("click", () => {
-        monthlyMonth--;
-        if (monthlyMonth < 0) { monthlyMonth = 11; monthlyYear--; }
-        renderMonthly();
-      });
-      document.getElementById("btn-month-next").addEventListener("click", () => {
-        const now = new Date();
-        if (monthlyYear === now.getFullYear() && monthlyMonth === now.getMonth()) return;
-        monthlyMonth++;
-        if (monthlyMonth > 11) { monthlyMonth = 0; monthlyYear++; }
-        renderMonthly();
-      });
-      document.getElementById("monthly-period-filter").addEventListener("change", renderMonthly);
+      document
+        .getElementById("btn-month-prev")
+        .addEventListener("click", () => {
+          monthlyMonth--;
+          if (monthlyMonth < 0) {
+            monthlyMonth = 11;
+            monthlyYear--;
+          }
+          renderMonthly();
+        });
+      document
+        .getElementById("btn-month-next")
+        .addEventListener("click", () => {
+          const now = new Date();
+          if (
+            monthlyYear === now.getFullYear() &&
+            monthlyMonth === now.getMonth()
+          )
+            return;
+          monthlyMonth++;
+          if (monthlyMonth > 11) {
+            monthlyMonth = 0;
+            monthlyYear++;
+          }
+          renderMonthly();
+        });
+      document
+        .getElementById("monthly-period-filter")
+        .addEventListener("change", renderMonthly);
 
       function renderMonthly() {
         const label = document.getElementById("monthly-label");
@@ -1464,32 +2529,70 @@
         // Disable next if current month
         const now = new Date();
         const nextBtn = document.getElementById("btn-month-next");
-        nextBtn.style.opacity = (monthlyYear === now.getFullYear() && monthlyMonth === now.getMonth()) ? "0.3" : "1";
+        nextBtn.style.opacity =
+          monthlyYear === now.getFullYear() && monthlyMonth === now.getMonth()
+            ? "0.3"
+            : "1";
 
-        const prefix = monthlyYear + "-" + String(monthlyMonth + 1).padStart(2, "0");
-        const monthData = globalData.filter(r => (r.date || "").startsWith(prefix))
+        const prefix =
+          monthlyYear + "-" + String(monthlyMonth + 1).padStart(2, "0");
+        const monthData = globalData
+          .filter((r) => (r.date || "").startsWith(prefix))
           .sort((a, b) => new Date(a.date) - new Date(b.date));
 
-        const monthPosts = globalPosts.filter(p => (p.date || "").startsWith(prefix));
+        const monthPosts = globalPosts.filter((p) =>
+          (p.date || "").startsWith(prefix),
+        );
         const period = document.getElementById("monthly-period-filter").value;
 
         // ─── KPIs ───
-        const totalViews   = monthData.reduce((s, r) => s + (r.storyViews || 0), 0);
-        const totalLikes   = monthData.reduce((s, r) => s + (r.likes || 0), 0);
-        const totalComments= monthData.reduce((s, r) => s + (r.comments || 0), 0);
-        const totalSaves   = monthData.reduce((s, r) => s + (r.saves || 0), 0);
-        const totalShares  = monthData.reduce((s, r) => s + (r.shares || 0), 0);
-        const totalInt     = totalLikes + totalComments + totalSaves + totalShares;
-        const avgEng       = totalViews > 0 ? ((totalInt / totalViews) * 100).toFixed(2) : "0.00";
+        const totalViews = monthData.reduce(
+          (s, r) => s + (r.storyViews || 0),
+          0,
+        );
+        const totalLikes = monthData.reduce((s, r) => s + (r.likes || 0), 0);
+        const totalComments = monthData.reduce(
+          (s, r) => s + (r.comments || 0),
+          0,
+        );
+        const totalSaves = monthData.reduce((s, r) => s + (r.saves || 0), 0);
+        const totalShares = monthData.reduce((s, r) => s + (r.shares || 0), 0);
+        const totalInt = totalLikes + totalComments + totalSaves + totalShares;
+        const avgEng =
+          totalViews > 0 ? ((totalInt / totalViews) * 100).toFixed(2) : "0.00";
         document.getElementById("monthly-kpis").innerHTML = [
-          { label:"Vistas Historia", val: totalViews.toLocaleString(), icon:"eye", color:"border-blue-400" },
-          { label:"Total Interacc.", val: totalInt.toLocaleString(), icon:"heart", color:"border-pink-400" },
-          { label:"Publicaciones", val: monthPosts.length, icon:"image", color:"border-club-green" },
-          { label:"Eng. Rate", val: avgEng + "%", icon:"trending-up", color:"border-amber-400" },
-        ].map(k => `<div class="glass-card p-3 sm:p-4 border-l-4 ${k.color}">
+          {
+            label: "Vistas Historia",
+            val: totalViews.toLocaleString(),
+            icon: "eye",
+            color: "border-blue-400",
+          },
+          {
+            label: "Total Interacc.",
+            val: totalInt.toLocaleString(),
+            icon: "heart",
+            color: "border-pink-400",
+          },
+          {
+            label: "Publicaciones",
+            val: monthPosts.length,
+            icon: "image",
+            color: "border-club-green",
+          },
+          {
+            label: "Eng. Rate",
+            val: avgEng + "%",
+            icon: "trending-up",
+            color: "border-amber-400",
+          },
+        ]
+          .map(
+            (k) => `<div class="glass-card p-3 sm:p-4 border-l-4 ${k.color}">
           <p class="text-xs text-slate-500 mb-1">${k.label}</p>
           <p class="text-xl font-bold text-club-dark">${k.val}</p>
-        </div>`).join("");
+        </div>`,
+          )
+          .join("");
 
         // ─── CHART & TABLE ───
         const ctx = document.getElementById("monthlyChart").getContext("2d");
@@ -1497,47 +2600,177 @@
 
         if (period === "week") {
           // Group by ISO week
-          document.getElementById("monthly-chart-title").textContent = "Interacciones por semana — " + MESES_ES[monthlyMonth];
-          document.getElementById("monthly-table-title").textContent = "Detalle por semana";
+          document.getElementById("monthly-chart-title").textContent =
+            "Interacciones por semana — " + MESES_ES[monthlyMonth];
+          document.getElementById("monthly-table-title").textContent =
+            "Detalle por semana";
           const weeks = {};
-          monthData.forEach(r => {
-            const d  = new Date(r.date + "T00:00:00");
+          monthData.forEach((r) => {
+            const d = new Date(r.date + "T00:00:00");
             const wk = getISOWeek(d);
             const key = "Sem " + wk;
-            if (!weeks[key]) weeks[key] = { views:0, likes:0, comments:0, saves:0, shares:0, days:0 };
-            weeks[key].views    += r.storyViews || 0;
-            weeks[key].likes    += r.likes || 0;
+            if (!weeks[key])
+              weeks[key] = {
+                views: 0,
+                likes: 0,
+                comments: 0,
+                saves: 0,
+                shares: 0,
+                days: 0,
+              };
+            weeks[key].views += r.storyViews || 0;
+            weeks[key].likes += r.likes || 0;
             weeks[key].comments += r.comments || 0;
-            weeks[key].saves    += r.saves || 0;
-            weeks[key].shares   += r.shares || 0;
+            weeks[key].saves += r.saves || 0;
+            weeks[key].shares += r.shares || 0;
             weeks[key].days++;
           });
           const wKeys = Object.keys(weeks);
-          const wInts = wKeys.map(k => weeks[k].likes + weeks[k].comments + weeks[k].saves + weeks[k].shares);
-          monthlyChartInst = new Chart(ctx, { type:"bar", data:{ labels:wKeys, datasets:[{ label:"Interacciones", data:wInts, backgroundColor:"rgba(20,83,51,0.75)", borderRadius:6 }] }, options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false},tooltip:tooltipStyle()}, scales:{x:{grid:{display:false}},y:{grid:{color:"#f1f5f9"}}} } });
-          document.getElementById("monthly-record-count").textContent = wKeys.length + " semanas";
-          document.getElementById("monthly-table-head").innerHTML = `<th class="p-3 font-medium">Semana</th><th class="p-3 font-medium text-right">Días</th><th class="p-3 font-medium text-right">Vistas</th><th class="p-3 font-medium text-right">❤️</th><th class="p-3 font-medium text-right">💬</th><th class="p-3 font-medium text-right">🔖</th><th class="p-3 font-medium text-right">↗️</th><th class="p-3 font-medium text-right font-semibold">Total</th><th class="p-3 font-medium text-right">Eng%</th>`;
-          document.getElementById("monthly-table-body").innerHTML = wKeys.map(k => {
-            const v = weeks[k]; const total = v.likes+v.comments+v.saves+v.shares;
-            const eng = v.views > 0 ? ((total/v.views)*100).toFixed(1) : "0.0";
-            return `<tr class="hover:bg-slate-50"><td class="p-3 font-medium text-club-dark">${k}</td><td class="p-3 text-right text-slate-500">${v.days}</td><td class="p-3 text-right">${v.views.toLocaleString()}</td><td class="p-3 text-right text-pink-600">${v.likes.toLocaleString()}</td><td class="p-3 text-right text-blue-600">${v.comments.toLocaleString()}</td><td class="p-3 text-right text-amber-600">${v.saves.toLocaleString()}</td><td class="p-3 text-right text-green-600">${v.shares.toLocaleString()}</td><td class="p-3 text-right font-bold text-club-green">${total.toLocaleString()}</td><td class="p-3 text-right text-xs text-slate-500">${eng}%</td></tr>`;
-          }).join("") || `<tr><td colspan="9" class="p-8 text-center text-slate-400">Sin datos para este mes.</td></tr>`;
+          const wInts = wKeys.map(
+            (k) =>
+              weeks[k].likes +
+              weeks[k].comments +
+              weeks[k].saves +
+              weeks[k].shares,
+          );
+          monthlyChartInst = new Chart(ctx, {
+            type: "bar",
+            data: {
+              labels: wKeys,
+              datasets: [
+                {
+                  label: "Interacciones",
+                  data: wInts,
+                  backgroundColor: "rgba(20,83,51,0.75)",
+                  borderRadius: 6,
+                },
+              ],
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: { legend: { display: false }, tooltip: tooltipStyle() },
+              scales: {
+                x: { grid: { display: false } },
+                y: { grid: { color: "#f1f5f9" } },
+              },
+            },
+          });
+          document.getElementById("monthly-record-count").textContent =
+            wKeys.length + " semanas";
+          document.getElementById("monthly-table-head").innerHTML =
+            `<th class="p-3 font-medium">Semana</th><th class="p-3 font-medium text-right">Días</th><th class="p-3 font-medium text-right">Vistas</th><th class="p-3 font-medium text-right">❤️</th><th class="p-3 font-medium text-right">💬</th><th class="p-3 font-medium text-right">🔖</th><th class="p-3 font-medium text-right">↗️</th><th class="p-3 font-medium text-right font-semibold">Total</th><th class="p-3 font-medium text-right">Eng%</th>`;
+          document.getElementById("monthly-table-body").innerHTML =
+            wKeys
+              .map((k) => {
+                const v = weeks[k];
+                const total = v.likes + v.comments + v.saves + v.shares;
+                const eng =
+                  v.views > 0 ? ((total / v.views) * 100).toFixed(1) : "0.0";
+                return `<tr class="hover:bg-slate-50"><td class="p-3 font-medium text-club-dark">${k}</td><td class="p-3 text-right text-slate-500">${v.days}</td><td class="p-3 text-right">${v.views.toLocaleString()}</td><td class="p-3 text-right text-pink-600">${v.likes.toLocaleString()}</td><td class="p-3 text-right text-blue-600">${v.comments.toLocaleString()}</td><td class="p-3 text-right text-amber-600">${v.saves.toLocaleString()}</td><td class="p-3 text-right text-green-600">${v.shares.toLocaleString()}</td><td class="p-3 text-right font-bold text-club-green">${total.toLocaleString()}</td><td class="p-3 text-right text-xs text-slate-500">${eng}%</td></tr>`;
+              })
+              .join("") ||
+            `<tr><td colspan="9" class="p-8 text-center text-slate-400">Sin datos para este mes.</td></tr>`;
         } else {
           // Group by day
-          document.getElementById("monthly-chart-title").textContent = "Interacciones diarias — " + MESES_ES[monthlyMonth] + " " + monthlyYear;
-          document.getElementById("monthly-table-title").textContent = "Detalle diario";
-          const DAYS = ["Dom","Lun","Mar","Mié","Jue","Vie","Sáb"];
-          const labels = monthData.map(r => { const d = new Date(r.date+"T00:00:00"); return d.getDate()+" "+DAYS[d.getDay()]; });
-          const ints   = monthData.map(r => (r.likes||0)+(r.comments||0)+(r.saves||0)+(r.shares||0));
-          const views  = monthData.map(r => r.storyViews || 0);
-          monthlyChartInst = new Chart(ctx, { type:"bar", data:{ labels, datasets:[ { label:"Interacciones", data:ints, backgroundColor:"rgba(197,160,89,0.8)", borderRadius:5, yAxisID:"y" }, { label:"Vistas", data:views, type:"line", borderColor:"#145333", backgroundColor:"transparent", borderWidth:2, pointRadius:2, tension:0.3, yAxisID:"y1" } ] }, options:{ responsive:true, maintainAspectRatio:false, interaction:{mode:"index",intersect:false}, plugins:{legend:{position:"bottom",labels:{usePointStyle:true,boxWidth:6}},tooltip:tooltipStyle()}, scales:{ x:{grid:{display:false}}, y:{type:"linear",position:"left",grid:{color:"#f1f5f9"},title:{display:true,text:"Interacciones",font:{size:11}}}, y1:{type:"linear",position:"right",grid:{display:false},title:{display:true,text:"Vistas",font:{size:11}}} } } });
-          document.getElementById("monthly-record-count").textContent = monthData.length + " registros";
-          document.getElementById("monthly-table-head").innerHTML = `<th class="p-3 font-medium">Fecha</th><th class="p-3 font-medium">Día</th><th class="p-3 font-medium text-right">Vistas</th><th class="p-3 font-medium text-right">❤️</th><th class="p-3 font-medium text-right hidden sm:table-cell">💬</th><th class="p-3 font-medium text-right hidden sm:table-cell">🔖</th><th class="p-3 font-medium text-right hidden sm:table-cell">↗️</th><th class="p-3 font-medium text-right">Total</th><th class="p-3 font-medium text-right">Eng%</th>`;
-          document.getElementById("monthly-table-body").innerHTML = monthData.map(r => {
-            const d = new Date(r.date+"T00:00:00"); const total = (r.likes||0)+(r.comments||0)+(r.saves||0)+(r.shares||0);
-            const eng = (r.storyViews||0) > 0 ? ((total/(r.storyViews))*100).toFixed(1) : "0.0";
-            return `<tr class="hover:bg-slate-50"><td class="p-3 font-medium text-slate-700 whitespace-nowrap">${d.toLocaleDateString("es-ES",{day:"2-digit",month:"short"})}</td><td class="p-3 text-slate-400 text-xs">${DAYS[d.getDay()]}</td><td class="p-3 text-right">${(r.storyViews||0).toLocaleString()}</td><td class="p-3 text-right text-pink-600">${(r.likes||0).toLocaleString()}</td><td class="p-3 text-right text-blue-600 hidden sm:table-cell">${(r.comments||0).toLocaleString()}</td><td class="p-3 text-right text-amber-600 hidden sm:table-cell">${(r.saves||0).toLocaleString()}</td><td class="p-3 text-right text-green-600 hidden sm:table-cell">${(r.shares||0).toLocaleString()}</td><td class="p-3 text-right font-bold text-club-green">${total.toLocaleString()}</td><td class="p-3 text-right text-xs text-slate-500">${eng}%</td></tr>`;
-          }).join("") || `<tr><td colspan="9" class="p-8 text-center text-slate-400">Sin datos para este mes.</td></tr>`;
+          document.getElementById("monthly-chart-title").textContent =
+            "Interacciones diarias — " +
+            MESES_ES[monthlyMonth] +
+            " " +
+            monthlyYear;
+          document.getElementById("monthly-table-title").textContent =
+            "Detalle diario";
+          const DAYS = ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"];
+          const labels = monthData.map((r) => {
+            const d = new Date(r.date + "T00:00:00");
+            return d.getDate() + " " + DAYS[d.getDay()];
+          });
+          const ints = monthData.map(
+            (r) =>
+              (r.likes || 0) +
+              (r.comments || 0) +
+              (r.saves || 0) +
+              (r.shares || 0),
+          );
+          const views = monthData.map((r) => r.storyViews || 0);
+          monthlyChartInst = new Chart(ctx, {
+            type: "bar",
+            data: {
+              labels,
+              datasets: [
+                {
+                  label: "Interacciones",
+                  data: ints,
+                  backgroundColor: "rgba(197,160,89,0.8)",
+                  borderRadius: 5,
+                  yAxisID: "y",
+                },
+                {
+                  label: "Vistas",
+                  data: views,
+                  type: "line",
+                  borderColor: "#145333",
+                  backgroundColor: "transparent",
+                  borderWidth: 2,
+                  pointRadius: 2,
+                  tension: 0.3,
+                  yAxisID: "y1",
+                },
+              ],
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              interaction: { mode: "index", intersect: false },
+              plugins: {
+                legend: {
+                  position: "bottom",
+                  labels: { usePointStyle: true, boxWidth: 6 },
+                },
+                tooltip: tooltipStyle(),
+              },
+              scales: {
+                x: { grid: { display: false } },
+                y: {
+                  type: "linear",
+                  position: "left",
+                  grid: { color: "#f1f5f9" },
+                  title: {
+                    display: true,
+                    text: "Interacciones",
+                    font: { size: 11 },
+                  },
+                },
+                y1: {
+                  type: "linear",
+                  position: "right",
+                  grid: { display: false },
+                  title: { display: true, text: "Vistas", font: { size: 11 } },
+                },
+              },
+            },
+          });
+          document.getElementById("monthly-record-count").textContent =
+            monthData.length + " registros";
+          document.getElementById("monthly-table-head").innerHTML =
+            `<th class="p-3 font-medium">Fecha</th><th class="p-3 font-medium">Día</th><th class="p-3 font-medium text-right">Vistas</th><th class="p-3 font-medium text-right">❤️</th><th class="p-3 font-medium text-right hidden sm:table-cell">💬</th><th class="p-3 font-medium text-right hidden sm:table-cell">🔖</th><th class="p-3 font-medium text-right hidden sm:table-cell">↗️</th><th class="p-3 font-medium text-right">Total</th><th class="p-3 font-medium text-right">Eng%</th>`;
+          document.getElementById("monthly-table-body").innerHTML =
+            monthData
+              .map((r) => {
+                const d = new Date(r.date + "T00:00:00");
+                const total =
+                  (r.likes || 0) +
+                  (r.comments || 0) +
+                  (r.saves || 0) +
+                  (r.shares || 0);
+                const eng =
+                  (r.storyViews || 0) > 0
+                    ? ((total / r.storyViews) * 100).toFixed(1)
+                    : "0.0";
+                return `<tr class="hover:bg-slate-50"><td class="p-3 font-medium text-slate-700 whitespace-nowrap">${d.toLocaleDateString("es-ES", { day: "2-digit", month: "short" })}</td><td class="p-3 text-slate-400 text-xs">${DAYS[d.getDay()]}</td><td class="p-3 text-right">${(r.storyViews || 0).toLocaleString()}</td><td class="p-3 text-right text-pink-600">${(r.likes || 0).toLocaleString()}</td><td class="p-3 text-right text-blue-600 hidden sm:table-cell">${(r.comments || 0).toLocaleString()}</td><td class="p-3 text-right text-amber-600 hidden sm:table-cell">${(r.saves || 0).toLocaleString()}</td><td class="p-3 text-right text-green-600 hidden sm:table-cell">${(r.shares || 0).toLocaleString()}</td><td class="p-3 text-right font-bold text-club-green">${total.toLocaleString()}</td><td class="p-3 text-right text-xs text-slate-500">${eng}%</td></tr>`;
+              })
+              .join("") ||
+            `<tr><td colspan="9" class="p-8 text-center text-slate-400">Sin datos para este mes.</td></tr>`;
         }
         lucide.createIcons();
       }
@@ -1551,7 +2784,40 @@
         renderInsights();
         renderPostsGrid();
         renderWeeklyHistory();
+        renderRecentPostsOverview();
         lucide.createIcons();
+      }
+
+      function renderRecentPostsOverview() {
+        const el = document.getElementById("overview-recent-posts");
+        if (!el) return;
+        const BADGE = { Reel:"badge-reel", Foto:"badge-foto", Carrusel:"badge-carrusel", Story:"badge-story", Video:"badge-video" };
+        const recent = [...globalPosts]
+          .sort((a, b) => new Date(b.publishedAt || b.date) - new Date(a.publishedAt || a.date))
+          .slice(0, 5);
+        if (!recent.length) {
+          el.innerHTML = `<p class="text-slate-400 text-sm py-2">Sin publicaciones registradas aún.</p>`;
+          return;
+        }
+        el.innerHTML = recent.map(p => {
+          const total = (p.likes||0)+(p.comments||0)+(p.saves||0)+(p.compartidos||0);
+          const dateStr = (p.publishedAt||p.date||"").split("T")[0];
+          const timeStr = p.publishedAt ? (p.publishedAt.split("T")[1]||"").slice(0,5) : "";
+          const d = new Date(dateStr + "T00:00:00");
+          const fmtDate = d.toLocaleDateString("es-ES", {day:"2-digit", month:"short"});
+          const engPost = p.reach > 0 ? ((total/p.reach)*100).toFixed(1) : p.vistas > 0 ? ((total/p.vistas)*100).toFixed(1) : null;
+          return `<div class="flex items-center justify-between py-2 border-b border-slate-100 last:border-0 gap-2">
+            <div class="flex items-center gap-2 min-w-0">
+              <span class="px-1.5 py-0.5 rounded text-[10px] font-semibold ${BADGE[p.type]||"bg-slate-100 text-slate-600"} shrink-0">${p.type}</span>
+              <span class="text-sm text-slate-700 truncate">${p.title}</span>
+            </div>
+            <div class="flex items-center gap-2 text-xs shrink-0 ml-1">
+              <span class="text-slate-400">${fmtDate}${timeStr ? " · " + timeStr : ""}</span>
+              <span class="font-bold text-club-green">${total.toLocaleString()} int.</span>
+              ${engPost ? `<span class="text-club-gold font-medium">${engPost}%</span>` : ""}
+            </div>
+          </div>`;
+        }).join("");
       }
 
       function sum(arr, key) {
@@ -1569,32 +2835,51 @@
         const prev7 = globalData.slice(7, 14);
         // Seguidores: from weekly records
         const latestWeekly = globalWeekly[0];
-        const prevWeekly   = globalWeekly[1];
+        const prevWeekly = globalWeekly[1];
         const latestFollowers = latestWeekly?.followers || 0;
-        const prevFollowers   = prevWeekly?.followers   || latestFollowers;
-        document.getElementById("kpi-followers").textContent = latestFollowers > 0 ? latestFollowers.toLocaleString() : "---";
+        const prevFollowers = prevWeekly?.followers || latestFollowers;
+        document.getElementById("kpi-followers").textContent =
+          latestFollowers > 0 ? latestFollowers.toLocaleString() : "---";
         if (latestFollowers > 0) {
-          renderTrend("kpi-followers-trend", latestFollowers, prevFollowers, "vs sem. ant.");
+          renderTrend(
+            "kpi-followers-trend",
+            latestFollowers,
+            prevFollowers,
+            "vs sem. ant.",
+          );
         } else {
-          document.getElementById("kpi-followers-trend").innerHTML = `<span class="text-slate-400">Esperando datos semanales...</span>`;
+          document.getElementById("kpi-followers-trend").innerHTML =
+            `<span class="text-slate-400">Esperando datos semanales...</span>`;
         }
         // Visitas al perfil: from weekly records
         const latestVisits = latestWeekly?.visits || 0;
-        const prevVisits   = prevWeekly?.visits   || latestVisits;
-        document.getElementById("kpi-reach").textContent = latestVisits > 0 ? latestVisits.toLocaleString() : "---";
+        const prevVisits = prevWeekly?.visits || latestVisits;
+        document.getElementById("kpi-reach").textContent =
+          latestVisits > 0 ? latestVisits.toLocaleString() : "---";
         if (latestVisits > 0) {
-          renderTrend("kpi-reach-trend", latestVisits, prevVisits, "vs sem. ant.");
+          renderTrend(
+            "kpi-reach-trend",
+            latestVisits,
+            prevVisits,
+            "vs sem. ant.",
+          );
         } else {
-          document.getElementById("kpi-reach-trend").innerHTML = `<span class="text-slate-400">Esperando datos semanales...</span>`;
+          document.getElementById("kpi-reach-trend").innerHTML =
+            `<span class="text-slate-400">Esperando datos semanales...</span>`;
         }
         // Interactions: from daily records
-        if (globalData.length === 0) { resetKPIsInteractions(); return; }
-        const curInt  = sumInteractions(cur7);
+        if (globalData.length === 0) {
+          resetKPIsInteractions();
+          return;
+        }
+        const curInt = sumInteractions(cur7);
         const prevInt = sumInteractions(prev7);
-        document.getElementById("kpi-interactions").textContent = curInt.toLocaleString();
+        document.getElementById("kpi-interactions").textContent =
+          curInt.toLocaleString();
         renderTrend("kpi-interactions-trend", curInt, prevInt, "vs sem. ant.");
         const totalViews = cur7.reduce((s, x) => s + (x.storyViews || 0), 0);
-        const eng = totalViews > 0 ? ((curInt / totalViews) * 100).toFixed(2) : "0.00";
+        const eng =
+          totalViews > 0 ? ((curInt / totalViews) * 100).toFixed(2) : "0.00";
         document.getElementById("kpi-engagement").textContent = eng + "%";
       }
 
@@ -1629,16 +2914,22 @@
         });
       }
       function resetKPIsInteractions() {
-        ["kpi-interactions", "kpi-engagement"].forEach((id) => (document.getElementById(id).textContent = "---"));
-        document.getElementById("kpi-interactions-trend").innerHTML = `<span class="text-slate-400">Esperando datos...</span>`;
+        ["kpi-interactions", "kpi-engagement"].forEach(
+          (id) => (document.getElementById(id).textContent = "---"),
+        );
+        document.getElementById("kpi-interactions-trend").innerHTML =
+          `<span class="text-slate-400">Esperando datos...</span>`;
       }
 
-      document.getElementById("history-filter").addEventListener("change", renderTable);
+      document
+        .getElementById("history-filter")
+        .addEventListener("change", renderTable);
 
       function renderTable() {
         tableBody.innerHTML = "";
-        const filter = document.getElementById("history-filter")?.value || "daily";
-        const thead  = document.getElementById("history-thead");
+        const filter =
+          document.getElementById("history-filter")?.value || "daily";
+        const thead = document.getElementById("history-thead");
 
         if (filter === "daily") {
           thead.innerHTML = `<tr class="bg-slate-50 text-slate-500 text-xs uppercase tracking-wider">
@@ -1660,12 +2951,22 @@
           }
           historyCount.textContent = globalData.length + " registros";
           globalData.forEach((item) => {
-            const total = (item.likes || 0) + (item.comments || 0) + (item.saves || 0) + (item.shares || 0);
+            const total =
+              (item.likes || 0) +
+              (item.comments || 0) +
+              (item.saves || 0) +
+              (item.shares || 0);
             const d = new Date(item.date + "T00:00:00");
-            const fmtDate = d.toLocaleDateString("es-ES", { day: "2-digit", month: "short", year: "numeric" });
+            const fmtDate = d.toLocaleDateString("es-ES", {
+              day: "2-digit",
+              month: "short",
+              year: "numeric",
+            });
             const views = item.storyViews || 0;
             const eng = views > 0 ? ((total / views) * 100).toFixed(1) : "0.0";
-            const timeStr = item.time ? item.time : `<span class="text-slate-300">—</span>`;
+            const timeStr = item.time
+              ? item.time
+              : `<span class="text-slate-300">—</span>`;
             const tr = document.createElement("tr");
             tr.className = "hover:bg-slate-50 transition-colors";
             tr.innerHTML = `
@@ -1686,7 +2987,6 @@
               </td>`;
             tableBody.appendChild(tr);
           });
-
         } else if (filter === "weekly") {
           thead.innerHTML = `<tr class="bg-slate-50 text-slate-500 text-xs uppercase tracking-wider">
             <th class="p-2 sm:p-4 font-medium">Semana</th>
@@ -1700,29 +3000,63 @@
             <th class="p-2 sm:p-4 font-medium text-right">Eng%</th>
           </tr>`;
           const weeks = {};
-          globalData.forEach(r => {
-            const d = new Date(r.date + "T00:00:00"); const wk = getISOWeek(d); const yr = d.getFullYear();
+          globalData.forEach((r) => {
+            const d = new Date(r.date + "T00:00:00");
+            const wk = getISOWeek(d);
+            const yr = d.getFullYear();
             const key = yr + "-S" + String(wk).padStart(2, "0");
-            if (!weeks[key]) weeks[key] = { label: "Sem " + wk + " / " + yr, views: 0, likes: 0, comments: 0, saves: 0, shares: 0, stories: 0, posts: 0 };
-            weeks[key].views += r.storyViews || 0; weeks[key].likes += r.likes || 0;
-            weeks[key].comments += r.comments || 0; weeks[key].saves += r.saves || 0;
-            weeks[key].shares += r.shares || 0; weeks[key].stories++;
+            if (!weeks[key])
+              weeks[key] = {
+                label: "Sem " + wk + " / " + yr,
+                views: 0,
+                likes: 0,
+                comments: 0,
+                saves: 0,
+                shares: 0,
+                stories: 0,
+                posts: 0,
+              };
+            weeks[key].views += r.storyViews || 0;
+            weeks[key].likes += r.likes || 0;
+            weeks[key].comments += r.comments || 0;
+            weeks[key].saves += r.saves || 0;
+            weeks[key].shares += r.shares || 0;
+            weeks[key].stories++;
           });
-          globalPosts.forEach(p => {
-            const dateStr = (p.date || (p.publishedAt || "").split("T")[0] || "");
+          globalPosts.forEach((p) => {
+            const dateStr = p.date || (p.publishedAt || "").split("T")[0] || "";
             if (!dateStr) return;
-            const d = new Date(dateStr + "T00:00:00"); const wk = getISOWeek(d); const yr = d.getFullYear();
+            const d = new Date(dateStr + "T00:00:00");
+            const wk = getISOWeek(d);
+            const yr = d.getFullYear();
             const key = yr + "-S" + String(wk).padStart(2, "0");
             if (weeks[key]) weeks[key].posts++;
-            else { weeks[key] = { label: "Sem " + wk + " / " + yr, views: 0, likes: 0, comments: 0, saves: 0, shares: 0, stories: 0, posts: 1 }; }
+            else {
+              weeks[key] = {
+                label: "Sem " + wk + " / " + yr,
+                views: 0,
+                likes: 0,
+                comments: 0,
+                saves: 0,
+                shares: 0,
+                stories: 0,
+                posts: 1,
+              };
+            }
           });
-          const sorted = Object.entries(weeks).sort((a, b) => b[0].localeCompare(a[0]));
+          const sorted = Object.entries(weeks).sort((a, b) =>
+            b[0].localeCompare(a[0]),
+          );
           historyCount.textContent = sorted.length + " semanas";
-          if (!sorted.length) { tableBody.innerHTML = `<tr><td colspan="9" class="p-8 text-center text-slate-400">Sin datos.</td></tr>`; }
+          if (!sorted.length) {
+            tableBody.innerHTML = `<tr><td colspan="9" class="p-8 text-center text-slate-400">Sin datos.</td></tr>`;
+          }
           sorted.forEach(([, v]) => {
             const total = v.likes + v.comments + v.saves + v.shares;
-            const eng = v.views > 0 ? ((total / v.views) * 100).toFixed(1) : "0.0";
-            const tr = document.createElement("tr"); tr.className = "hover:bg-slate-50";
+            const eng =
+              v.views > 0 ? ((total / v.views) * 100).toFixed(1) : "0.0";
+            const tr = document.createElement("tr");
+            tr.className = "hover:bg-slate-50";
             tr.innerHTML = `
               <td class="p-2 sm:p-4 font-semibold text-club-dark text-sm">${v.label}</td>
               <td class="p-2 sm:p-4 text-right text-slate-500 text-sm">${v.stories}</td>
@@ -1735,8 +3069,8 @@
               <td class="p-2 sm:p-4 text-right text-xs text-slate-500">${eng}%</td>`;
             tableBody.appendChild(tr);
           });
-
-        } else { // monthly
+        } else {
+          // monthly
           thead.innerHTML = `<tr class="bg-slate-50 text-slate-500 text-xs uppercase tracking-wider">
             <th class="p-2 sm:p-4 font-medium">Mes</th>
             <th class="p-2 sm:p-4 font-medium text-right">Historias</th>
@@ -1749,26 +3083,59 @@
             <th class="p-2 sm:p-4 font-medium text-right">Eng%</th>
           </tr>`;
           const months = {};
-          globalData.forEach(r => {
+          globalData.forEach((r) => {
             const key = (r.date || "2000-01").slice(0, 7);
-            if (!months[key]) months[key] = { views: 0, likes: 0, comments: 0, saves: 0, shares: 0, stories: 0, posts: 0 };
-            months[key].views += r.storyViews || 0; months[key].likes += r.likes || 0;
-            months[key].comments += r.comments || 0; months[key].saves += r.saves || 0;
-            months[key].shares += r.shares || 0; months[key].stories++;
+            if (!months[key])
+              months[key] = {
+                views: 0,
+                likes: 0,
+                comments: 0,
+                saves: 0,
+                shares: 0,
+                stories: 0,
+                posts: 0,
+              };
+            months[key].views += r.storyViews || 0;
+            months[key].likes += r.likes || 0;
+            months[key].comments += r.comments || 0;
+            months[key].saves += r.saves || 0;
+            months[key].shares += r.shares || 0;
+            months[key].stories++;
           });
-          globalPosts.forEach(p => {
-            const key = ((p.date || (p.publishedAt || "").split("T")[0]) || "2000-01").slice(0, 7);
+          globalPosts.forEach((p) => {
+            const key = (
+              p.date ||
+              (p.publishedAt || "").split("T")[0] ||
+              "2000-01"
+            ).slice(0, 7);
             if (months[key]) months[key].posts++;
-            else { months[key] = { views: 0, likes: 0, comments: 0, saves: 0, shares: 0, stories: 0, posts: 1 }; }
+            else {
+              months[key] = {
+                views: 0,
+                likes: 0,
+                comments: 0,
+                saves: 0,
+                shares: 0,
+                stories: 0,
+                posts: 1,
+              };
+            }
           });
-          const sorted = Object.entries(months).sort((a, b) => b[0].localeCompare(a[0]));
+          const sorted = Object.entries(months).sort((a, b) =>
+            b[0].localeCompare(a[0]),
+          );
           historyCount.textContent = sorted.length + " meses";
-          if (!sorted.length) { tableBody.innerHTML = `<tr><td colspan="9" class="p-8 text-center text-slate-400">Sin datos.</td></tr>`; }
+          if (!sorted.length) {
+            tableBody.innerHTML = `<tr><td colspan="9" class="p-8 text-center text-slate-400">Sin datos.</td></tr>`;
+          }
           sorted.forEach(([key, v]) => {
-            const [yr, mo] = key.split("-"); const label = MESES_ES[parseInt(mo) - 1] + " " + yr;
+            const [yr, mo] = key.split("-");
+            const label = MESES_ES[parseInt(mo) - 1] + " " + yr;
             const total = v.likes + v.comments + v.saves + v.shares;
-            const eng = v.views > 0 ? ((total / v.views) * 100).toFixed(1) : "0.0";
-            const tr = document.createElement("tr"); tr.className = "hover:bg-slate-50";
+            const eng =
+              v.views > 0 ? ((total / v.views) * 100).toFixed(1) : "0.0";
+            const tr = document.createElement("tr");
+            tr.className = "hover:bg-slate-50";
             tr.innerHTML = `
               <td class="p-2 sm:p-4 font-semibold text-club-dark text-sm capitalize">${label}</td>
               <td class="p-2 sm:p-4 text-right text-slate-500 text-sm">${v.stories}</td>
@@ -1982,7 +3349,7 @@
           types[p.type].count++;
           types[p.type].totalInteractions +=
             (p.likes || 0) + (p.comments || 0) + (p.saves || 0);
-          types[p.type].totalImpressions += (p.vistas || 0);
+          types[p.type].totalImpressions += p.vistas || 0;
         });
         const labels = Object.keys(types);
         const COLORS = ["#C5A059", "#145333", "#0D3341", "#6B7280", "#9CA3AF"];
@@ -1990,26 +3357,35 @@
           type: "doughnut",
           data: {
             labels,
-            datasets: [{
-              data: labels.map((t) => types[t].totalInteractions),
-              backgroundColor: COLORS.slice(0, labels.length),
-              borderWidth: 0,
-            }],
+            datasets: [
+              {
+                data: labels.map((t) => types[t].totalInteractions),
+                backgroundColor: COLORS.slice(0, labels.length),
+                borderWidth: 0,
+              },
+            ],
           },
           options: {
             responsive: true,
             maintainAspectRatio: false,
-            plugins: { legend: { position: "bottom" }, tooltip: tooltipStyle() },
+            plugins: {
+              legend: { position: "bottom" },
+              tooltip: tooltipStyle(),
+            },
           },
         });
-        typeTable.innerHTML = labels.map((t) => {
-          const v = types[t];
-          const avgInt = v.count > 0 ? Math.round(v.totalInteractions / v.count) : 0;
-          return `<div class="flex items-center justify-between py-2 border-b border-slate-100 last:border-0">
+        typeTable.innerHTML =
+          labels
+            .map((t) => {
+              const v = types[t];
+              const avgInt =
+                v.count > 0 ? Math.round(v.totalInteractions / v.count) : 0;
+              return `<div class="flex items-center justify-between py-2 border-b border-slate-100 last:border-0">
             <span class="font-medium text-slate-700">${t}</span>
             <span class="text-xs text-slate-500">${v.count} pub · avg ${avgInt} int.</span>
           </div>`;
-        }).join("") || `<p class="text-slate-400">Sin datos.</p>`;
+            })
+            .join("") || `<p class="text-slate-400">Sin datos.</p>`;
       }
 
       function renderWeeklyEngagementChart() {
