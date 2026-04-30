@@ -417,9 +417,7 @@
           <button
             type="submit"
             id="btn-post-submit"
-            disabled
-            class="w-full mt-2 bg-club-gold hover:bg-club-goldhover text-club-dark font-semibold py-2.5 px-4 rounded-lg transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
-          >
+            class="w-full mt-2 bg-club-gold hover:bg-club-goldhover text-club-dark font-semibold py-2.5 px-4 rounded-lg transition-colors flex items-center justify-center gap-2">
             <i data-lucide="save" class="w-4 h-4"></i> Guardar Publicacion
           </button>
         </form>
@@ -446,37 +444,10 @@
           </div>
         </div>
         <div class="flex items-center gap-3">
-          <div id="auth-status" class="flex items-center gap-2"></div>
-          <button
-            id="btn-google-login"
-            class="hidden text-xs bg-white/10 hover:bg-white/20 text-white font-medium px-3 py-1.5 rounded-lg flex items-center gap-2 transition-colors border border-white/20"
-          >
-            <svg viewBox="0 0 24 24" class="w-3.5 h-3.5 shrink-0">
-              <path
-                fill="#4285F4"
-                d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
-              />
-              <path
-                fill="#34A853"
-                d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
-              />
-              <path
-                fill="#FBBC05"
-                d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"
-              />
-              <path
-                fill="#EA4335"
-                d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
-              />
-            </svg>
-            Iniciar sesión
-          </button>
-          <button
-            id="btn-logout"
-            class="hidden text-xs bg-red-500/20 hover:bg-red-500/40 text-red-200 font-medium px-3 py-1.5 rounded-lg transition-colors"
-          >
-            Cerrar sesión
-          </button>
+          <div id="firebase-status" class="flex items-center gap-1.5 text-xs text-club-light/60">
+            <span class="w-2 h-2 rounded-full bg-slate-400 inline-block" id="firebase-dot"></span>
+            <span id="firebase-label">Conectando...</span>
+          </div>
         </div>
       </div>
     </header>
@@ -761,9 +732,7 @@
                 <button
                   type="submit"
                   id="btn-submit"
-                  disabled
-                  class="w-full mt-1 bg-club-gold hover:bg-club-goldhover text-club-dark font-semibold py-2.5 px-4 rounded-lg transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
-                >
+                  class="w-full mt-1 bg-club-gold hover:bg-club-goldhover text-club-dark font-semibold py-2.5 px-4 rounded-lg transition-colors flex items-center justify-center gap-2">
                   Guardar Métricas
                 </button>
               </form>
@@ -1286,9 +1255,7 @@
                 <button
                   type="submit"
                   id="btn-weekly-submit"
-                  disabled
-                  class="w-full bg-club-gold hover:bg-club-goldhover text-club-dark font-semibold py-2.5 px-4 rounded-lg transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
-                >
+                  class="w-full bg-club-gold hover:bg-club-goldhover text-club-dark font-semibold py-2.5 px-4 rounded-lg transition-colors flex items-center justify-center gap-2">
                   Guardar registro semanal
                 </button>
               </form>
@@ -1469,13 +1436,6 @@
     <script type="module">
       import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
       import {
-        getAuth,
-        onAuthStateChanged,
-        signInWithPopup,
-        GoogleAuthProvider,
-        signOut,
-      } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-      import {
         getFirestore,
         collection,
         onSnapshot,
@@ -1502,8 +1462,8 @@
       //  rules_version = '2';
       //  service cloud.firestore {
       //    match /databases/{database}/documents {
-      //      match /users/{userId}/{document=**} {
-      //        allow read, write: if request.auth != null && request.auth.uid == userId;
+      //      match /{document=**} {
+      //        allow read, write: if true;
       //      }
       //    }
       //  }
@@ -1527,8 +1487,8 @@
       const authStatus = document.getElementById("auth-status");
       const inputDate = document.getElementById("input-date");
       const chartFilter = document.getElementById("chart-filter");
-      const btnGoogleLogin = document.getElementById("btn-google-login");
-      const btnLogout = document.getElementById("btn-logout");
+      const btnGoogleLogin = null;
+      const btnLogout = null;
       const btnOpenPostModal = document.getElementById("btn-open-post-modal");
       const btnAddPostTop = document.getElementById("btn-add-post-top");
       const modalOverlay = document.getElementById("modal-overlay");
@@ -1562,7 +1522,7 @@
         .toTimeString()
         .slice(0, 5);
 
-      let db, auth, provider, currentUser;
+      let db;
       let globalWeekly = [];
       let mainChartInstance,
         followersChartInst,
@@ -2042,69 +2002,36 @@
       let monthlyMonth = new Date().getMonth();
       let monthlyChartInst = null;
 
-      // Mostrar datos inmediatamente al cargar
+      // Mostrar datos históricos inmediatamente al cargar
       updateDashboard();
       enableForms();
 
-      if (!DEMO_MODE) {
-        const app = initializeApp(firebaseConfig);
-        auth = getAuth(app);
-        db = getFirestore(app);
-        provider = new GoogleAuthProvider();
+      // Inicializar Firebase y cargar datos reales
+      const app = initializeApp(firebaseConfig);
+      db = getFirestore(app);
 
-        // Fallback: si onAuthStateChanged no responde en 6s, continuar sin auth
-        const authTimeout = setTimeout(() => {
-          authStatus.innerHTML = `<span class="flex items-center gap-1.5 text-xs text-red-300"><span class="w-2 h-2 rounded-full bg-red-400 inline-block"></span>Sin conexión</span>`;
-          btnGoogleLogin.classList.remove("hidden");
-          disableForms();
-        }, 6000);
+      // Indicador de estado Firebase
+      const fbDot = document.getElementById("firebase-dot");
+      const fbLabel = document.getElementById("firebase-label");
+      const connTimeout = setTimeout(() => {
+        if (fbDot) { fbDot.style.background = "#f87171"; }
+        if (fbLabel) fbLabel.textContent = "Sin conexión";
+      }, 8000);
 
-        onAuthStateChanged(
-          auth,
-          (user) => {
-            clearTimeout(authTimeout);
-            currentUser = user;
-            if (user) {
-              authStatus.innerHTML = `<span class="flex items-center gap-1.5 text-xs text-white"><span class="w-2 h-2 rounded-full bg-green-400 inline-block animate-pulse"></span>${user.displayName || user.email}</span>`;
-              btnLogout.classList.remove("hidden");
-              btnGoogleLogin.classList.add("hidden");
-              enableForms();
-              loadData();
-              loadPosts();
-              loadWeekly();
-            } else {
-              authStatus.innerHTML = `<span class="flex items-center gap-1.5 text-xs text-club-light/70"><span class="w-2 h-2 rounded-full bg-slate-400 inline-block"></span>No conectado</span>`;
-              btnLogout.classList.add("hidden");
-              btnGoogleLogin.classList.remove("hidden");
-              disableForms();
-            }
-          },
-          (err) => {
-            clearTimeout(authTimeout);
-            authStatus.innerHTML = ``;
-          },
-        );
-
-        btnLogout.addEventListener("click", () => signOut(auth));
-        btnGoogleLogin.addEventListener("click", () =>
-          signInWithPopup(auth, provider).catch((err) =>
-            showToast("Error al iniciar sesión: " + err.message, "error"),
-          ),
-        );
-      } else {
-        authStatus.innerHTML = `<span class="flex items-center gap-1.5 text-xs text-yellow-300"><span class="w-2 h-2 rounded-full bg-yellow-400 inline-block"></span>Modo Demo</span>`;
-        enableForms();
-        updateDashboard();
-      }
+      loadData();
+      loadPosts();
+      loadWeekly();
 
       function loadData() {
-        if (!currentUser || !db) return;
+        if (!db) return;
         onSnapshot(
-          collection(db, "users", currentUser.uid, "instagram_stats"),
+          collection(db, "instagram_stats"),
           (snap) => {
+            clearTimeout(connTimeout);
+            if (fbDot) { fbDot.style.background = "#4ade80"; fbDot.style.animation = "pulse 2s infinite"; }
+            if (fbLabel) fbLabel.textContent = "Conectado";
             const fbData = [];
             snap.forEach((d) => fbData.push({ id: d.id, ...d.data() }));
-            // Fusionar: Firebase primero, luego base Notion sin duplicados por fecha
             const fbDates = new Set(fbData.map((r) => r.date));
             const notionOnly = NOTION_DAILY.filter((r) => !fbDates.has(r.date));
             globalData = [...fbData, ...notionOnly].sort(
@@ -2113,14 +2040,18 @@
             updateDashboard();
             renderRecentPostsOverview();
           },
-          (err) => console.error(err),
+          (err) => {
+            console.error(err);
+            if (fbDot) fbDot.style.background = "#f87171";
+            if (fbLabel) fbLabel.textContent = "Error BD";
+          },
         );
       }
 
       function loadWeekly() {
-        if (!currentUser || !db) return;
+        if (!db) return;
         onSnapshot(
-          collection(db, "users", currentUser.uid, "instagram_weekly"),
+          collection(db, "instagram_weekly"),
           (snap) => {
             const data = [];
             snap.forEach((d) => data.push({ id: d.id, ...d.data() }));
@@ -2136,13 +2067,12 @@
       }
 
       function loadPosts() {
-        if (!currentUser || !db) return;
+        if (!db) return;
         onSnapshot(
-          collection(db, "users", currentUser.uid, "instagram_posts"),
+          collection(db, "instagram_posts"),
           (snap) => {
             const firebasePosts = [];
             snap.forEach((d) => firebasePosts.push({ id: d.id, ...d.data() }));
-            // Fusionar: Firebase primero, luego los de Notion que no estén duplicados
             const fbIds = new Set(firebasePosts.map((p) => p.id));
             const notionOnly = NOTION_POSTS.filter((p) => !fbIds.has(p.id));
             globalPosts = [...firebasePosts, ...notionOnly].sort(
@@ -2168,24 +2098,8 @@
         ].forEach((b) => {
           if (b) b.disabled = false;
         });
-        // Hide login banner
-        const banner = document.getElementById("login-required-banner");
-        if (banner) banner.classList.add("hidden");
       }
-      function disableForms() {
-        [
-          btnSubmit,
-          btnOpenPostModal,
-          btnPostSubmit,
-          btnPanelPostSubmit,
-          btnWeeklySubmit,
-        ].forEach((b) => {
-          if (b) b.disabled = true;
-        });
-        // Show login banner
-        const banner = document.getElementById("login-required-banner");
-        if (banner) banner.classList.remove("hidden");
-      }
+      function disableForms() { /* no-op: no auth required */ }
 
       window.cancelEditDaily = () => {
         editingDailyId = null;
@@ -2251,21 +2165,11 @@
         };
         if (editingDailyId) {
           // UPDATE MODE
-          if (
-            !DEMO_MODE &&
-            currentUser &&
-            !editingDailyId.startsWith("demo_")
-          ) {
+          if (!editingDailyId.startsWith("d") && !editingDailyId.startsWith("n")) {
             try {
               btnSubmit.disabled = true;
               await updateDoc(
-                doc(
-                  db,
-                  "users",
-                  currentUser.uid,
-                  "instagram_stats",
-                  editingDailyId,
-                ),
+                doc(db, "instagram_stats", editingDailyId),
                 record,
               );
               showToast("Registro actualizado");
@@ -2275,10 +2179,7 @@
               btnSubmit.disabled = false;
             }
           } else {
-            const idx = globalData.findIndex((x) => x.id === editingDailyId);
-            if (idx !== -1) globalData[idx] = { ...globalData[idx], ...record };
-            updateDashboard();
-            showToast("Registro actualizado");
+            showToast("Los registros históricos no se pueden editar", "error");
           }
           editingDailyId = null;
           document.getElementById("edit-daily-banner").classList.add("hidden");
@@ -2289,25 +2190,18 @@
         }
         // ADD MODE
         record.createdAt = new Date().toISOString();
-        if (!DEMO_MODE && currentUser) {
-          btnSubmit.innerHTML = `<div class="loader w-4 h-4 border-2 border-club-dark border-t-transparent mr-2"></div>Guardando...`;
-          btnSubmit.disabled = true;
-          try {
-            await addDoc(
-              collection(db, "users", currentUser.uid, "instagram_stats"),
-              record,
-            );
-            _resetForm();
-            showToast("Métricas guardadas correctamente");
-          } catch (err) {
-            showToast("Error: " + err.message, "error");
-          } finally {
-            btnSubmit.innerHTML = origBtnHTML;
-            btnSubmit.disabled = false;
-            lucide.createIcons();
-          }
-        } else {
-          showToast("Debes iniciar sesión primero", "error");
+        btnSubmit.innerHTML = `<div class="loader w-4 h-4 border-2 border-club-dark border-t-transparent mr-2"></div>Guardando...`;
+        btnSubmit.disabled = true;
+        try {
+          await addDoc(collection(db, "instagram_stats"), record);
+          _resetForm();
+          showToast("Métricas guardadas correctamente");
+        } catch (err) {
+          showToast("Error: " + err.message, "error");
+        } finally {
+          btnSubmit.innerHTML = origBtnHTML;
+          btnSubmit.disabled = false;
+          lucide.createIcons();
         }
       });
 
@@ -2356,33 +2250,26 @@
             ) || 0,
           createdAt: new Date().toISOString(),
         };
-        if (!DEMO_MODE && currentUser) {
-          const orig = btnPostSubmit.innerHTML;
-          btnPostSubmit.innerHTML = `<div class="loader w-4 h-4 border-2 border-club-dark border-t-transparent mr-2"></div>Guardando...`;
-          btnPostSubmit.disabled = true;
-          try {
-            await addDoc(
-              collection(db, "users", currentUser.uid, "instagram_posts"),
-              postRecord,
-            );
-            postForm.reset();
-            document.getElementById("post-date").value = new Date()
-              .toISOString()
-              .split("T")[0];
-            document.getElementById("post-time").value = new Date()
-              .toTimeString()
-              .slice(0, 5);
-            modalOverlay.classList.add("hidden");
-            showToast("Publicacion registrada");
-          } catch (err) {
-            showToast("Error: " + err.message, "error");
-          } finally {
-            btnPostSubmit.innerHTML = orig;
-            btnPostSubmit.disabled = false;
-            lucide.createIcons();
-          }
-        } else {
-          showToast("Debes iniciar sesión primero", "error");
+        const orig = btnPostSubmit.innerHTML;
+        btnPostSubmit.innerHTML = `<div class="loader w-4 h-4 border-2 border-club-dark border-t-transparent mr-2"></div>Guardando...`;
+        btnPostSubmit.disabled = true;
+        try {
+          await addDoc(collection(db, "instagram_posts"), postRecord);
+          postForm.reset();
+          document.getElementById("post-date").value = new Date()
+            .toISOString()
+            .split("T")[0];
+          document.getElementById("post-time").value = new Date()
+            .toTimeString()
+            .slice(0, 5);
+          modalOverlay.classList.add("hidden");
+          showToast("Publicacion registrada");
+        } catch (err) {
+          showToast("Error: " + err.message, "error");
+        } finally {
+          btnPostSubmit.innerHTML = orig;
+          btnPostSubmit.disabled = false;
+          lucide.createIcons();
         }
       });
 
@@ -2435,62 +2322,47 @@
             .toTimeString()
             .slice(0, 5);
         };
-        if (!DEMO_MODE && currentUser) {
-          const origHTML = btnPanelPostSubmit.innerHTML;
-          btnPanelPostSubmit.innerHTML = `<div class="loader w-4 h-4 border-2 border-white border-t-transparent mr-2"></div>Guardando...`;
-          btnPanelPostSubmit.disabled = true;
-          try {
-            await addDoc(
-              collection(db, "users", currentUser.uid, "instagram_posts"),
-              panelRecord,
-            );
-            _resetPanelForm();
-            showToast("Publicación registrada");
-          } catch (err) {
-            showToast("Error: " + err.message, "error");
-          } finally {
-            btnPanelPostSubmit.innerHTML = origHTML;
-            btnPanelPostSubmit.disabled = false;
-            lucide.createIcons();
-          }
-        } else {
-          showToast("Debes iniciar sesión primero", "error");
+        const origHTML = btnPanelPostSubmit.innerHTML;
+        btnPanelPostSubmit.innerHTML = `<div class="loader w-4 h-4 border-2 border-white border-t-transparent mr-2"></div>Guardando...`;
+        btnPanelPostSubmit.disabled = true;
+        try {
+          await addDoc(collection(db, "instagram_posts"), panelRecord);
+          _resetPanelForm();
+          showToast("Publicación registrada");
+        } catch (err) {
+          showToast("Error: " + err.message, "error");
+        } finally {
+          btnPanelPostSubmit.innerHTML = origHTML;
+          btnPanelPostSubmit.disabled = false;
+          lucide.createIcons();
         }
       });
 
       window.deleteRecord = async (id) => {
         if (!confirm("\u00bfEliminar este registro?")) return;
-        if (!DEMO_MODE && currentUser && !id.startsWith("d") && !id.startsWith("n")) {
-          try {
-            await deleteDoc(
-              doc(db, "users", currentUser.uid, "instagram_stats", id),
-            );
-            showToast("Registro eliminado");
-          } catch (err) {
-            showToast("Error: " + err.message, "error");
-          }
-        } else if (id.startsWith("d") || id.startsWith("n")) {
+        if (id.startsWith("d") || id.startsWith("n")) {
           showToast("Los registros históricos no se pueden eliminar", "error");
-        } else {
-          showToast("Debes iniciar sesión primero", "error");
+          return;
+        }
+        try {
+          await deleteDoc(doc(db, "instagram_stats", id));
+          showToast("Registro eliminado");
+        } catch (err) {
+          showToast("Error: " + err.message, "error");
         }
       };
 
       window.deletePost = async (id) => {
         if (!confirm("\u00bfEliminar esta publicación?")) return;
-        if (!DEMO_MODE && currentUser && !id.startsWith("n")) {
-          try {
-            await deleteDoc(
-              doc(db, "users", currentUser.uid, "instagram_posts", id),
-            );
-            showToast("Publicacion eliminada");
-          } catch (err) {
-            showToast("Error: " + err.message, "error");
-          }
-        } else if (id.startsWith("n")) {
+        if (id.startsWith("n")) {
           showToast("Los registros históricos no se pueden eliminar", "error");
-        } else {
-          showToast("Debes iniciar sesión primero", "error");
+          return;
+        }
+        try {
+          await deleteDoc(doc(db, "instagram_posts", id));
+          showToast("Publicacion eliminada");
+        } catch (err) {
+          showToast("Error: " + err.message, "error");
         }
       };
 
@@ -2522,17 +2394,11 @@
 
       window.deleteWeeklyRecord = async (id) => {
         if (!confirm("\u00bfEliminar este registro semanal?")) return;
-        if (!DEMO_MODE && currentUser) {
-          try {
-            await deleteDoc(
-              doc(db, "users", currentUser.uid, "instagram_weekly", id),
-            );
-            showToast("Registro semanal eliminado");
-          } catch (err) {
-            showToast("Error: " + err.message, "error");
-          }
-        } else {
-          showToast("Debes iniciar sesión primero", "error");
+        try {
+          await deleteDoc(doc(db, "instagram_weekly", id));
+          showToast("Registro semanal eliminado");
+        } catch (err) {
+          showToast("Error: " + err.message, "error");
         }
       };
 
@@ -2546,63 +2412,40 @@
         };
         if (editingWeeklyId) {
           // UPDATE existing
-          if (!DEMO_MODE && currentUser) {
-            const orig = btnWeeklySubmit.textContent;
-            btnWeeklySubmit.textContent = "Guardando...";
-            btnWeeklySubmit.disabled = true;
-            try {
-              await setDoc(
-                doc(
-                  db,
-                  "users",
-                  currentUser.uid,
-                  "instagram_weekly",
-                  editingWeeklyId,
-                ),
-                { ...weeklyRecord, updatedAt: new Date().toISOString() },
-                { merge: true },
-              );
-              showToast("Registro semanal actualizado");
-            } catch (err) {
-              showToast("Error: " + err.message, "error");
-            } finally {
-              btnWeeklySubmit.textContent = orig;
-              btnWeeklySubmit.disabled = false;
-            }
-          } else {
-            const idx = globalWeekly.findIndex((x) => x.id === editingWeeklyId);
-            if (idx !== -1)
-              globalWeekly[idx] = { ...globalWeekly[idx], ...weeklyRecord };
-            globalWeekly.sort((a, b) => new Date(b.date) - new Date(a.date));
-            renderWeeklyHistory();
-            calculateKPIs();
-            showToast("Registro actualizado (Demo)");
+          const orig = btnWeeklySubmit.textContent;
+          btnWeeklySubmit.textContent = "Guardando...";
+          btnWeeklySubmit.disabled = true;
+          try {
+            await setDoc(
+              doc(db, "instagram_weekly", editingWeeklyId),
+              { ...weeklyRecord, updatedAt: new Date().toISOString() },
+              { merge: true },
+            );
+            showToast("Registro semanal actualizado");
+          } catch (err) {
+            showToast("Error: " + err.message, "error");
+          } finally {
+            btnWeeklySubmit.textContent = orig;
+            btnWeeklySubmit.disabled = false;
           }
           cancelEditWeekly();
           return;
         }
         weeklyRecord.createdAt = new Date().toISOString();
-        if (!DEMO_MODE && currentUser) {
-          const orig = btnWeeklySubmit.innerHTML;
-          btnWeeklySubmit.innerHTML = `<div class="loader w-4 h-4 border-2 border-club-dark border-t-transparent mr-2"></div>Guardando...`;
-          btnWeeklySubmit.disabled = true;
-          try {
-            await addDoc(
-              collection(db, "users", currentUser.uid, "instagram_weekly"),
-              weeklyRecord,
-            );
-            weeklyForm.reset();
-            document.getElementById("weekly-date").valueAsDate = new Date();
-            showToast("Registro semanal guardado");
-          } catch (err) {
-            showToast("Error: " + err.message, "error");
-          } finally {
-            btnWeeklySubmit.innerHTML = orig;
-            btnWeeklySubmit.disabled = false;
-            lucide.createIcons();
-          }
-        } else {
-          showToast("Debes iniciar sesión primero", "error");
+        const orig = btnWeeklySubmit.innerHTML;
+        btnWeeklySubmit.innerHTML = `<div class="loader w-4 h-4 border-2 border-club-dark border-t-transparent mr-2"></div>Guardando...`;
+        btnWeeklySubmit.disabled = true;
+        try {
+          await addDoc(collection(db, "instagram_weekly"), weeklyRecord);
+          weeklyForm.reset();
+          document.getElementById("weekly-date").valueAsDate = new Date();
+          showToast("Registro semanal guardado");
+        } catch (err) {
+          showToast("Error: " + err.message, "error");
+        } finally {
+          btnWeeklySubmit.innerHTML = orig;
+          btnWeeklySubmit.disabled = false;
+          lucide.createIcons();
         }
       });
 
@@ -3336,7 +3179,7 @@
             tr.innerHTML = `
               <td class="p-2 sm:p-4 font-medium text-slate-700 whitespace-nowrap text-xs sm:text-sm">${fmtDate}</td>
               <td class="p-2 sm:p-4 text-slate-400 text-xs hidden sm:table-cell">${timeStr}</td>
-              <td class="p-2 sm:p-4 text-slate-600 text-xs hidden md:table-cell max-w-[160px] truncate" title="${item.storyName || ''}">${item.storyName || '<span class="text-slate-300">—</span>'}</td>
+              <td class="p-2 sm:p-4 text-slate-600 text-xs hidden md:table-cell max-w-[160px] truncate" title="${item.storyName || ""}">${item.storyName || '<span class="text-slate-300">—</span>'}</td>
               <td class="p-2 sm:p-4 text-right text-slate-600 text-xs sm:text-sm">${views.toLocaleString()}</td>
               <td class="p-2 sm:p-4 text-right text-pink-600 text-xs sm:text-sm">${(item.likes || 0).toLocaleString()}</td>
               <td class="p-2 sm:p-4 text-right text-blue-600 text-xs sm:text-sm hidden sm:table-cell">${(item.comments || 0).toLocaleString()}</td>
