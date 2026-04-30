@@ -142,7 +142,8 @@
       }
 
       /* Lucide icons inside buttons: constrain to 1rem */
-      button > svg, button .lucide {
+      button > svg,
+      button .lucide {
         width: 1rem;
         height: 1rem;
         flex-shrink: 0;
@@ -2069,11 +2070,7 @@
       }
       function disableForms() {
         // Only disable post/weekly buttons that require auth; keep daily form always active
-        [
-          btnOpenPostModal,
-          btnPostSubmit,
-          btnPanelPostSubmit,
-        ].forEach((b) => {
+        [btnOpenPostModal, btnPostSubmit, btnPanelPostSubmit].forEach((b) => {
           if (b) b.disabled = true;
         });
       }
@@ -2802,6 +2799,7 @@
                   backgroundColor: "rgba(197,160,89,0.8)",
                   borderRadius: 5,
                   yAxisID: "y",
+                  order: 2,
                 },
                 {
                   label: "Vistas",
@@ -2809,10 +2807,12 @@
                   type: "line",
                   borderColor: "#145333",
                   backgroundColor: "transparent",
-                  borderWidth: 2,
-                  pointRadius: 2,
+                  borderWidth: 2.5,
+                  pointRadius: 3,
+                  pointBackgroundColor: "#145333",
                   tension: 0.3,
                   yAxisID: "y1",
+                  order: 1,
                 },
               ],
             },
@@ -3476,7 +3476,15 @@
           types[p.type].totalImpressions += p.vistas || 0;
         });
         const labels = Object.keys(types);
-        const COLORS = ["#C5A059", "#145333", "#0D3341", "#6B7280", "#9CA3AF"];
+        const TYPE_COLORS = {
+          Carrusel: "#C5A059",
+          Foto:     "#0D3341",
+          Reel:     "#E1D3B8",
+          Story:    "#145333",
+          Video:    "#0D3341",
+        };
+        const fallbackColors = ["#C5A059","#0D3341","#E1D3B8","#145333","#6B7280"];
+        const bgColors = labels.map((t, i) => TYPE_COLORS[t] || fallbackColors[i] || "#9CA3AF");
         contentTypeChartInst = new Chart(ctx, {
           type: "doughnut",
           data: {
@@ -3484,7 +3492,7 @@
             datasets: [
               {
                 data: labels.map((t) => types[t].totalInteractions),
-                backgroundColor: COLORS.slice(0, labels.length),
+                backgroundColor: bgColors,
                 borderWidth: 0,
               },
             ],
