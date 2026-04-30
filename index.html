@@ -417,7 +417,8 @@
           <button
             type="submit"
             id="btn-post-submit"
-            class="w-full mt-2 bg-club-gold hover:bg-club-goldhover text-club-dark font-semibold py-2.5 px-4 rounded-lg transition-colors flex items-center justify-center gap-2">
+            class="w-full mt-2 bg-club-gold hover:bg-club-goldhover text-club-dark font-semibold py-2.5 px-4 rounded-lg transition-colors flex items-center justify-center gap-2"
+          >
             <i data-lucide="save" class="w-4 h-4"></i> Guardar Publicacion
           </button>
         </form>
@@ -444,8 +445,14 @@
           </div>
         </div>
         <div class="flex items-center gap-3">
-          <div id="firebase-status" class="flex items-center gap-1.5 text-xs text-club-light/60">
-            <span class="w-2 h-2 rounded-full bg-slate-400 inline-block" id="firebase-dot"></span>
+          <div
+            id="firebase-status"
+            class="flex items-center gap-1.5 text-xs text-club-light/60"
+          >
+            <span
+              class="w-2 h-2 rounded-full bg-slate-400 inline-block"
+              id="firebase-dot"
+            ></span>
             <span id="firebase-label">Conectando...</span>
           </div>
         </div>
@@ -732,7 +739,8 @@
                 <button
                   type="submit"
                   id="btn-submit"
-                  class="w-full mt-1 bg-club-gold hover:bg-club-goldhover text-club-dark font-semibold py-2.5 px-4 rounded-lg transition-colors flex items-center justify-center gap-2">
+                  class="w-full mt-1 bg-club-gold hover:bg-club-goldhover text-club-dark font-semibold py-2.5 px-4 rounded-lg transition-colors flex items-center justify-center gap-2"
+                >
                   Guardar Métricas
                 </button>
               </form>
@@ -1255,7 +1263,8 @@
                 <button
                   type="submit"
                   id="btn-weekly-submit"
-                  class="w-full bg-club-gold hover:bg-club-goldhover text-club-dark font-semibold py-2.5 px-4 rounded-lg transition-colors flex items-center justify-center gap-2">
+                  class="w-full bg-club-gold hover:bg-club-goldhover text-club-dark font-semibold py-2.5 px-4 rounded-lg transition-colors flex items-center justify-center gap-2"
+                >
                   Guardar registro semanal
                 </button>
               </form>
@@ -1284,7 +1293,6 @@
                       <th class="p-4 font-medium">Fecha</th>
                       <th class="p-4 font-medium">Dia</th>
                       <th class="p-4 font-medium text-right">Seguidores</th>
-                      <th class="p-4 font-medium text-right">Δ Seguidores</th>
                       <th class="p-4 font-medium text-right">Visitas perfil</th>
                       <th class="p-4 font-medium text-right">Δ Visitas</th>
                       <th class="p-4 font-medium text-center">Acción</th>
@@ -1723,8 +1731,91 @@
 
       const NOTION_POSTS = [
         {
-          id: "n14",
-          date: "2026-04-26",
+          id: "p1",
+          date: "2026-04-28",
+          publishedAt: "2026-04-28T10:00",
+          type: "Reel",
+          title: "Torneo Copa Campestre — Highlights",
+          vistas: 6420,
+          reproducciones: 3810,
+          reach: 4950,
+          likes: 487,
+          comments: 34,
+          saves: 115,
+          compartidos: 62,
+          pctSeguidores: 38.2,
+          pctInteractuantes: 13.7,
+          createdAt: "2026-04-28T10:00:00.000Z",
+        },
+        {
+          id: "p2",
+          date: "2026-04-27",
+          publishedAt: "2026-04-27T12:00",
+          type: "Carrusel",
+          title: "Instalaciones del club — Primavera 2026",
+          vistas: 4130,
+          reproducciones: 0,
+          reach: 3200,
+          likes: 315,
+          comments: 21,
+          saves: 88,
+          compartidos: 39,
+          pctSeguidores: 29.4,
+          pctInteractuantes: 10.2,
+          createdAt: "2026-04-27T12:00:00.000Z",
+        },
+        {
+          id: "p3",
+          date: "2026-04-25",
+          publishedAt: "2026-04-25T09:30",
+          type: "Foto",
+          title: "Atardecer en el campo de golf",
+          vistas: 3580,
+          reproducciones: 0,
+          reach: 2740,
+          likes: 294,
+          comments: 16,
+          saves: 71,
+          compartidos: 28,
+          pctSeguidores: 24.1,
+          pctInteractuantes: 11.5,
+          createdAt: "2026-04-25T09:30:00.000Z",
+        },
+        {
+          id: "p4",
+          date: "2026-04-24",
+          publishedAt: "2026-04-24T11:00",
+          type: "Reel",
+          title: "Tips de golf para principiantes",
+          vistas: 9870,
+          reproducciones: 6340,
+          reach: 7650,
+          likes: 562,
+          comments: 41,
+          saves: 158,
+          compartidos: 74,
+          pctSeguidores: 41.5,
+          pctInteractuantes: 14.9,
+          createdAt: "2026-04-24T11:00:00.000Z",
+        },
+        {
+          id: "p5",
+          date: "2026-04-22",
+          publishedAt: "2026-04-22T08:45",
+          type: "Carrusel",
+          title: "Agenda de actividades — última semana de abril",
+          vistas: 5210,
+          reproducciones: 0,
+          reach: 3890,
+          likes: 376,
+          comments: 25,
+          saves: 102,
+          compartidos: 47,
+          pctSeguidores: 32.8,
+          pctInteractuantes: 9.8,
+          createdAt: "2026-04-22T08:45:00.000Z",
+        },
+      ];
           publishedAt: "2026-04-26T11:00",
           type: "Carrusel",
           title: "Agenda de eventos — ultima semana de abril",
@@ -2014,7 +2105,9 @@
       const fbDot = document.getElementById("firebase-dot");
       const fbLabel = document.getElementById("firebase-label");
       const connTimeout = setTimeout(() => {
-        if (fbDot) { fbDot.style.background = "#f87171"; }
+        if (fbDot) {
+          fbDot.style.background = "#f87171";
+        }
         if (fbLabel) fbLabel.textContent = "Sin conexión";
       }, 8000);
 
@@ -2028,7 +2121,10 @@
           collection(db, "instagram_stats"),
           (snap) => {
             clearTimeout(connTimeout);
-            if (fbDot) { fbDot.style.background = "#4ade80"; fbDot.style.animation = "pulse 2s infinite"; }
+            if (fbDot) {
+              fbDot.style.background = "#4ade80";
+              fbDot.style.animation = "pulse 2s infinite";
+            }
             if (fbLabel) fbLabel.textContent = "Conectado";
             const fbData = [];
             snap.forEach((d) => fbData.push({ id: d.id, ...d.data() }));
@@ -2041,9 +2137,10 @@
             renderRecentPostsOverview();
           },
           (err) => {
+            clearTimeout(connTimeout);
             console.error(err);
             if (fbDot) fbDot.style.background = "#f87171";
-            if (fbLabel) fbLabel.textContent = "Error BD";
+            if (fbLabel) fbLabel.textContent = "Actualiza reglas Firestore";
           },
         );
       }
@@ -2099,7 +2196,9 @@
           if (b) b.disabled = false;
         });
       }
-      function disableForms() { /* no-op: no auth required */ }
+      function disableForms() {
+        /* no-op: no auth required */
+      }
 
       window.cancelEditDaily = () => {
         editingDailyId = null;
@@ -2165,7 +2264,10 @@
         };
         if (editingDailyId) {
           // UPDATE MODE
-          if (!editingDailyId.startsWith("d") && !editingDailyId.startsWith("n")) {
+          if (
+            !editingDailyId.startsWith("d") &&
+            !editingDailyId.startsWith("n")
+          ) {
             try {
               btnSubmit.disabled = true;
               await updateDoc(
@@ -2453,7 +2555,7 @@
         const countEl = document.getElementById("weekly-history-count");
         if (!weeklyTableBody) return;
         if (globalWeekly.length === 0) {
-          weeklyTableBody.innerHTML = `<tr><td colspan="7" class="p-8 text-center text-slate-400">No hay registros semanales aún.</td></tr>`;
+          weeklyTableBody.innerHTML = `<tr><td colspan="6" class="p-8 text-center text-slate-400">No hay registros semanales aún.</td></tr>`;
           if (countEl) countEl.textContent = "";
           return;
         }
@@ -2469,7 +2571,6 @@
             });
             const dayName = DAYS[d.getDay()];
             const prev = globalWeekly[idx + 1];
-            const deltaF = prev ? item.followers - prev.followers : null;
             const deltaV = prev
               ? (item.visits || 0) - (prev.visits || 0)
               : null;
@@ -2485,7 +2586,6 @@
             <td class="p-4 font-medium text-slate-700 whitespace-nowrap">${fmtDate}</td>
             <td class="p-4 text-slate-500 text-xs">${dayName}</td>
             <td class="p-4 text-right font-semibold text-club-dark">${(item.followers || 0).toLocaleString()}</td>
-            <td class="p-4 text-right">${deltaHtml(deltaF)}</td>
             <td class="p-4 text-right text-slate-600">${(item.visits || 0).toLocaleString()}</td>
             <td class="p-4 text-right">${deltaHtml(deltaV)}</td>
             <td class="p-4 text-center">
