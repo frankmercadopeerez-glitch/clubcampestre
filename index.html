@@ -332,9 +332,27 @@
           class="flex items-center gap-2 mb-5 border-b border-slate-100 pb-4"
         >
           <i data-lucide="image-plus" class="w-5 h-5 text-club-green"></i>
-          <h2 class="text-lg font-semibold text-club-dark">
+          <h2
+            class="text-lg font-semibold text-club-dark"
+            id="modal-post-title"
+          >
             Registrar Publicacion (Detallado)
           </h2>
+        </div>
+        <!-- Edit banner -->
+        <div
+          id="edit-post-banner"
+          class="hidden mb-3 px-3 py-2 bg-amber-50 border border-amber-200 rounded-lg text-xs text-amber-700 flex items-center gap-2"
+        >
+          <i data-lucide="pencil" class="w-3.5 h-3.5 flex-shrink-0"></i>
+          <span>Editando publicación existente</span>
+          <button
+            type="button"
+            onclick="cancelEditPost()"
+            class="ml-auto text-amber-500 hover:text-amber-700 font-semibold"
+          >
+            Cancelar
+          </button>
         </div>
         <form id="post-form" class="space-y-4">
           <div class="grid grid-cols-2 gap-4">
@@ -1283,8 +1301,12 @@
       <section id="tab-history" class="hidden flex-col gap-6">
         <!-- Page title -->
         <div>
-          <h2 class="text-xl font-bold text-slate-800">Historial de métricas</h2>
-          <p class="text-sm text-slate-400 mt-0.5">Registro completo de historias publicadas</p>
+          <h2 class="text-xl font-bold text-slate-800">
+            Historial de métricas
+          </h2>
+          <p class="text-sm text-slate-400 mt-0.5">
+            Registro completo de historias publicadas
+          </p>
         </div>
         <div class="glass-card overflow-hidden">
           <div
@@ -1365,19 +1387,32 @@
         <!-- Page title -->
         <div>
           <h2 class="text-xl font-bold text-slate-800">Seguimiento semanal</h2>
-          <p class="text-sm text-slate-400 mt-0.5">Registra una vez por semana seguidores y visitas al perfil</p>
+          <p class="text-sm text-slate-400 mt-0.5">
+            Registra una vez por semana seguidores y visitas al perfil
+          </p>
         </div>
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <!-- Formulario semanal -->
           <div class="lg:col-span-1">
             <div class="glass-card p-5">
-              <div class="flex items-center gap-2 mb-4 border-b border-slate-100 pb-3">
-                <div class="w-7 h-7 rounded-lg bg-club-gold/15 flex items-center justify-center">
-                  <i data-lucide="calendar-days" class="w-4 h-4 text-club-gold"></i>
+              <div
+                class="flex items-center gap-2 mb-4 border-b border-slate-100 pb-3"
+              >
+                <div
+                  class="w-7 h-7 rounded-lg bg-club-gold/15 flex items-center justify-center"
+                >
+                  <i
+                    data-lucide="calendar-days"
+                    class="w-4 h-4 text-club-gold"
+                  ></i>
                 </div>
                 <div>
-                  <h2 class="text-sm font-semibold text-slate-800">Nuevo registro</h2>
-                  <p class="text-xs text-slate-400">Seguidores y visitas al perfil</p>
+                  <h2 class="text-sm font-semibold text-slate-800">
+                    Nuevo registro
+                  </h2>
+                  <p class="text-xs text-slate-400">
+                    Seguidores y visitas al perfil
+                  </p>
                 </div>
               </div>
               <form id="weekly-form" class="space-y-4">
@@ -1444,10 +1479,16 @@
           <!-- Historial semanal -->
           <div class="lg:col-span-2">
             <div class="glass-card overflow-hidden">
-              <div class="p-4 border-b border-slate-100 flex items-center justify-between">
+              <div
+                class="p-4 border-b border-slate-100 flex items-center justify-between"
+              >
                 <div>
-                  <h3 class="text-sm font-semibold text-slate-800">Historial de crecimiento</h3>
-                  <p class="text-xs text-slate-400">Seguimiento de audiencia semana a semana</p>
+                  <h3 class="text-sm font-semibold text-slate-800">
+                    Historial de crecimiento
+                  </h3>
+                  <p class="text-xs text-slate-400">
+                    Seguimiento de audiencia semana a semana
+                  </p>
                 </div>
                 <span
                   id="weekly-history-count"
@@ -1490,7 +1531,9 @@
         <!-- Page title -->
         <div>
           <h2 class="text-xl font-bold text-slate-800">Vista mensual</h2>
-          <p class="text-sm text-slate-400 mt-0.5">Agrupación y tendencias por mes</p>
+          <p class="text-sm text-slate-400 mt-0.5">
+            Agrupación y tendencias por mes
+          </p>
         </div>
         <!-- Selector de mes -->
         <div class="flex items-center justify-between">
@@ -2111,6 +2154,64 @@
         if (e.target === modalOverlay) modalOverlay.classList.add("hidden");
       });
 
+      let editingPostId = null;
+
+      window.cancelEditPost = () => {
+        editingPostId = null;
+        postForm.reset();
+        document.getElementById("post-date").value = new Date()
+          .toISOString()
+          .split("T")[0];
+        document.getElementById("post-time").value = new Date()
+          .toTimeString()
+          .slice(0, 5);
+        document.getElementById("edit-post-banner").classList.add("hidden");
+        document.getElementById("modal-post-title").textContent =
+          "Registrar Publicacion (Detallado)";
+        btnPostSubmit.innerHTML = `<i data-lucide="save" class="w-4 h-4"></i> Guardar Publicacion`;
+        lucide.createIcons();
+      };
+
+      window.editPost = (id) => {
+        const p = globalPosts.find((x) => x.id === id);
+        if (!p) {
+          showToast("No se encontró la publicación", "error");
+          return;
+        }
+        if (/^[np]\d/.test(id)) {
+          showToast("Los registros históricos no se pueden editar", "error");
+          return;
+        }
+        editingPostId = id;
+        const [datePart, timePart] = (p.publishedAt || p.date + "T00:00").split(
+          "T",
+        );
+        document.getElementById("post-date").value = datePart || p.date;
+        document.getElementById("post-time").value = (
+          timePart || "00:00"
+        ).slice(0, 5);
+        document.getElementById("post-type").value = p.type || "";
+        document.getElementById("post-title").value = p.title || "";
+        document.getElementById("post-vistas").value = p.vistas || 0;
+        document.getElementById("post-reproducciones").value =
+          p.reproducciones || 0;
+        document.getElementById("post-reach").value = p.reach || 0;
+        document.getElementById("post-likes").value = p.likes || 0;
+        document.getElementById("post-comments").value = p.comments || 0;
+        document.getElementById("post-saves").value = p.saves || 0;
+        document.getElementById("post-compartidos").value = p.compartidos || 0;
+        document.getElementById("post-pct-seguidores").value =
+          p.pctSeguidores || 0;
+        document.getElementById("post-pct-interactuantes").value =
+          p.pctInteractuantes || 0;
+        document.getElementById("edit-post-banner").classList.remove("hidden");
+        document.getElementById("modal-post-title").textContent =
+          "Editar Publicacion";
+        btnPostSubmit.innerHTML = `<i data-lucide="save" class="w-4 h-4"></i> Actualizar Publicacion`;
+        modalOverlay.classList.remove("hidden");
+        lucide.createIcons();
+      };
+
       postForm.addEventListener("submit", async (e) => {
         e.preventDefault();
         const postDate =
@@ -2146,7 +2247,17 @@
         btnPostSubmit.innerHTML = `<div class="loader w-4 h-4 border-2 border-club-dark border-t-transparent mr-2"></div>Guardando...`;
         btnPostSubmit.disabled = true;
         try {
-          await addDoc(collection(db, "instagram_posts"), postRecord);
+          if (editingPostId) {
+            await updateDoc(
+              doc(db, "instagram_posts", editingPostId),
+              postRecord,
+            );
+            showToast("Publicación actualizada");
+          } else {
+            await addDoc(collection(db, "instagram_posts"), postRecord);
+            showToast("Publicacion registrada");
+          }
+          editingPostId = null;
           postForm.reset();
           document.getElementById("post-date").value = new Date()
             .toISOString()
@@ -2154,12 +2265,14 @@
           document.getElementById("post-time").value = new Date()
             .toTimeString()
             .slice(0, 5);
+          document.getElementById("edit-post-banner").classList.add("hidden");
+          document.getElementById("modal-post-title").textContent =
+            "Registrar Publicacion (Detallado)";
+          btnPostSubmit.innerHTML = `<i data-lucide="save" class="w-4 h-4"></i> Guardar Publicacion`;
           modalOverlay.classList.add("hidden");
-          showToast("Publicacion registrada");
         } catch (err) {
           showToast("Error: " + err.message, "error");
         } finally {
-          btnPostSubmit.innerHTML = orig;
           btnPostSubmit.disabled = false;
           lucide.createIcons();
         }
@@ -3609,7 +3722,10 @@
             return `<div class="glass-card p-4 flex flex-col gap-3 hover:shadow-md transition-shadow">
             <div class="flex items-start justify-between">
               <span class="px-2.5 py-1 rounded-full text-xs font-semibold ${BADGE[p.type] || ""}">${p.type}</span>
-              <button onclick="deletePost('${p.id}')" class="text-slate-300 hover:text-red-500 transition-colors p-1"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
+              <div class="flex items-center gap-0.5">
+                ${!/^[np]\d/.test(p.id) ? `<button onclick="editPost('${p.id}')" class="text-slate-300 hover:text-club-green transition-colors p-1" title="Editar"><i data-lucide="pencil" class="w-3.5 h-3.5"></i></button>` : ""}
+                <button onclick="deletePost('${p.id}')" class="text-slate-300 hover:text-red-500 transition-colors p-1" title="Eliminar"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
+              </div>
             </div>
             <p class="text-sm font-medium text-slate-700 leading-snug">${medal} ${p.title}</p>
             <p class="text-xs text-slate-400">${fmtDate}${timeStr ? " · <b>" + timeStr + "</b>" : ""}</p>
@@ -3678,7 +3794,10 @@
             <td class="p-3 text-right font-semibold text-club-green">${total.toLocaleString()}</td>
             <td class="p-3 text-right text-xs text-club-gold font-semibold">${engPost}%</td>
             <td class="p-3 text-center">
-              <button onclick="deletePost('${p.id}')" class="text-slate-300 hover:text-red-500 transition-colors p-1"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
+              <div class="flex items-center justify-center gap-1">
+                ${!/^[np]\d/.test(p.id) ? `<button onclick="editPost('${p.id}')" class="text-slate-300 hover:text-club-green transition-colors p-1" title="Editar"><i data-lucide="pencil" class="w-3.5 h-3.5"></i></button>` : ""}
+                <button onclick="deletePost('${p.id}')" class="text-slate-300 hover:text-red-500 transition-colors p-1" title="Eliminar"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
+              </div>
             </td>
           </tr>`;
           })
