@@ -1037,6 +1037,10 @@
       let globalPosts = [...NOTION_POSTS];
       let globalData   = [...NOTION_DAILY].sort((a, b) => new Date(b.date) - new Date(a.date));
       let editingDailyId = null;
+      const MESES_ES = ["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
+      let monthlyYear  = new Date().getFullYear();
+      let monthlyMonth = new Date().getMonth();
+      let monthlyChartInst = null;
 
       // Mostrar datos inmediatamente al cargar
       updateDashboard();
@@ -1438,10 +1442,7 @@
       chartFilter.addEventListener("change", updateDashboard);
 
       // ─── MENSUAL ───────────────────────────────────────────────────────────
-      const MESES_ES = ["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
-      let monthlyYear  = new Date().getFullYear();
-      let monthlyMonth = new Date().getMonth(); // 0-indexed
-      let monthlyChartInst = null;
+      // (MESES_ES, monthlyYear, monthlyMonth, monthlyChartInst declared above)
 
       document.getElementById("btn-month-prev").addEventListener("click", () => {
         monthlyMonth--;
@@ -1550,7 +1551,6 @@
         renderInsights();
         renderPostsGrid();
         renderWeeklyHistory();
-        renderMonthly();
         lucide.createIcons();
       }
 
