@@ -2178,10 +2178,6 @@
           showToast("No se encontró la publicación", "error");
           return;
         }
-        if (/^[np]\d/.test(id)) {
-          showToast("Los registros históricos no se pueden editar", "error");
-          return;
-        }
         editingPostId = id;
         const [datePart, timePart] = (p.publishedAt || p.date + "T00:00").split(
           "T",
@@ -2248,10 +2244,12 @@
         btnPostSubmit.disabled = true;
         try {
           if (editingPostId) {
-            await updateDoc(
-              doc(db, "instagram_posts", editingPostId),
-              postRecord,
-            );
+            // Static seed IDs (p1, p2…) → write to Firestore with same ID so dedup works
+            if (/^[np]\d/.test(editingPostId)) {
+              await setDoc(doc(db, "instagram_posts", editingPostId), postRecord);
+            } else {
+              await updateDoc(doc(db, "instagram_posts", editingPostId), postRecord);
+            }
             showToast("Publicación actualizada");
           } else {
             await addDoc(collection(db, "instagram_posts"), postRecord);
@@ -3723,7 +3721,7 @@
             <div class="flex items-start justify-between">
               <span class="px-2.5 py-1 rounded-full text-xs font-semibold ${BADGE[p.type] || ""}">${p.type}</span>
               <div class="flex items-center gap-0.5">
-                ${!/^[np]\d/.test(p.id) ? `<button onclick="editPost('${p.id}')" class="text-slate-300 hover:text-club-green transition-colors p-1" title="Editar"><i data-lucide="pencil" class="w-3.5 h-3.5"></i></button>` : ""}
+                <button onclick="editPost('${p.id}')" class="text-slate-300 hover:text-club-green transition-colors p-1" title="Editar"><i data-lucide="pencil" class="w-3.5 h-3.5"></i></button>
                 <button onclick="deletePost('${p.id}')" class="text-slate-300 hover:text-red-500 transition-colors p-1" title="Eliminar"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
               </div>
             </div>
@@ -3795,7 +3793,7 @@
             <td class="p-3 text-right text-xs text-club-gold font-semibold">${engPost}%</td>
             <td class="p-3 text-center">
               <div class="flex items-center justify-center gap-1">
-                ${!/^[np]\d/.test(p.id) ? `<button onclick="editPost('${p.id}')" class="text-slate-300 hover:text-club-green transition-colors p-1" title="Editar"><i data-lucide="pencil" class="w-3.5 h-3.5"></i></button>` : ""}
+                <button onclick="editPost('${p.id}')" class="text-slate-300 hover:text-club-green transition-colors p-1" title="Editar"><i data-lucide="pencil" class="w-3.5 h-3.5"></i></button>
                 <button onclick="deletePost('${p.id}')" class="text-slate-300 hover:text-red-500 transition-colors p-1" title="Eliminar"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
               </div>
             </td>
