@@ -65,21 +65,27 @@
     <style>
       body {
         font-family: "Poppins", sans-serif;
-        background-color: #f0f4f8;
+        background-color: #f1f5f9;
       }
       .glass-card {
-        background: white;
+        background: #ffffff;
         border: 1px solid #e2e8f0;
-        border-radius: 1rem;
+        border-radius: 0.875rem;
         box-shadow:
-          0 4px 6px -1px rgba(0, 0, 0, 0.05),
-          0 2px 4px -1px rgba(0, 0, 0, 0.03);
+          0 1px 3px rgba(0, 0, 0, 0.06),
+          0 1px 2px rgba(0, 0, 0, 0.04);
         isolation: isolate;
         position: relative;
       }
+      .glass-card:hover {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        transition: box-shadow 0.2s ease;
+      }
+
+      /* Scrollbar */
       ::-webkit-scrollbar {
-        width: 6px;
-        height: 6px;
+        width: 5px;
+        height: 5px;
       }
       ::-webkit-scrollbar-track {
         background: transparent;
@@ -91,57 +97,139 @@
       ::-webkit-scrollbar-thumb:hover {
         background: #94a3b8;
       }
+
+      /* Spinner */
       .loader {
-        border: 3px solid #f3f3f3;
+        border: 2px solid #e2e8f0;
         border-radius: 50%;
-        border-top: 3px solid #145333;
-        width: 20px;
-        height: 20px;
-        animation: spin 1s linear infinite;
+        border-top: 2px solid #145333;
+        width: 18px;
+        height: 18px;
+        animation: spin 0.8s linear infinite;
         display: inline-block;
       }
       @keyframes spin {
-        0% {
-          transform: rotate(0deg);
-        }
-        100% {
+        to {
           transform: rotate(360deg);
         }
       }
 
-      /* Tab active */
+      /* ── Tabs ─────────────────────────────────────────────── */
+      .tab-btn {
+        position: relative;
+        color: #64748b;
+        font-weight: 500;
+        letter-spacing: 0.01em;
+        border-radius: 0;
+        padding: 0.625rem 1rem;
+        transition:
+          color 0.15s,
+          background 0.15s;
+      }
+      .tab-btn::after {
+        content: "";
+        position: absolute;
+        bottom: -2px;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: transparent;
+        border-radius: 2px 2px 0 0;
+        transition: background 0.15s;
+      }
+      .tab-btn:hover {
+        color: #145333;
+        background: #f1f5f9;
+        border-radius: 0.5rem 0.5rem 0 0;
+      }
       .tab-btn.active {
-        background-color: #145333;
-        color: white;
-      }
-      /* Badge colores tipo contenido */
-      .badge-reel {
-        background: #e1d3b8 !important;
-        color: #5c4a2a !important;
+        color: #145333;
         font-weight: 600;
+        background: transparent;
       }
-      .badge-foto {
-        background: #0d3341 !important;
-        color: #ffffff !important;
-        font-weight: 600;
-      }
-      .badge-carrusel {
-        background: #0d3341 !important;
-        color: #ffffff !important;
-        font-weight: 600;
-      }
-      .badge-story {
-        background: #145333 !important;
-        color: #ffffff !important;
-        font-weight: 600;
-      }
-      .badge-video {
-        background: #0d3341 !important;
-        color: #ffffff !important;
-        font-weight: 600;
+      .tab-btn.active::after {
+        background: #145333;
       }
 
-      /* Lucide icons inside buttons: constrain to 1rem */
+      /* ── KPI cards ─────────────────────────────────────────── */
+      .kpi-card {
+        background: #fff;
+        border-radius: 0.875rem;
+        padding: 1.25rem 1.5rem;
+        border: 1px solid #e2e8f0;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+        position: relative;
+        overflow: hidden;
+      }
+      .kpi-card .kpi-icon {
+        position: absolute;
+        right: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        opacity: 0.06;
+        width: 4rem;
+        height: 4rem;
+      }
+      .kpi-card .kpi-label {
+        font-size: 0.7rem;
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: #94a3b8;
+      }
+      .kpi-card .kpi-value {
+        font-size: 1.75rem;
+        font-weight: 700;
+        color: #0f172a;
+        line-height: 1.2;
+      }
+      .kpi-card.kpi-accent {
+        background: linear-gradient(135deg, #145333 0%, #0d3b24 100%);
+        border-color: transparent;
+      }
+      .kpi-card.kpi-accent .kpi-label {
+        color: rgba(232, 241, 236, 0.7);
+      }
+      .kpi-card.kpi-accent .kpi-value {
+        color: #c5a059;
+      }
+
+      /* ── Badges ────────────────────────────────────────────── */
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        padding: 0.2rem 0.6rem;
+        border-radius: 9999px;
+        font-size: 0.65rem;
+        font-weight: 600;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+      }
+      .badge-reel {
+        background: #fef3c7;
+        color: #92400e;
+      }
+      .badge-foto {
+        background: #dbeafe;
+        color: #1e3a8a;
+      }
+      .badge-carrusel {
+        background: #e0e7ff;
+        color: #3730a3;
+      }
+      .badge-story {
+        background: #d1fae5;
+        color: #065f46;
+      }
+      .badge-video {
+        background: #fce7f3;
+        color: #9d174d;
+      }
+
+      /* Icons inside buttons */
       button > svg,
       button .lucide {
         width: 1rem;
@@ -149,30 +237,73 @@
         flex-shrink: 0;
       }
 
-      /* Toast notification */
+      /* Toast */
       #toast {
         transition:
-          opacity 0.3s,
-          transform 0.3s;
+          opacity 0.25s,
+          transform 0.25s;
       }
       #toast.hide {
         opacity: 0;
-        transform: translateY(20px);
+        transform: translateY(16px);
         pointer-events: none;
       }
 
-      /* Modal overlay */
+      /* Modal */
       #modal-overlay {
         transition: opacity 0.2s;
       }
-      /* Best day highlight */
+
+      /* Best day bar */
       .best-day-bar {
         background: linear-gradient(90deg, #c5a059, #e6c67a);
       }
 
-      /* Sticky header shadow on scroll */
+      /* Sticky header shadow */
       header.scrolled {
-        box-shadow: 0 4px 24px rgba(11, 47, 29, 0.18);
+        box-shadow: 0 4px 20px rgba(11, 47, 29, 0.2);
+      }
+
+      /* Input focus ring consistent */
+      input:focus,
+      select:focus,
+      textarea:focus {
+        outline: none;
+        border-color: #145333;
+        box-shadow: 0 0 0 3px rgba(20, 83, 51, 0.12);
+      }
+
+      /* Section divider label */
+      .section-label {
+        font-size: 0.65rem;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: #94a3b8;
+        margin-bottom: 0.5rem;
+      }
+
+      /* Stat pill chip */
+      .stat-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.25rem;
+        font-size: 0.7rem;
+        font-weight: 600;
+        padding: 0.15rem 0.5rem;
+        border-radius: 9999px;
+      }
+      .stat-chip.up {
+        background: #d1fae5;
+        color: #065f46;
+      }
+      .stat-chip.down {
+        background: #fee2e2;
+        color: #991b1b;
+      }
+      .stat-chip.flat {
+        background: #f1f5f9;
+        color: #64748b;
       }
     </style>
   </head>
@@ -431,83 +562,82 @@
       class="bg-club-dark text-white sticky top-0 z-50 transition-shadow"
     >
       <div
-        class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between"
+        class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between"
       >
         <div class="flex items-center gap-3">
-          <div class="bg-club-gold text-club-dark p-2 rounded-lg">
-            <i data-lucide="bar-chart-2" class="w-5 h-5"></i>
+          <div
+            class="bg-club-gold/20 p-1.5 rounded-lg border border-club-gold/30"
+          >
+            <i data-lucide="bar-chart-2" class="w-4 h-4 text-club-gold"></i>
           </div>
           <div>
-            <h1 class="font-bold text-lg leading-tight">Club Campestre</h1>
-            <p class="text-xs text-club-light opacity-80">
-              Metricas de Instagram
+            <h1 class="font-semibold text-sm leading-tight">
+              Club Campestre de Cartagena
+            </h1>
+            <p class="text-xs text-white/50 leading-tight">
+              Analytics · Instagram
             </p>
           </div>
         </div>
         <div class="flex items-center gap-3">
           <div
             id="firebase-status"
-            class="flex items-center gap-1.5 text-xs text-club-light/60"
+            class="flex items-center gap-1.5 text-xs text-white/50"
           >
             <span
-              class="w-2 h-2 rounded-full bg-slate-400 inline-block"
+              class="w-1.5 h-1.5 rounded-full bg-slate-400 inline-block transition-colors duration-500"
               id="firebase-dot"
             ></span>
-            <span id="firebase-label">Conectando...</span>
+            <span id="firebase-label" class="hidden sm:inline"
+              >Conectando...</span
+            >
           </div>
         </div>
       </div>
     </header>
 
     <!-- Navigation Tabs -->
-    <nav class="bg-white border-b border-slate-200 sticky top-16 z-40">
+    <nav
+      class="bg-white border-b-2 border-slate-100 sticky top-14 z-40 shadow-sm"
+    >
       <div
-        class="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8 flex gap-0.5 py-1.5 overflow-x-auto scrollbar-none"
+        class="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8 flex overflow-x-auto scrollbar-none"
       >
         <button
-          class="tab-btn active flex items-center gap-1 px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg text-xs sm:text-sm font-medium transition-colors text-slate-600 hover:bg-slate-100 whitespace-nowrap"
+          class="tab-btn active flex items-center gap-1.5 text-sm whitespace-nowrap"
           data-tab="overview"
         >
-          <i
-            data-lucide="layout-dashboard"
-            class="w-3.5 h-3.5 sm:w-4 sm:h-4"
-          ></i>
-          <span>Panel</span>
+          <i data-lucide="layout-dashboard" class="w-4 h-4"></i> Panel
         </button>
         <button
-          class="tab-btn flex items-center gap-1 px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg text-xs sm:text-sm font-medium transition-colors text-slate-600 hover:bg-slate-100 whitespace-nowrap"
+          class="tab-btn flex items-center gap-1.5 text-sm whitespace-nowrap"
           data-tab="insights"
         >
-          <i data-lucide="lightbulb" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i>
-          <span>Insights</span>
+          <i data-lucide="trending-up" class="w-4 h-4"></i> Análisis
         </button>
         <button
-          class="tab-btn flex items-center gap-1 px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg text-xs sm:text-sm font-medium transition-colors text-slate-600 hover:bg-slate-100 whitespace-nowrap"
+          class="tab-btn flex items-center gap-1.5 text-sm whitespace-nowrap"
           data-tab="posts"
         >
-          <i data-lucide="grid" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i>
-          <span>Posts</span>
+          <i data-lucide="grid" class="w-4 h-4"></i> Publicaciones
         </button>
         <button
-          class="tab-btn flex items-center gap-1 px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg text-xs sm:text-sm font-medium transition-colors text-slate-600 hover:bg-slate-100 whitespace-nowrap"
+          class="tab-btn flex items-center gap-1.5 text-sm whitespace-nowrap"
           data-tab="history"
         >
-          <i data-lucide="table" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i>
-          <span>Historial</span>
+          <i data-lucide="clock" class="w-4 h-4"></i> Historial
         </button>
         <button
-          class="tab-btn flex items-center gap-1 px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg text-xs sm:text-sm font-medium transition-colors text-slate-600 hover:bg-slate-100 whitespace-nowrap"
+          class="tab-btn flex items-center gap-1.5 text-sm whitespace-nowrap"
           data-tab="weekly"
         >
-          <i data-lucide="calendar-days" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i>
-          <span>Semanal</span>
+          <i data-lucide="calendar-days" class="w-4 h-4"></i> Seguimiento
         </button>
         <button
-          class="tab-btn flex items-center gap-1 px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg text-xs sm:text-sm font-medium transition-colors text-slate-600 hover:bg-slate-100 whitespace-nowrap"
+          class="tab-btn flex items-center gap-1.5 text-sm whitespace-nowrap"
           data-tab="monthly"
         >
-          <i data-lucide="calendar" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i>
-          <span>Mensual</span>
+          <i data-lucide="bar-chart" class="w-4 h-4"></i> Mensual
         </button>
       </div>
     </nav>
@@ -541,76 +671,68 @@
     >
       <!-- TAB: PANEL GENERAL -->
       <section id="tab-overview" class="flex flex-col gap-6">
+        <!-- Page title -->
+        <div class="flex items-center justify-between">
+          <div>
+            <h2 class="text-xl font-bold text-slate-800">Resumen general</h2>
+            <p class="text-sm text-slate-400 mt-0.5">
+              Métricas de Instagram actualizadas en tiempo real
+            </p>
+          </div>
+        </div>
+
+        <!-- KPI Cards -->
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div class="glass-card p-4 flex flex-col relative overflow-hidden">
-            <div class="absolute -right-4 -top-4 opacity-5">
-              <i data-lucide="users" class="w-24 h-24 text-club-green"></i>
-            </div>
-            <span
-              class="text-xs text-slate-500 font-medium mb-1 uppercase tracking-wide"
-              >Seguidores</span
-            >
-            <span class="text-2xl font-bold text-club-dark" id="kpi-followers"
-              >---</span
-            >
+          <div class="kpi-card">
+            <span class="kpi-label">Seguidores</span>
+            <span class="kpi-value" id="kpi-followers">---</span>
             <div
-              class="mt-2 flex items-center gap-1 text-xs"
+              class="flex items-center gap-1 text-xs mt-1"
               id="kpi-followers-trend"
             >
-              <span class="text-slate-400">Esperando datos...</span>
+              <span class="text-slate-400 text-xs"
+                >Últimas métricas semanales</span
+              >
             </div>
+            <i data-lucide="users" class="kpi-icon text-club-green"></i>
           </div>
-          <div class="glass-card p-4 flex flex-col relative overflow-hidden">
-            <div class="absolute -right-4 -top-4 opacity-5">
-              <i data-lucide="eye" class="w-24 h-24 text-club-green"></i>
-            </div>
-            <span
-              class="text-xs text-slate-500 font-medium mb-1 uppercase tracking-wide"
-              >Visitas al perfil</span
-            >
-            <span class="text-2xl font-bold text-club-dark" id="kpi-reach"
-              >---</span
-            >
+          <div class="kpi-card">
+            <span class="kpi-label">Visitas al perfil</span>
+            <span class="kpi-value" id="kpi-reach">---</span>
             <div
-              class="mt-2 flex items-center gap-1 text-xs"
+              class="flex items-center gap-1 text-xs mt-1"
               id="kpi-reach-trend"
             >
-              <span class="text-slate-400">Esperando datos...</span>
+              <span class="text-slate-400 text-xs"
+                >Últimas métricas semanales</span
+              >
             </div>
+            <i data-lucide="eye" class="kpi-icon text-club-dark"></i>
           </div>
-          <div class="glass-card p-4 flex flex-col relative overflow-hidden">
-            <div class="absolute -right-4 -top-4 opacity-5">
-              <i data-lucide="heart" class="w-24 h-24 text-club-green"></i>
-            </div>
-            <span
-              class="text-xs text-slate-500 font-medium mb-1 uppercase tracking-wide"
-              >Interacciones 7d</span
-            >
-            <span
-              class="text-2xl font-bold text-club-dark"
-              id="kpi-interactions"
-              >---</span
-            >
+          <div class="kpi-card">
+            <span class="kpi-label">Interacciones 7 días</span>
+            <span class="kpi-value" id="kpi-interactions">---</span>
             <div
-              class="mt-2 flex items-center gap-1 text-xs"
+              class="flex items-center gap-1 text-xs mt-1"
               id="kpi-interactions-trend"
             >
-              <span class="text-slate-400">Esperando datos...</span>
+              <span class="text-slate-400 text-xs"
+                >Likes + comentarios + guardados</span
+              >
             </div>
+            <i data-lucide="heart" class="kpi-icon text-rose-400"></i>
           </div>
-          <div
-            class="glass-card p-4 flex flex-col relative overflow-hidden bg-club-green text-white border-transparent"
-          >
-            <span
-              class="text-xs text-club-light opacity-90 font-medium mb-1 uppercase tracking-wide"
-              >Engagement Rate</span
-            >
-            <span class="text-2xl font-bold text-club-gold" id="kpi-engagement"
-              >---</span
-            >
-            <div class="mt-2 text-xs text-club-light opacity-70">
+          <div class="kpi-card kpi-accent">
+            <span class="kpi-label">Engagement Rate</span>
+            <span class="kpi-value" id="kpi-engagement">---</span>
+            <div class="mt-1 text-xs text-white/50">
               Basado en alcance reciente
             </div>
+            <i
+              data-lucide="zap"
+              class="kpi-icon text-club-gold"
+              style="opacity: 0.15"
+            ></i>
           </div>
         </div>
 
@@ -621,13 +743,22 @@
               <div
                 class="flex items-center gap-2 mb-4 border-b border-slate-100 pb-3"
               >
-                <i
-                  data-lucide="plus-circle"
-                  class="w-5 h-5 text-club-green"
-                ></i>
-                <h2 class="text-lg font-semibold text-club-dark">
-                  Registro Diario — Historia
-                </h2>
+                <div
+                  class="w-7 h-7 rounded-lg bg-club-green/10 flex items-center justify-center"
+                >
+                  <i
+                    data-lucide="plus-circle"
+                    class="w-4 h-4 text-club-green"
+                  ></i>
+                </div>
+                <div>
+                  <h2 class="text-sm font-semibold text-slate-800">
+                    Registrar Historia
+                  </h2>
+                  <p class="text-xs text-slate-400">
+                    Datos diarios de Instagram Stories
+                  </p>
+                </div>
               </div>
               <form id="stats-form" class="space-y-4">
                 <div>
@@ -753,10 +884,22 @@
               <div
                 class="flex items-center gap-2 mb-4 border-b border-slate-100 pb-3"
               >
-                <i data-lucide="image-plus" class="w-5 h-5 text-club-green"></i>
-                <h2 class="text-lg font-semibold text-club-dark">
-                  Registrar Publicación
-                </h2>
+                <div
+                  class="w-7 h-7 rounded-lg bg-club-dark/10 flex items-center justify-center"
+                >
+                  <i
+                    data-lucide="image-plus"
+                    class="w-4 h-4 text-club-dark"
+                  ></i>
+                </div>
+                <div>
+                  <h2 class="text-sm font-semibold text-slate-800">
+                    Registrar Publicación
+                  </h2>
+                  <p class="text-xs text-slate-400">
+                    Post, Reel, Carrusel o Foto
+                  </p>
+                </div>
               </div>
               <form id="post-form-panel" class="space-y-3">
                 <div class="grid grid-cols-2 gap-2">
@@ -969,9 +1112,14 @@
           <div class="lg:col-span-2 flex flex-col gap-6">
             <div class="glass-card p-4 md:p-6">
               <div class="flex items-center justify-between mb-4">
-                <h2 class="text-lg font-semibold text-club-dark">
-                  Evolucion: Interacciones y Alcance
-                </h2>
+                <div>
+                  <h2 class="text-sm font-semibold text-slate-800">
+                    Evolución de interacciones
+                  </h2>
+                  <p class="text-xs text-slate-400">
+                    Vistas, likes, comentarios y guardados
+                  </p>
+                </div>
                 <select
                   id="chart-filter"
                   class="text-sm border border-slate-200 rounded-md px-2 py-1 text-slate-600 focus:outline-none"
@@ -987,9 +1135,14 @@
               </div>
             </div>
             <div class="glass-card p-4 md:p-6">
-              <h2 class="text-lg font-semibold text-club-dark mb-4">
-                Crecimiento de Seguidores
-              </h2>
+              <div class="mb-4">
+                <h2 class="text-sm font-semibold text-slate-800">
+                  Crecimiento de seguidores
+                </h2>
+                <p class="text-xs text-slate-400">
+                  Registros semanales de audiencia
+                </p>
+              </div>
               <div class="w-full h-52 relative">
                 <canvas id="followersChart"></canvas>
               </div>
@@ -997,12 +1150,14 @@
             <!-- Publicaciones recientes -->
             <div class="glass-card p-4 md:p-5">
               <div class="flex items-center justify-between mb-3">
-                <h3
-                  class="text-sm font-semibold text-club-dark flex items-center gap-2"
-                >
-                  <i data-lucide="activity" class="w-4 h-4 text-club-gold"></i>
-                  Publicaciones recientes
-                </h3>
+                <div>
+                  <h3 class="text-sm font-semibold text-slate-800">
+                    Publicaciones recientes
+                  </h3>
+                  <p class="text-xs text-slate-400">
+                    Últimas publicaciones registradas
+                  </p>
+                </div>
                 <button
                   onclick="document.querySelector('[data-tab=posts]').click()"
                   class="text-xs text-club-dark font-medium hover:underline"
@@ -1020,8 +1175,17 @@
         </div>
       </section>
 
-      <!-- TAB: INSIGHTS -->
+      <!-- TAB: INSIGHTS / ANÁLISIS -->
       <section id="tab-insights" class="hidden flex-col gap-6">
+        <!-- Page title -->
+        <div>
+          <h2 class="text-xl font-bold text-slate-800">
+            Análisis de rendimiento
+          </h2>
+          <p class="text-sm text-slate-400 mt-0.5">
+            Patrones de publicación y rendimiento por tipo de contenido
+          </p>
+        </div>
         <div class="glass-card p-5 md:p-6">
           <div class="flex items-center gap-2 mb-5">
             <i data-lucide="calendar-check" class="w-5 h-5 text-club-gold"></i>
@@ -1078,9 +1242,12 @@
       <!-- TAB: PUBLICACIONES -->
       <section id="tab-posts" class="hidden flex-col gap-6">
         <div class="flex items-center justify-between">
-          <h2 class="text-xl font-bold text-club-dark">
-            Publicaciones registradas
-          </h2>
+          <div>
+            <h2 class="text-xl font-bold text-slate-800">Publicaciones</h2>
+            <p class="text-sm text-slate-400 mt-0.5">
+              Posts, Reels y contenido registrado
+            </p>
+          </div>
           <button
             id="btn-add-post-top"
             class="bg-club-gold hover:bg-club-goldhover text-club-dark font-semibold px-4 py-2 rounded-lg text-sm flex items-center gap-2 transition-colors"
@@ -1114,16 +1281,21 @@
 
       <!-- TAB: HISTORIAL -->
       <section id="tab-history" class="hidden flex-col gap-6">
+        <!-- Page title -->
+        <div>
+          <h2 class="text-xl font-bold text-slate-800">Historial de métricas</h2>
+          <p class="text-sm text-slate-400 mt-0.5">Registro completo de historias publicadas</p>
+        </div>
         <div class="glass-card overflow-hidden">
           <div
             class="p-4 md:p-6 border-b border-slate-100 flex flex-wrap items-center justify-between gap-3"
           >
             <div>
-              <h2 class="text-base sm:text-lg font-semibold text-club-dark">
-                Historial de metricas
+              <h2 class="text-base sm:text-lg font-semibold text-slate-800">
+                Registro de historias
               </h2>
               <p class="text-xs text-slate-400 mt-0.5">
-                Historias y Publicaciones
+                Vistas e interacciones diarias
               </p>
             </div>
             <div class="flex items-center gap-3">
@@ -1190,25 +1362,24 @@
 
       <!-- TAB: SEMANAL -->
       <section id="tab-weekly" class="hidden flex-col gap-6">
+        <!-- Page title -->
+        <div>
+          <h2 class="text-xl font-bold text-slate-800">Seguimiento semanal</h2>
+          <p class="text-sm text-slate-400 mt-0.5">Registra una vez por semana seguidores y visitas al perfil</p>
+        </div>
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <!-- Formulario semanal -->
           <div class="lg:col-span-1">
             <div class="glass-card p-5">
-              <div
-                class="flex items-center gap-2 mb-4 border-b border-slate-100 pb-3"
-              >
-                <i
-                  data-lucide="calendar-days"
-                  class="w-5 h-5 text-club-green"
-                ></i>
-                <h2 class="text-lg font-semibold text-club-dark">
-                  Registro Semanal
-                </h2>
+              <div class="flex items-center gap-2 mb-4 border-b border-slate-100 pb-3">
+                <div class="w-7 h-7 rounded-lg bg-club-gold/15 flex items-center justify-center">
+                  <i data-lucide="calendar-days" class="w-4 h-4 text-club-gold"></i>
+                </div>
+                <div>
+                  <h2 class="text-sm font-semibold text-slate-800">Nuevo registro</h2>
+                  <p class="text-xs text-slate-400">Seguidores y visitas al perfil</p>
+                </div>
               </div>
-              <p class="text-xs text-slate-500 mb-4">
-                Registra una vez por semana el total de seguidores y las visitas
-                al perfil para medir el crecimiento.
-              </p>
               <form id="weekly-form" class="space-y-4">
                 <div
                   id="edit-weekly-banner"
@@ -1273,12 +1444,11 @@
           <!-- Historial semanal -->
           <div class="lg:col-span-2">
             <div class="glass-card overflow-hidden">
-              <div
-                class="p-4 border-b border-slate-100 flex items-center justify-between"
-              >
-                <h3 class="font-semibold text-club-dark">
-                  Historial de seguimiento semanal
-                </h3>
+              <div class="p-4 border-b border-slate-100 flex items-center justify-between">
+                <div>
+                  <h3 class="text-sm font-semibold text-slate-800">Historial de crecimiento</h3>
+                  <p class="text-xs text-slate-400">Seguimiento de audiencia semana a semana</p>
+                </div>
                 <span
                   id="weekly-history-count"
                   class="text-xs text-slate-400"
@@ -1317,6 +1487,11 @@
 
       <!-- TAB: MENSUAL -->
       <section id="tab-monthly" class="hidden flex-col gap-6">
+        <!-- Page title -->
+        <div>
+          <h2 class="text-xl font-bold text-slate-800">Vista mensual</h2>
+          <p class="text-sm text-slate-400 mt-0.5">Agrupación y tendencias por mes</p>
+        </div>
         <!-- Selector de mes -->
         <div class="flex items-center justify-between">
           <div class="flex items-center gap-2">
@@ -1541,28 +1716,6 @@
       // Registros diarios derivados de los Stories de Notion
       const NOTION_DAILY = [
         {
-          id: "d28",
-          date: "2026-04-28",
-          time: "09:15",
-          storyViews: 1890,
-          likes: 152,
-          comments: 8,
-          saves: 45,
-          shares: 19,
-          createdAt: "2026-04-28T09:15:00.000Z",
-        },
-        {
-          id: "d27",
-          date: "2026-04-27",
-          time: "10:30",
-          storyViews: 1430,
-          likes: 108,
-          comments: 5,
-          saves: 29,
-          shares: 11,
-          createdAt: "2026-04-27T10:30:00.000Z",
-        },
-        {
           id: "d26",
           date: "2026-04-26",
           time: "11:00",
@@ -1607,7 +1760,7 @@
           createdAt: "2026-04-23T14:20:00.000Z",
         },
         {
-          id: "d10",
+          id: "d22",
           date: "2026-04-22",
           time: "10:00",
           storyViews: 20969,
@@ -1616,116 +1769,6 @@
           saves: 376,
           shares: 182,
           createdAt: "2026-04-22T10:00:00.000Z",
-        },
-        {
-          id: "d9",
-          date: "2026-04-21",
-          time: "12:00",
-          storyViews: 155,
-          likes: 241,
-          comments: 4,
-          saves: 76,
-          shares: 43,
-          createdAt: "2026-04-21T12:00:00.000Z",
-        },
-        {
-          id: "d20",
-          date: "2026-04-20",
-          time: "08:50",
-          storyViews: 1520,
-          likes: 112,
-          comments: 6,
-          saves: 34,
-          shares: 14,
-          createdAt: "2026-04-20T08:50:00.000Z",
-        },
-        {
-          id: "d19",
-          date: "2026-04-19",
-          time: "11:30",
-          storyViews: 2670,
-          likes: 198,
-          comments: 14,
-          saves: 67,
-          shares: 28,
-          createdAt: "2026-04-19T11:30:00.000Z",
-        },
-        {
-          id: "d18",
-          date: "2026-04-18",
-          time: "09:45",
-          storyViews: 3450,
-          likes: 312,
-          comments: 24,
-          saves: 95,
-          shares: 48,
-          createdAt: "2026-04-18T09:45:00.000Z",
-        },
-        {
-          id: "d17",
-          date: "2026-04-17",
-          time: "10:10",
-          storyViews: 2890,
-          likes: 243,
-          comments: 18,
-          saves: 78,
-          shares: 35,
-          createdAt: "2026-04-17T10:10:00.000Z",
-        },
-        {
-          id: "d16",
-          date: "2026-04-16",
-          time: "13:00",
-          storyViews: 1750,
-          likes: 156,
-          comments: 9,
-          saves: 38,
-          shares: 15,
-          createdAt: "2026-04-16T13:00:00.000Z",
-        },
-        {
-          id: "d15",
-          date: "2026-04-15",
-          time: "09:20",
-          storyViews: 2100,
-          likes: 187,
-          comments: 12,
-          saves: 55,
-          shares: 22,
-          createdAt: "2026-04-15T09:20:00.000Z",
-        },
-        {
-          id: "d14",
-          date: "2026-04-14",
-          time: "11:15",
-          storyViews: 1340,
-          likes: 98,
-          comments: 5,
-          saves: 28,
-          shares: 12,
-          createdAt: "2026-04-14T11:15:00.000Z",
-        },
-        {
-          id: "d13",
-          date: "2026-04-13",
-          time: "10:00",
-          storyViews: 1890,
-          likes: 145,
-          comments: 8,
-          saves: 42,
-          shares: 18,
-          createdAt: "2026-04-13T10:00:00.000Z",
-        },
-        {
-          id: "d8",
-          date: "2025-03-20",
-          time: "",
-          storyViews: 13803,
-          likes: 667,
-          comments: 1,
-          saves: 112,
-          shares: 77,
-          createdAt: "2025-03-20T00:00:00.000Z",
         },
       ];
 
