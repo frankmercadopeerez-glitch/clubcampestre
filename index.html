@@ -2083,7 +2083,13 @@
               btnSubmit.disabled = false;
             }
           } else {
-            showToast("Los registros históricos no se pueden editar", "error");
+            // In-memory record — update globalData array directly
+            const idx = globalData.findIndex((r) => r.id === editingDailyId);
+            if (idx !== -1) {
+              globalData[idx] = { ...globalData[idx], ...record };
+              renderTable();
+              showToast("Registro actualizado");
+            }
           }
           editingDailyId = null;
           document.getElementById("edit-daily-banner").classList.add("hidden");
