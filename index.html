@@ -437,6 +437,11 @@
           font-size: 0.65rem;
           padding: 0.2rem 0.6rem;
         }
+        .monthly-metric-btn.active {
+          background: #C5A059 !important;
+          color: #fff !important;
+          border-color: #C5A059 !important;
+        }
 
         /* Form inputs */
         input,
@@ -687,6 +692,7 @@
                 <label class="block text-xs font-medium text-slate-700 mb-1"
                   >% Seguidores en alcance</label
                 >
+                <p class="text-[10px] text-slate-400 mb-1">De todos los que vieron el post, ¿qué % son seguidores?</p>
                 <div class="relative">
                   <input
                     type="number"
@@ -707,6 +713,7 @@
                 <label class="block text-xs font-medium text-slate-700 mb-1"
                   >% Seguidores que interactúan</label
                 >
+                <p class="text-[10px] text-slate-400 mb-1">De tus seguidores alcanzados, ¿qué % interactuó?</p>
                 <div class="relative">
                   <input
                     type="number"
@@ -1960,10 +1967,6 @@
           if (b) b.disabled = false;
         });
       }
-      function disableForms() {
-        /* no-op: no auth required */
-      }
-
       window.cancelEditDaily = () => {
         editingDailyId = null;
         form.reset();
@@ -2068,11 +2071,15 @@
             lucide.createIcons();
           });
       });
-      modalClose.addEventListener("click", () =>
-        modalOverlay.classList.add("hidden"),
-      );
+      modalClose.addEventListener("click", () => {
+        modalOverlay.classList.add("hidden");
+        postForm.reset();
+      });
       modalOverlay.addEventListener("click", (e) => {
-        if (e.target === modalOverlay) modalOverlay.classList.add("hidden");
+        if (e.target === modalOverlay) {
+          modalOverlay.classList.add("hidden");
+          postForm.reset();
+        }
       });
 
       let editingPostId = null;
@@ -2744,6 +2751,10 @@
               scales: wScales,
             },
           });
+          // Wire toggle buttons
+          document.querySelectorAll(".monthly-metric-btn").forEach((btn) => {
+            btn.onclick = () => { btn.classList.toggle("active"); renderMonthly(); };
+          });
           document.getElementById("monthly-record-count").textContent =
             wKeys.length + " semanas";
           document.getElementById("monthly-table-head").innerHTML =
@@ -2897,13 +2908,7 @@
           // Wire toggle buttons
           document.querySelectorAll(".monthly-metric-btn").forEach((btn) => {
             btn.onclick = () => {
-              const metric = btn.dataset.metric;
-              const def = METRIC_DEFS[metric];
               btn.classList.toggle("active");
-              const on = btn.classList.contains("active");
-              btn.style.background = on ? def.color : "white";
-              btn.style.color = on ? "#fff" : "#64748b";
-              btn.style.borderColor = on ? def.color : "#cbd5e1";
               renderMonthly();
             };
           });
@@ -3158,7 +3163,7 @@
         const latestFollowers = latestWeekly?.followers || 0;
         const prevFollowers = prevWeekly?.followers || latestFollowers;
         document.getElementById("kpi-followers").textContent =
-          latestFollowers > 0 ? latestFollowers.toLocaleString() : "---";
+          latestFollowers > 0 ? latestFollowers.toLocaleString() : "Sin datos";
         if (latestFollowers > 0) {
           renderTrend(
             "kpi-followers-trend",
@@ -3174,7 +3179,7 @@
         const latestVisits = latestWeekly?.visits || 0;
         const prevVisits = prevWeekly?.visits || latestVisits;
         document.getElementById("kpi-reach").textContent =
-          latestVisits > 0 ? latestVisits.toLocaleString() : "---";
+          latestVisits > 0 ? latestVisits.toLocaleString() : "Sin datos";
         if (latestVisits > 0) {
           renderTrend(
             "kpi-reach-trend",
@@ -3204,8 +3209,14 @@
 
       function renderTrend(id, cur, prev, label) {
         const el = document.getElementById(id);
-        if (!prev || prev === 0) {
+        if (prev == null) {
           el.innerHTML = `<span class="text-slate-400">Sin datos previos</span>`;
+          return;
+        }
+        if (prev === 0) {
+          el.innerHTML = cur > 0
+            ? `<i data-lucide="trending-up" class="w-3 h-3 text-green-600"></i><span class="text-green-600 font-medium">Nuevo</span><span class="text-slate-400 ml-1">${label}</span>`
+            : `<span class="text-slate-400">Sin cambios</span>`;
           return;
         }
         const pct = (((cur - prev) / prev) * 100).toFixed(1);
@@ -3222,7 +3233,7 @@
           "kpi-reach",
           "kpi-interactions",
           "kpi-engagement",
-        ].forEach((id) => (document.getElementById(id).textContent = "---"));
+        ].forEach((id) => (document.getElementById(id).textContent = "Sin datos"));
         [
           "kpi-followers-trend",
           "kpi-reach-trend",
@@ -3234,7 +3245,7 @@
       }
       function resetKPIsInteractions() {
         ["kpi-interactions", "kpi-engagement"].forEach(
-          (id) => (document.getElementById(id).textContent = "---"),
+          (id) => (document.getElementById(id).textContent = "Sin datos"),
         );
         document.getElementById("kpi-interactions-trend").innerHTML =
           `<span class="text-slate-400">Esperando datos...</span>`;
@@ -3597,7 +3608,7 @@
               tooltip: tooltipStyle(),
             },
             scales: {
-              x: { grid: { display: false } },
+              x: { grid: { display: false }, ticks: { maxTicksLimit: 10 } },
               y: {
                 type: "linear",
                 display: true,
@@ -3660,7 +3671,7 @@
             maintainAspectRatio: false,
             plugins: { legend: { display: false }, tooltip: tooltipStyle() },
             scales: {
-              x: { grid: { display: false } },
+              x: { grid: { display: false }, ticks: { maxTicksLimit: 10 } },
               y: {
                 grid: { color: "#f1f5f9" },
                 ticks: { callback: (v) => v.toLocaleString() },
@@ -3759,7 +3770,7 @@
           "#6B7280",
         ];
         const bgColors = labels.map(
-          (t, i) => TYPE_COLORS[t] || fallbackColors[i] || "#9CA3AF",
+          (t, i) => TYPE_COLORS[t] || fallbackColors[i % fallbackColors.length],
         );
         contentTypeChartInst = new Chart(ctx, {
           type: "doughnut",
@@ -3938,7 +3949,7 @@
             (item.likes || 0) + (item.comments || 0) + (item.saves || 0);
           weeks[key].reach += item.reach || 0;
         });
-        const sortedWeeks = Object.keys(weeks).sort().slice(-8);
+        const sortedWeeks = Object.keys(weeks).sort().slice(-12);
         weeklyEngagementInst = new Chart(ctx, {
           type: "bar",
           data: {
@@ -4046,7 +4057,7 @@
               <div><span class="block font-semibold text-slate-700">${(p.compartidos || 0).toLocaleString()}</span>↗️</div>
             </div>
             <div class="flex gap-2 text-xs justify-between bg-slate-50 rounded-lg px-3 py-1.5">
-              <span class="text-slate-500">Eng: <b class="text-club-gold">${engPost}%</b></span>
+              <span class="text-slate-500">Eng: <b class="text-club-gold">${engPost !== "---" ? engPost + "%" : "—"}</b></span>
               ${p.pctSeguidores ? `<span class="text-slate-500">Seg: <b>${p.pctSeguidores}%</b></span>` : ""}
               ${p.pctInteractuantes ? `<span class="text-slate-500">Int: <b>${p.pctInteractuantes}%</b></span>` : ""}
             </div>
@@ -4097,7 +4108,7 @@
             <td class="p-3 text-right text-xs">${p.pctSeguidores ? p.pctSeguidores + "%" : "—"}</td>
             <td class="p-3 text-right text-xs">${p.pctInteractuantes ? p.pctInteractuantes + "%" : "—"}</td>
             <td class="p-3 text-right font-semibold text-club-green">${total.toLocaleString()}</td>
-            <td class="p-3 text-right text-xs text-club-gold font-semibold">${engPost}%</td>
+            <td class="p-3 text-right text-xs text-club-gold font-semibold">${engPost !== "---" ? engPost + "%" : "—"}</td>
             <td class="p-3 text-center">
               <div class="flex items-center justify-center gap-1">
                 <button onclick="editPost('${p.id}')" class="text-slate-300 hover:text-club-green transition-colors p-1" title="Editar"><i data-lucide="pencil" class="w-3.5 h-3.5"></i></button>
@@ -4291,60 +4302,6 @@
         t.style.background = type === "error" ? "#7f1d1d" : "#0D3341";
         t.classList.remove("hide");
         setTimeout(() => t.classList.add("hide"), 3500);
-      }
-
-      function generateMockData() {
-        const mock = [];
-        let f = 5200;
-        const today = new Date();
-        for (let i = 0; i < 30; i++) {
-          const d = new Date(today);
-          d.setDate(today.getDate() - i);
-          const reach = Math.floor(Math.random() * 900) + 1000;
-          f -= Math.floor(Math.random() * 8);
-          mock.push({
-            id: "mock_" + i,
-            date: d.toISOString().split("T")[0],
-            followers: f,
-            reach,
-            likes: Math.floor(Math.random() * 160) + 80,
-            comments: Math.floor(Math.random() * 25) + 3,
-            saves: Math.floor(Math.random() * 15) + 2,
-            createdAt: d.toISOString(),
-          });
-        }
-        return mock;
-      }
-      function generateMockPosts() {
-        const types = ["Reel", "Foto", "Carrusel", "Story", "Video"];
-        const titles = [
-          "Tarde de golf en el Club",
-          "Restaurante La Lena: nuevo menu",
-          "Piscina y relax fin de semana",
-          "Torneo de tenis",
-          "Eventos corporativos",
-          "Noche de gala anual",
-          "Clases de natacion",
-          "Brunch dominical",
-        ];
-        const today = new Date();
-        return Array.from({ length: 8 }, (_, i) => {
-          const d = new Date(today);
-          d.setDate(today.getDate() - i * 4);
-          const impressions = Math.floor(Math.random() * 5000) + 800;
-          return {
-            id: "mock_post_" + i,
-            date: d.toISOString().split("T")[0],
-            type: types[i % types.length],
-            title: titles[i % titles.length],
-            impressions,
-            reach: Math.floor(impressions * 0.75),
-            likes: Math.floor(Math.random() * 300) + 50,
-            comments: Math.floor(Math.random() * 30) + 5,
-            saves: Math.floor(Math.random() * 50) + 5,
-            createdAt: d.toISOString(),
-          };
-        });
       }
 
       lucide.createIcons();
