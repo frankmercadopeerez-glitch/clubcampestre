@@ -3379,8 +3379,11 @@
         globalPosts.forEach((item) => {
           const raw = item.publishedAt || item.date;
           if (!raw) return;
-          const day = new Date(raw.includes("T") ? raw : raw + "T00:00:00").getDay();
-          sums[day] += (item.likes || 0) + (item.comments || 0) + (item.compartidos || 0);
+          const day = new Date(
+            raw.includes("T") ? raw : raw + "T00:00:00",
+          ).getDay();
+          sums[day] +=
+            (item.likes || 0) + (item.comments || 0) + (item.compartidos || 0);
           counts[day] += 1;
         });
         const avgs = sums.map((s, i) =>
@@ -3602,7 +3605,7 @@
           .getElementById("weeklyEngagementChart")
           .getContext("2d");
         if (weeklyEngagementInst) weeklyEngagementInst.destroy();
-        if (globalData.length < 7) return;
+        if (globalData.length < 7 && globalPosts.length === 0) return;
         const weeks = {};
         globalData.forEach((item) => {
           const d = new Date(item.date + "T00:00:00");
@@ -3610,6 +3613,16 @@
           const key = d.getFullYear() + "-W" + String(wk).padStart(2, "0");
           if (!weeks[key]) weeks[key] = { interactions: 0 };
           weeks[key].interactions += (item.likes || 0) + (item.shares || 0);
+        });
+        globalPosts.forEach((item) => {
+          const raw = item.publishedAt || item.date;
+          if (!raw) return;
+          const d = new Date(raw.includes("T") ? raw : raw + "T00:00:00");
+          const wk = getISOWeek(d);
+          const key = d.getFullYear() + "-W" + String(wk).padStart(2, "0");
+          if (!weeks[key]) weeks[key] = { interactions: 0 };
+          weeks[key].interactions +=
+            (item.likes || 0) + (item.comments || 0) + (item.compartidos || 0);
         });
         const sortedWeeks = Object.keys(weeks).sort().slice(-12);
         weeklyEngagementInst = new Chart(ctx, {
@@ -3635,7 +3648,7 @@
               x: { grid: { display: false } },
               y: {
                 grid: { color: "#f1f5f9" },
-                ticks: { callback: (v) => v + "%" },
+                ticks: { callback: (v) => v },
               },
             },
           },
