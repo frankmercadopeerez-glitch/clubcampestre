@@ -1640,12 +1640,12 @@
       document.getElementById("post-date").value = new Date()
         .toISOString()
         .split("T")[0];
-      document.getElementById("post-time").value = "";
+      document.getElementById("post-time").value = new Date().toTimeString().slice(0,5);
       // Panel post form init
       document.getElementById("panel-post-date").value = new Date()
         .toISOString()
         .split("T")[0];
-      document.getElementById("panel-post-time").value = "";
+      document.getElementById("panel-post-time").value = new Date().toTimeString().slice(0,5);
 
       let db;
       let globalWeekly = [];
@@ -1901,7 +1901,7 @@
         document.getElementById("post-date").value = new Date()
           .toISOString()
           .split("T")[0];
-        document.getElementById("post-time").value = "";
+        document.getElementById("post-time").value = new Date().toTimeString().slice(0,5);
         document.getElementById("edit-post-banner").classList.add("hidden");
         document.getElementById("modal-post-title").textContent =
           "Registrar Publicacion (Detallado)";
@@ -2023,7 +2023,7 @@
           document.getElementById("post-date").value = new Date()
             .toISOString()
             .split("T")[0];
-          document.getElementById("post-time").value = "";
+          document.getElementById("post-time").value = new Date().toTimeString().slice(0,5);
           document.getElementById("edit-post-banner").classList.add("hidden");
           document.getElementById("modal-post-title").textContent =
             "Registrar Publicacion (Detallado)";
@@ -2075,7 +2075,7 @@
           document.getElementById("panel-post-date").value = new Date()
             .toISOString()
             .split("T")[0];
-          document.getElementById("panel-post-time").value = "";
+          document.getElementById("panel-post-time").value = new Date().toTimeString().slice(0,5);
         };
         const origHTML = btnPanelPostSubmit.innerHTML;
         btnPanelPostSubmit.innerHTML = `<div class="loader w-4 h-4 border-2 border-white border-t-transparent mr-2"></div>Guardando...`;
@@ -3933,3 +3933,4 @@
     </script>
   </body>
 </html>
+
