@@ -654,18 +654,6 @@
               </div>
               <div>
                 <label class="block text-xs text-slate-600 mb-1"
-                  >🔖 Guardados</label
-                >
-                <input
-                  type="number"
-                  id="post-saves"
-                  min="0"
-                  placeholder="0"
-                  class="w-full px-2 py-1.5 text-sm border border-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-club-green/50"
-                />
-              </div>
-              <div>
-                <label class="block text-xs text-slate-600 mb-1"
                   >↗️ Compartidos</label
                 >
                 <input
@@ -675,62 +663,6 @@
                   placeholder="0"
                   class="w-full px-2 py-1.5 text-sm border border-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-club-green/50"
                 />
-              </div>
-            </div>
-          </div>
-          <!-- Porcentajes -->
-          <div class="pt-2 border-t border-slate-100">
-            <p
-              class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2"
-            >
-              Porcentajes de audiencia
-            </p>
-            <div class="grid grid-cols-2 gap-3">
-              <div>
-                <label class="block text-xs font-medium text-slate-700 mb-1"
-                  >% Seguidores en alcance</label
-                >
-                <p class="text-[10px] text-slate-400 mb-1">
-                  De todos los que vieron el post, ¿qué % son seguidores?
-                </p>
-                <div class="relative">
-                  <input
-                    type="number"
-                    id="post-pct-seguidores"
-                    min="0"
-                    max="100"
-                    step="0.1"
-                    placeholder="0.0"
-                    class="w-full px-2 py-1.5 pr-7 text-sm border border-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-club-green/50"
-                  />
-                  <span
-                    class="absolute right-2 top-1/2 -translate-y-1/2 text-xs text-slate-400"
-                    >%</span
-                  >
-                </div>
-              </div>
-              <div>
-                <label class="block text-xs font-medium text-slate-700 mb-1"
-                  >% Seguidores que interactúan</label
-                >
-                <p class="text-[10px] text-slate-400 mb-1">
-                  De tus seguidores alcanzados, ¿qué % interactuó?
-                </p>
-                <div class="relative">
-                  <input
-                    type="number"
-                    id="post-pct-interactuantes"
-                    min="0"
-                    max="100"
-                    step="0.1"
-                    placeholder="0.0"
-                    class="w-full px-2 py-1.5 pr-7 text-sm border border-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-club-green/50"
-                  />
-                  <span
-                    class="absolute right-2 top-1/2 -translate-y-1/2 text-xs text-slate-400"
-                    >%</span
-                  >
-                </div>
               </div>
             </div>
           </div>
@@ -897,19 +829,6 @@
             <i data-lucide="users" class="kpi-icon text-club-green"></i>
           </div>
           <div class="kpi-card">
-            <span class="kpi-label">Visitas al perfil</span>
-            <span class="kpi-value" id="kpi-reach">---</span>
-            <div
-              class="flex items-center gap-1 text-xs mt-1"
-              id="kpi-reach-trend"
-            >
-              <span class="text-slate-400 text-xs"
-                >Últimas métricas semanales</span
-              >
-            </div>
-            <i data-lucide="eye" class="kpi-icon text-club-dark"></i>
-          </div>
-          <div class="kpi-card">
             <span class="kpi-label">Interacciones 7 días</span>
             <span class="kpi-value" id="kpi-interactions">---</span>
             <div
@@ -917,7 +836,7 @@
               id="kpi-interactions-trend"
             >
               <span class="text-slate-400 text-xs"
-                >Likes + comentarios + guardados</span
+                >Likes + compartidos (historias)</span
               >
             </div>
             <i data-lucide="heart" class="kpi-icon text-rose-400"></i>
@@ -981,19 +900,6 @@
                   <p
                     class="text-xl font-bold text-slate-800 mt-0.5"
                     id="qs-reach"
-                  >
-                    0
-                  </p>
-                </div>
-                <div class="bg-slate-50 rounded-lg p-3 text-center">
-                  <p
-                    class="text-[10px] text-slate-400 uppercase tracking-wide font-semibold"
-                  >
-                    Guardados
-                  </p>
-                  <p
-                    class="text-xl font-bold text-slate-800 mt-0.5"
-                    id="qs-saves"
                   >
                     0
                   </p>
@@ -1166,18 +1072,6 @@
                     </div>
                     <div>
                       <label class="block text-xs text-slate-600 mb-1"
-                        >Guard.</label
-                      >
-                      <input
-                        type="number"
-                        id="panel-post-saves"
-                        min="0"
-                        placeholder="0"
-                        class="w-full px-2 py-1.5 text-sm border border-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-club-green/50"
-                      />
-                    </div>
-                    <div>
-                      <label class="block text-xs text-slate-600 mb-1"
                         >Compart.</label
                       >
                       <input
@@ -1187,46 +1081,6 @@
                         placeholder="0"
                         class="w-full px-2 py-1.5 text-sm border border-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-club-green/50"
                       />
-                    </div>
-                  </div>
-                </div>
-                <div class="pt-1 border-t border-slate-100">
-                  <p
-                    class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1"
-                  >
-                    % Audiencia
-                    <span class="font-normal normal-case">(opcional)</span>
-                  </p>
-                  <div class="grid grid-cols-2 gap-2 mt-2">
-                    <div class="relative">
-                      <input
-                        type="number"
-                        id="panel-post-pct-seg"
-                        min="0"
-                        max="100"
-                        step="0.1"
-                        placeholder="% Seguidores"
-                        class="w-full px-2 py-1.5 pr-6 text-sm border border-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-club-green/50"
-                      />
-                      <span
-                        class="absolute right-2 top-1/2 -translate-y-1/2 text-xs text-slate-400"
-                        >%</span
-                      >
-                    </div>
-                    <div class="relative">
-                      <input
-                        type="number"
-                        id="panel-post-pct-int"
-                        min="0"
-                        max="100"
-                        step="0.1"
-                        placeholder="% Interactuantes"
-                        class="w-full px-2 py-1.5 pr-6 text-sm border border-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-club-green/50"
-                      />
-                      <span
-                        class="absolute right-2 top-1/2 -translate-y-1/2 text-xs text-slate-400"
-                        >%</span
-                      >
                     </div>
                   </div>
                 </div>
@@ -1627,13 +1481,6 @@
               >
                 Compartidos
               </button>
-              <button
-                data-metric="guardados"
-                data-color="#d97706"
-                class="monthly-metric-btn"
-              >
-                Guardados
-              </button>
             </div>
           </div>
           <div class="w-full h-72 relative">
@@ -1935,6 +1782,7 @@
             renderMainChart();
             renderRecentPostsOverview();
             renderQuickStats();
+            calculateKPIs();
             lucide.createIcons();
           },
           (err) => console.error(err),
@@ -2002,7 +1850,6 @@
           likes: parseInt(document.getElementById("input-likes").value) || 0,
           comments:
             parseInt(document.getElementById("input-comments").value) || 0,
-          saves: 0,
           shares: parseInt(document.getElementById("input-shares").value) || 0,
         };
         const origBtnHTML = `<i data-lucide="save" class="w-4 h-4"></i> Guardar Metricas`;
@@ -2103,12 +1950,7 @@
         document.getElementById("post-reach").value = p.reach || 0;
         document.getElementById("post-likes").value = p.likes || 0;
         document.getElementById("post-comments").value = p.comments || 0;
-        document.getElementById("post-saves").value = p.saves || 0;
         document.getElementById("post-compartidos").value = p.compartidos || 0;
-        document.getElementById("post-pct-seguidores").value =
-          p.pctSeguidores || 0;
-        document.getElementById("post-pct-interactuantes").value =
-          p.pctInteractuantes || 0;
         document.getElementById("post-followers").value = p.followers || "";
         document.getElementById("edit-post-banner").classList.remove("hidden");
         document.getElementById("modal-post-title").textContent =
@@ -2136,16 +1978,8 @@
           likes: parseInt(document.getElementById("post-likes").value) || 0,
           comments:
             parseInt(document.getElementById("post-comments").value) || 0,
-          saves: parseInt(document.getElementById("post-saves").value) || 0,
           compartidos:
             parseInt(document.getElementById("post-compartidos").value) || 0,
-          pctSeguidores:
-            parseFloat(document.getElementById("post-pct-seguidores").value) ||
-            0,
-          pctInteractuantes:
-            parseFloat(
-              document.getElementById("post-pct-interactuantes").value,
-            ) || 0,
           createdAt: new Date().toISOString(),
         };
         const postFollowers =
@@ -2224,16 +2058,8 @@
             parseInt(document.getElementById("panel-post-likes").value) || 0,
           comments:
             parseInt(document.getElementById("panel-post-comments").value) || 0,
-          saves:
-            parseInt(document.getElementById("panel-post-saves").value) || 0,
           compartidos:
             parseInt(document.getElementById("panel-post-compartidos").value) ||
-            0,
-          pctSeguidores:
-            parseFloat(document.getElementById("panel-post-pct-seg").value) ||
-            0,
-          pctInteractuantes:
-            parseFloat(document.getElementById("panel-post-pct-int").value) ||
             0,
           createdAt: new Date().toISOString(),
         };
@@ -2385,7 +2211,7 @@
         const countEl = document.getElementById("weekly-history-count");
         if (!weeklyTableBody) return;
         if (globalWeekly.length === 0) {
-          weeklyTableBody.innerHTML = `<tr><td colspan="6" class="p-8 text-center text-slate-400">No hay registros semanales aún.</td></tr>`;
+          weeklyTableBody.innerHTML = `<tr><td colspan="4" class="p-8 text-center text-slate-400">No hay registros semanales aún.</td></tr>`;
           if (countEl) countEl.textContent = "";
           return;
         }
@@ -2401,9 +2227,6 @@
             });
             const dayName = DAYS[d.getDay()];
             const prev = globalWeekly[idx + 1];
-            const deltaV = prev
-              ? (item.visits || 0) - (prev.visits || 0)
-              : null;
             const deltaHtml = (d) =>
               d === null
                 ? `<span class="text-slate-300">—</span>`
@@ -2416,8 +2239,6 @@
             <td class="p-4 font-medium text-slate-700 whitespace-nowrap">${fmtDate}</td>
             <td class="p-4 text-slate-500 text-xs">${dayName}</td>
             <td class="p-4 text-right font-semibold text-club-dark">${(item.followers || 0).toLocaleString()}</td>
-            <td class="p-4 text-right text-slate-600">${(item.visits || 0).toLocaleString()}</td>
-            <td class="p-4 text-right">${deltaHtml(deltaV)}</td>
             <td class="p-4 text-center">
               <div class="flex items-center justify-center gap-1">
                 <button onclick="editWeeklyRecord('${item.id}')" class="text-slate-300 hover:text-blue-500 transition-colors p-1" title="Editar">
@@ -2527,7 +2348,6 @@
                 reach: p.reach || 0,
                 likes: p.likes || 0,
                 comments: p.comments || 0,
-                saves: p.saves || 0,
                 shares: p.compartidos || 0,
                 title: p.title,
                 type: p.type,
@@ -2541,12 +2361,11 @@
           (s, r) => s + (r.comments || 0),
           0,
         );
-        const totalSaves = chartSource.reduce((s, r) => s + (r.saves || 0), 0);
         const totalShares = chartSource.reduce(
           (s, r) => s + (r.shares || 0),
           0,
         );
-        const totalInt = totalLikes + totalComments + totalSaves + totalShares;
+        const totalInt = totalLikes + totalComments + totalShares;
         const avgEng =
           chartSource.length > 0
             ? (totalInt / chartSource.length).toFixed(1)
@@ -2600,13 +2419,11 @@
                 views: 0,
                 likes: 0,
                 comments: 0,
-                saves: 0,
                 shares: 0,
                 days: 0,
               };
             weeks[key].likes += r.likes || 0;
             weeks[key].comments += r.comments || 0;
-            weeks[key].saves += r.saves || 0;
             weeks[key].shares += r.shares || 0;
             weeks[key].days++;
           });
@@ -2617,7 +2434,7 @@
               label: "Interacciones",
               type: "bar",
               color: "rgba(20,83,51,0.75)",
-              fn: (v) => v.likes + v.comments + v.saves + v.shares,
+              fn: (v) => v.likes + v.comments + v.shares,
             },
             likes: {
               label: "Likes",
@@ -2636,12 +2453,6 @@
               type: "line",
               color: "#0891b2",
               fn: (v) => v.shares,
-            },
-            guardados: {
-              label: "Guardados",
-              type: "line",
-              color: "#d97706",
-              fn: (v) => v.saves,
             },
           };
           const activeMetrics = [
@@ -2730,17 +2541,17 @@
           document.getElementById("monthly-record-count").textContent =
             wKeys.length + " semanas";
           document.getElementById("monthly-table-head").innerHTML =
-            `<th class="p3 font-medium">Semana</th><th class="p-3 font-medium text-right">Días</th><th class="p-3 font-medium text-right">❤️</th><th class="p-3 font-medium text-right">💬</th><th class="p-3 font-medium text-right">🔖</th><th class="p-3 font-medium text-right">↗️</th><th class="p-3 font-medium text-right font-semibold">Total</th>`;
+            `<th class="p3 font-medium">Semana</th><th class="p-3 font-medium text-right">Días</th><th class="p-3 font-medium text-right">❤️</th><th class="p-3 font-medium text-right">💬</th><th class="p-3 font-medium text-right">↗️</th><th class="p-3 font-medium text-right font-semibold">Total</th>`;
           document.getElementById("monthly-table-body").innerHTML =
             wKeys
               .map((k) => {
                 const v = weeks[k];
-                const total = v.likes + v.comments + v.saves + v.shares;
+                const total = v.likes + v.comments + v.shares;
                 const lbl = weekKeyToLabel(k);
-                return `<tr class="hover:bg-slate-50"><td class="p-3 font-medium text-club-dark">${lbl}</td><td class="p-3 text-right text-slate-500">${v.days}</td><td class="p-3 text-right text-pink-600">${v.likes.toLocaleString()}</td><td class="p-3 text-right text-blue-600">${v.comments.toLocaleString()}</td><td class="p-3 text-right text-amber-600">${v.saves.toLocaleString()}</td><td class="p-3 text-right text-green-600">${v.shares.toLocaleString()}</td><td class="p-3 text-right font-bold text-club-green">${total.toLocaleString()}</td></tr>`;
+                return `<tr class="hover:bg-slate-50"><td class="p-3 font-medium text-club-dark">${lbl}</td><td class="p-3 text-right text-slate-500">${v.days}</td><td class="p-3 text-right text-pink-600">${v.likes.toLocaleString()}</td><td class="p-3 text-right text-blue-600">${v.comments.toLocaleString()}</td><td class="p-3 text-right text-green-600">${v.shares.toLocaleString()}</td><td class="p-3 text-right font-bold text-club-green">${total.toLocaleString()}</td></tr>`;
               })
               .join("") ||
-            `<tr><td colspan="7" class="p-8 text-center text-slate-400">Sin datos para este mes.</td></tr>`;
+            `<tr><td colspan="6" class="p-8 text-center text-slate-400">Sin datos para este mes.</td></tr>`;
         } else {
           // Group by day
           document.getElementById("monthly-chart-title").textContent =
@@ -2763,11 +2574,7 @@
               type: "bar",
               color: "rgba(197,160,89,0.85)",
               axis: "y",
-              fn: (r) =>
-                (r.likes || 0) +
-                (r.comments || 0) +
-                (r.saves || 0) +
-                (r.shares || 0),
+              fn: (r) => (r.likes || 0) + (r.comments || 0) + (r.shares || 0),
             },
             likes: {
               label: "Likes",
@@ -2789,13 +2596,6 @@
               color: "#0891b2",
               axis: "y1",
               fn: (r) => r.shares || 0,
-            },
-            guardados: {
-              label: "Guardados",
-              type: "line",
-              color: "#d97706",
-              axis: "y1",
-              fn: (r) => r.saves || 0,
             },
           };
 
@@ -2908,10 +2708,7 @@
               .map((r) => {
                 const d = new Date(r.date + "T00:00:00");
                 const total =
-                  (r.likes || 0) +
-                  (r.comments || 0) +
-                  (r.saves || 0) +
-                  (r.shares || 0);
+                  (r.likes || 0) + (r.comments || 0) + (r.shares || 0);
                 const dateStr = d.toLocaleDateString("es-ES", {
                   day: "2-digit",
                   month: "short",
@@ -2926,14 +2723,13 @@
                     <td class="p-3 text-right text-blue-600">${(r.reach || 0).toLocaleString()}</td>
                     <td class="p-3 text-right text-pink-600">${(r.likes || 0).toLocaleString()}</td>
                     <td class="p-3 text-right text-blue-600 hidden sm:table-cell">${(r.comments || 0).toLocaleString()}</td>
-                    <td class="p-3 text-right text-amber-600 hidden sm:table-cell">${(r.saves || 0).toLocaleString()}</td>
                     <td class="p-3 text-right font-bold text-club-green">${total.toLocaleString()}</td>
                   </tr>`;
                 }
-                return `<tr class="hover:bg-slate-50"><td class="p-3 font-medium text-slate-700 whitespace-nowrap">${dateStr}</td><td class="p-3 text-slate-400 text-xs">${DAYS[d.getDay()]}</td><td class="p-3 text-right text-pink-600">${(r.likes || 0).toLocaleString()}</td><td class="p-3 text-right text-blue-600 hidden sm:table-cell">${(r.comments || 0).toLocaleString()}</td><td class="p-3 text-right text-amber-600 hidden sm:table-cell">${(r.saves || 0).toLocaleString()}</td><td class="p-3 text-right text-green-600 hidden sm:table-cell">${(r.shares || 0).toLocaleString()}</td><td class="p-3 text-right font-bold text-club-green">${total.toLocaleString()}</td></tr>`;
+                return `<tr class="hover:bg-slate-50"><td class="p-3 font-medium text-slate-700 whitespace-nowrap">${dateStr}</td><td class="p-3 text-slate-400 text-xs">${DAYS[d.getDay()]}</td><td class="p-3 text-right text-pink-600">${(r.likes || 0).toLocaleString()}</td><td class="p-3 text-right text-blue-600 hidden sm:table-cell">${(r.comments || 0).toLocaleString()}</td><td class="p-3 text-right text-green-600 hidden sm:table-cell">${(r.shares || 0).toLocaleString()}</td><td class="p-3 text-right font-bold text-club-green">${total.toLocaleString()}</td></tr>`;
               })
               .join("") ||
-            `<tr><td colspan="7" class="p-8 text-center text-slate-400">Sin datos para este mes.</td></tr>`;
+            `<tr><td colspan="6" class="p-8 text-center text-slate-400">Sin datos para este mes.</td></tr>`;
         }
         lucide.createIcons();
       }
@@ -2956,7 +2752,6 @@
         const qsPosts = document.getElementById("qs-posts");
         const qsLikes = document.getElementById("qs-likes");
         const qsReach = document.getElementById("qs-reach");
-        const qsSaves = document.getElementById("qs-saves");
         const topContent = document.getElementById("top-post-content");
         if (!qsPosts) return;
 
@@ -2966,7 +2761,6 @@
           (s, p) => s + (p.reach || p.vistas || 0),
           0,
         );
-        const totalSaves = globalPosts.reduce((s, p) => s + (p.saves || 0), 0);
 
         qsPosts.textContent = n;
         qsLikes.textContent =
@@ -2975,10 +2769,6 @@
             : totalLikes;
         qsReach.textContent =
           n > 0 ? Math.round(totalReach / n).toLocaleString("es") : "0";
-        qsSaves.textContent =
-          totalSaves >= 1000
-            ? (totalSaves / 1000).toFixed(1) + "k"
-            : totalSaves;
 
         if (!topContent) return;
         if (n === 0) {
@@ -2993,23 +2783,12 @@
           Video: "badge-video",
         };
         const best = [...globalPosts].sort((a, b) => {
-          const ea =
-            (a.likes || 0) +
-            (a.comments || 0) +
-            (a.saves || 0) +
-            (a.compartidos || 0);
-          const eb =
-            (b.likes || 0) +
-            (b.comments || 0) +
-            (b.saves || 0) +
-            (b.compartidos || 0);
+          const ea = (a.likes || 0) + (a.comments || 0) + (a.compartidos || 0);
+          const eb = (b.likes || 0) + (b.comments || 0) + (b.compartidos || 0);
           return eb - ea;
         })[0];
         const eng =
-          (best.likes || 0) +
-          (best.comments || 0) +
-          (best.saves || 0) +
-          (best.compartidos || 0);
+          (best.likes || 0) + (best.comments || 0) + (best.compartidos || 0);
         const d = new Date(
           (best.publishedAt || best.date || "").split("T")[0] + "T00:00:00",
         );
@@ -3061,11 +2840,7 @@
           timeStr: p.publishedAt
             ? (p.publishedAt.split("T")[1] || "").slice(0, 5)
             : "",
-          total:
-            (p.likes || 0) +
-            (p.comments || 0) +
-            (p.saves || 0) +
-            (p.compartidos || 0),
+          total: (p.likes || 0) + (p.comments || 0) + (p.compartidos || 0),
           reach: p.reach || p.vistas || 0,
         }));
 
@@ -3120,10 +2895,7 @@
         return arr.reduce((s, x) => s + (x[key] || 0), 0);
       }
       function sumInteractions(arr) {
-        return arr.reduce(
-          (s, x) => s + (x.likes || 0) + (x.comments || 0) + (x.saves || 0),
-          0,
-        );
+        return arr.reduce((s, x) => s + (x.likes || 0) + (x.shares || 0), 0);
       }
 
       function calculateKPIs() {
@@ -3147,23 +2919,7 @@
           document.getElementById("kpi-followers-trend").innerHTML =
             `<span class="text-slate-400">Esperando datos semanales...</span>`;
         }
-        // Visitas al perfil: from weekly records
-        const latestVisits = latestWeekly?.visits || 0;
-        const prevVisits = prevWeekly?.visits || latestVisits;
-        document.getElementById("kpi-reach").textContent =
-          latestVisits > 0 ? latestVisits.toLocaleString() : "Sin datos";
-        if (latestVisits > 0) {
-          renderTrend(
-            "kpi-reach-trend",
-            latestVisits,
-            prevVisits,
-            "vs sem. ant.",
-          );
-        } else {
-          document.getElementById("kpi-reach-trend").innerHTML =
-            `<span class="text-slate-400">Esperando datos semanales...</span>`;
-        }
-        // Interactions: from daily records
+        // Interactions: from daily records + posts last 7 days
         if (globalData.length === 0) {
           resetKPIsInteractions();
           return;
@@ -3199,19 +2955,10 @@
       }
 
       function resetKPIs() {
-        [
-          "kpi-followers",
-          "kpi-reach",
-          "kpi-interactions",
-          "kpi-engagement",
-        ].forEach(
+        ["kpi-followers", "kpi-interactions", "kpi-engagement"].forEach(
           (id) => (document.getElementById(id).textContent = "Sin datos"),
         );
-        [
-          "kpi-followers-trend",
-          "kpi-reach-trend",
-          "kpi-interactions-trend",
-        ].forEach((id) => {
+        ["kpi-followers-trend", "kpi-interactions-trend"].forEach((id) => {
           document.getElementById(id).innerHTML =
             `<span class="text-slate-400">Esperando datos...</span>`;
         });
@@ -3461,10 +3208,7 @@
                 label: "Interacciones",
                 data: source.map(
                   (x) =>
-                    (x.likes || 0) +
-                    (x.comments || 0) +
-                    (x.saves || 0) +
-                    (x.compartidos || 0),
+                    (x.likes || 0) + (x.comments || 0) + (x.compartidos || 0),
                 ),
                 borderColor: "#C5A059",
                 backgroundColor: "rgba(197,160,89,0.12)",
@@ -3488,9 +3232,7 @@
           : [
               {
                 label: "Interacciones",
-                data: source.map(
-                  (x) => (x.likes || 0) + (x.shares || 0),
-                ),
+                data: source.map((x) => (x.likes || 0) + (x.shares || 0)),
                 borderColor: "#C5A059",
                 backgroundColor: "rgba(197,160,89,0.12)",
                 borderWidth: 2.5,
@@ -3617,8 +3359,7 @@
           counts = Array(7).fill(0);
         globalData.forEach((item) => {
           const day = new Date(item.date + "T00:00:00").getDay();
-          sums[day] +=
-            (item.likes || 0) + (item.comments || 0) + (item.saves || 0);
+          sums[day] += (item.likes || 0) + (item.shares || 0);
           counts[day] += 1;
         });
         const avgs = sums.map((s, i) =>
@@ -3665,7 +3406,7 @@
             };
           types[p.type].count++;
           types[p.type].totalInteractions +=
-            (p.likes || 0) + (p.comments || 0) + (p.saves || 0);
+            (p.likes || 0) + (p.comments || 0) + (p.compartidos || 0);
           types[p.type].totalImpressions += p.vistas || 0;
         });
         const labels = Object.keys(types);
@@ -3777,10 +3518,7 @@
         const typeEng = {};
         globalPosts.forEach((p) => {
           const inter =
-            (p.likes || 0) +
-            (p.comments || 0) +
-            (p.saves || 0) +
-            (p.compartidos || 0);
+            (p.likes || 0) + (p.comments || 0) + (p.compartidos || 0);
           const denom = p.reach || p.vistas || 0;
           if (denom > 0) {
             totalEng += (inter / denom) * 100;
@@ -3859,8 +3597,7 @@
           const wk = getISOWeek(d);
           const key = d.getFullYear() + "-W" + String(wk).padStart(2, "0");
           if (!weeks[key]) weeks[key] = { interactions: 0, reach: 0 };
-          weeks[key].interactions +=
-            (item.likes || 0) + (item.comments || 0) + (item.saves || 0);
+          weeks[key].interactions += (item.likes || 0) + (item.shares || 0);
           weeks[key].reach += item.reach || 0;
         });
         const sortedWeeks = Object.keys(weeks).sort().slice(-12);
@@ -3923,17 +3660,14 @@
           (a, b) =>
             (b.likes || 0) +
             (b.comments || 0) +
-            (b.saves || 0) -
-            ((a.likes || 0) + (a.comments || 0) + (a.saves || 0)),
+            (b.compartidos || 0) -
+            ((a.likes || 0) + (a.comments || 0) + (a.compartidos || 0)),
         );
 
         grid.innerHTML = sortedByInt
           .map((p, idx) => {
             const total =
-              (p.likes || 0) +
-              (p.comments || 0) +
-              (p.saves || 0) +
-              (p.compartidos || 0);
+              (p.likes || 0) + (p.comments || 0) + (p.compartidos || 0);
             const d = new Date(p.date + "T00:00:00");
             const fmtDate = d.toLocaleDateString("es-ES", {
               day: "2-digit",
@@ -3964,16 +3698,13 @@
               <div><p class="text-base font-bold text-club-green">${(p.reach || 0).toLocaleString()}</p><p class="text-[10px] text-slate-400">Ctas. alcanz.</p></div>
               <div><p class="text-base font-bold text-club-gold">${total.toLocaleString()}</p><p class="text-[10px] text-slate-400">Interacc.</p></div>
             </div>
-            <div class="grid grid-cols-4 gap-1 text-center text-xs text-slate-500">
+            <div class="grid grid-cols-3 gap-1 text-center text-xs text-slate-500">
               <div><span class="block font-semibold text-slate-700">${(p.likes || 0).toLocaleString()}</span>❤️</div>
               <div><span class="block font-semibold text-slate-700">${(p.comments || 0).toLocaleString()}</span>💬</div>
-              <div><span class="block font-semibold text-slate-700">${(p.saves || 0).toLocaleString()}</span>🔖</div>
               <div><span class="block font-semibold text-slate-700">${(p.compartidos || 0).toLocaleString()}</span>↗️</div>
             </div>
             <div class="flex gap-2 text-xs justify-between bg-slate-50 rounded-lg px-3 py-1.5">
               <span class="text-slate-500">Eng: <b class="text-club-gold">${engPost !== "---" ? engPost + "%" : "—"}</b></span>
-              ${p.pctSeguidores ? `<span class="text-slate-500">Seg: <b>${p.pctSeguidores}%</b></span>` : ""}
-              ${p.pctInteractuantes ? `<span class="text-slate-500">Int: <b>${p.pctInteractuantes}%</b></span>` : ""}
             </div>
           </div>`;
           })
@@ -3989,10 +3720,7 @@
         const tableRows = sortedByDate
           .map((p) => {
             const total =
-              (p.likes || 0) +
-              (p.comments || 0) +
-              (p.saves || 0) +
-              (p.compartidos || 0);
+              (p.likes || 0) + (p.comments || 0) + (p.compartidos || 0);
             const d = new Date(p.date + "T00:00:00");
             const DAYS = ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"];
             const fmtDate = d.toLocaleDateString("es-ES", {
@@ -4015,12 +3743,9 @@
             <td class="p-3 text-right">${(p.likes || 0).toLocaleString()}</td>
             <td class="p-3 text-right">${(p.comments || 0).toLocaleString()}</td>
             <td class="p-3 text-right">${(p.compartidos || 0).toLocaleString()}</td>
-            <td class="p-3 text-right">${(p.saves || 0).toLocaleString()}</td>
             <td class="p-3 text-right">${(p.vistas || 0).toLocaleString()}</td>
             <td class="p-3 text-right">${(p.reproducciones || 0).toLocaleString()}</td>
             <td class="p-3 text-right">${(p.reach || 0).toLocaleString()}</td>
-            <td class="p-3 text-right text-xs">${p.pctSeguidores ? p.pctSeguidores + "%" : "—"}</td>
-            <td class="p-3 text-right text-xs">${p.pctInteractuantes ? p.pctInteractuantes + "%" : "—"}</td>
             <td class="p-3 text-right font-semibold text-club-green">${total.toLocaleString()}</td>
             <td class="p-3 text-right text-xs text-club-gold font-semibold">${engPost !== "---" ? engPost + "%" : "—"}</td>
             <td class="p-3 text-center">
@@ -4053,8 +3778,6 @@
                     <th class="p-3 font-medium text-right">👁️ Vistas</th>
                     <th class="p-3 font-medium text-right">▶️ Reprod.</th>
                     <th class="p-3 font-medium text-right">👥 Ctas. alc.</th>
-                    <th class="p-3 font-medium text-right">% Seg.</th>
-                    <th class="p-3 font-medium text-right">% Int.</th>
                     <th class="p-3 font-medium text-right">Total Int.</th>
                     <th class="p-3 font-medium text-right">Eng.%</th>
                     <th class="p-3 font-medium text-center">Acción</th>
@@ -4104,20 +3827,12 @@
 
         const wkInteract = thisWeek.reduce(
           (s, p) =>
-            s +
-            (p.likes || 0) +
-            (p.comments || 0) +
-            (p.saves || 0) +
-            (p.compartidos || 0),
+            s + (p.likes || 0) + (p.comments || 0) + (p.compartidos || 0),
           0,
         );
         const pwInteract = prevWeek.reduce(
           (s, p) =>
-            s +
-            (p.likes || 0) +
-            (p.comments || 0) +
-            (p.saves || 0) +
-            (p.compartidos || 0),
+            s + (p.likes || 0) + (p.comments || 0) + (p.compartidos || 0),
           0,
         );
         const wkLikes = thisWeek.reduce((s, p) => s + (p.likes || 0), 0);
