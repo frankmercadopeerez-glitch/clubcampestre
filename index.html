@@ -1763,9 +1763,11 @@
                 new Date(b.publishedAt || b.date) -
                 new Date(a.publishedAt || a.date),
             );
-            // Reset grid pagination on fresh data load
+            // Reset grid and table pagination on fresh data load
             const g = document.getElementById("posts-grid");
             if (g) delete g.dataset.initialized;
+            const tw = document.getElementById("posts-table-wrap");
+            if (tw) delete tw.dataset.tableInitialized;
             renderPostsGrid();
             renderInsights();
             renderMainChart();
@@ -3766,7 +3768,7 @@
           const remaining = sortedByInt.length - visibleCount;
           const moreBtn = document.createElement("div");
           moreBtn.className = "col-span-full flex justify-center mt-2";
-          moreBtn.innerHTML = `<button id="btn-load-more-posts" class="bg-white border border-slate-200 hover:border-club-green text-slate-600 hover:text-club-green font-semibold px-6 py-2.5 rounded-xl text-sm transition-colors shadow-sm">Ver ${Math.min(remaining, PAGE_SIZE)} más de ${remaining} restantes</button>`;
+          moreBtn.innerHTML = `<button id="btn-load-more-posts" class="bg-white border border-slate-200 hover:border-club-green text-slate-600 hover:text-club-green font-semibold px-6 py-2.5 rounded-xl text-sm transition-colors shadow-sm">Ver más (${remaining} restantes)</button>`;
           grid.appendChild(moreBtn);
           document
             .getElementById("btn-load-more-posts")
@@ -3783,7 +3785,15 @@
             new Date(b.publishedAt || b.date) -
             new Date(a.publishedAt || a.date),
         );
-        const tableRows = sortedByDate
+        const TABLE_PAGE_SIZE = 12;
+        let visibleTableCount = parseInt(tableWrap.dataset.visibleTableCount || "0") || TABLE_PAGE_SIZE;
+        if (!tableWrap.dataset.tableInitialized) {
+          visibleTableCount = TABLE_PAGE_SIZE;
+          tableWrap.dataset.tableInitialized = "1";
+        }
+        tableWrap.dataset.visibleTableCount = visibleTableCount;
+        const visibleTableRows = sortedByDate.slice(0, visibleTableCount);
+        const tableRows = visibleTableRows
           .map((p) => {
             const total =
               (p.likes || 0) + (p.comments || 0) + (p.compartidos || 0);
@@ -3846,6 +3856,19 @@
               </table>
             </div>
           </div>`;
+
+        // "Ver más" button for table
+        if (visibleTableCount < sortedByDate.length) {
+          const tableRemaining = sortedByDate.length - visibleTableCount;
+          const tMoreBtn = document.createElement("div");
+          tMoreBtn.className = "flex justify-center mt-3 mb-1";
+          tMoreBtn.innerHTML = `<button id="btn-load-more-table" class="bg-white border border-slate-200 hover:border-club-green text-slate-600 hover:text-club-green font-semibold px-6 py-2.5 rounded-xl text-sm transition-colors shadow-sm">Ver más (${tableRemaining} restantes)</button>`;
+          tableWrap.appendChild(tMoreBtn);
+          document.getElementById("btn-load-more-table").addEventListener("click", () => {
+            tableWrap.dataset.visibleTableCount = sortedByDate.length;
+            renderPostsGrid();
+          });
+        }
 
         // ---- Weekly KPI summary ----
         renderWeeklyPostKPIs();
