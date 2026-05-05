@@ -2927,7 +2927,8 @@
               new Date(a.publishedAt || a.date),
           );
         const latestFollowers = postWithFollowers[0]?.followers || 0;
-        const prevFollowers = postWithFollowers[1]?.followers || latestFollowers;
+        const prevFollowers =
+          postWithFollowers[1]?.followers || latestFollowers;
         document.getElementById("kpi-followers").textContent =
           latestFollowers > 0 ? latestFollowers.toLocaleString() : "Sin datos";
         if (latestFollowers > 0) {
