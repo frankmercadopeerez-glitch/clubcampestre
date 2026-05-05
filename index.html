@@ -2934,7 +2934,9 @@
           ? new Date(latestWeekly.date)
           : null;
         const postDate2 = latestPost
-          ? new Date((latestPost.publishedAt || latestPost.date || "").split("T")[0])
+          ? new Date(
+              (latestPost.publishedAt || latestPost.date || "").split("T")[0],
+            )
           : null;
         if (weeklyDate && postDate2) {
           if (postDate2 >= weeklyDate) {
