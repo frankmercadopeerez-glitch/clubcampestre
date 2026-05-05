@@ -3730,10 +3730,21 @@
               year: "numeric",
             });
             const timeStr = p.publishedAt ? p.publishedAt.split("T")[1] : "";
-            const visDenom = p.type === "Reel" ? (p.reproducciones || 0) : p.type === "Story" ? (p.vistas || 0) : 0;
-            const visLabel = p.type === "Reel" ? "Reprod." : p.type === "Story" ? "Vistas" : null;
+            const visDenom =
+              p.type === "Reel"
+                ? p.reproducciones || 0
+                : p.type === "Story"
+                  ? p.vistas || 0
+                  : 0;
+            const visLabel =
+              p.type === "Reel"
+                ? "Reprod."
+                : p.type === "Story"
+                  ? "Vistas"
+                  : null;
             const visValue = visDenom;
-            const engPost = visDenom > 0 ? ((total / visDenom) * 100).toFixed(1) : null;
+            const engPost =
+              visDenom > 0 ? ((total / visDenom) * 100).toFixed(1) : null;
             const medal =
               idx === 0 ? "🥇" : idx === 1 ? "🥈" : idx === 2 ? "🥉" : "";
             return `<div class="glass-card p-4 flex flex-col gap-3 hover:shadow-md transition-shadow">
@@ -3746,8 +3757,8 @@
             </div>
             <p class="text-sm font-medium text-slate-700 leading-snug">${medal} ${p.title}</p>
             <p class="text-xs text-slate-400">${fmtDate}${timeStr ? " · <b>" + timeStr + "</b>" : ""}</p>
-            <div class="grid ${visLabel ? 'grid-cols-2' : 'grid-cols-1'} gap-1.5 pt-2 border-t border-slate-100 text-center">
-              ${visLabel ? `<div><p class="text-base font-bold text-club-dark">${visValue.toLocaleString()}</p><p class="text-[10px] text-slate-400">${visLabel}</p></div>` : ''}
+            <div class="grid ${visLabel ? "grid-cols-2" : "grid-cols-1"} gap-1.5 pt-2 border-t border-slate-100 text-center">
+              ${visLabel ? `<div><p class="text-base font-bold text-club-dark">${visValue.toLocaleString()}</p><p class="text-[10px] text-slate-400">${visLabel}</p></div>` : ""}
               <div><p class="text-base font-bold text-club-gold">${total.toLocaleString()}</p><p class="text-[10px] text-slate-400">Interacc.</p></div>
             </div>
             <div class="grid grid-cols-3 gap-1 text-center text-xs text-slate-500">
@@ -3805,9 +3816,20 @@
               month: "short",
             });
             const timeStr = p.publishedAt ? p.publishedAt.split("T")[1] : "";
-            const tVisDenom = p.type === "Reel" ? (p.reproducciones || 0) : p.type === "Story" ? (p.vistas || 0) : 0;
-            const tVisVal = tVisDenom > 0 ? tVisDenom.toLocaleString() : (p.type === "Reel" || p.type === "Story" ? "0" : "—");
-            const engPost = tVisDenom > 0 ? ((total / tVisDenom) * 100).toFixed(1) : null;
+            const tVisDenom =
+              p.type === "Reel"
+                ? p.reproducciones || 0
+                : p.type === "Story"
+                  ? p.vistas || 0
+                  : 0;
+            const tVisVal =
+              tVisDenom > 0
+                ? tVisDenom.toLocaleString()
+                : p.type === "Reel" || p.type === "Story"
+                  ? "0"
+                  : "—";
+            const engPost =
+              tVisDenom > 0 ? ((total / tVisDenom) * 100).toFixed(1) : null;
             return `<tr class="hover:bg-slate-50 transition-colors text-sm">
             <td class="p-3 whitespace-nowrap">
               <span class="px-2 py-0.5 rounded-full text-xs font-semibold ${BADGE[p.type] || ""}">${p.type}</span>
@@ -3920,7 +3942,10 @@
           0,
         );
         const wkLikes = thisWeek.reduce((s, p) => s + (p.likes || 0), 0);
-        const wkVis = thisWeek.reduce((s, p) => s + (p.reproducciones || 0) + (p.vistas || 0), 0);
+        const wkVis = thisWeek.reduce(
+          (s, p) => s + (p.reproducciones || 0) + (p.vistas || 0),
+          0,
+        );
 
         const trendHtml = (cur, prev) => {
           if (!prev) return "";
