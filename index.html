@@ -3730,8 +3730,10 @@
               year: "numeric",
             });
             const timeStr = p.publishedAt ? p.publishedAt.split("T")[1] : "";
-            const engPost =
-              p.vistas > 0 ? ((total / p.vistas) * 100).toFixed(1) : "---";
+            const visDenom = p.type === "Reel" ? (p.reproducciones || 0) : p.type === "Story" ? (p.vistas || 0) : 0;
+            const visLabel = p.type === "Reel" ? "Reprod." : p.type === "Story" ? "Vistas" : null;
+            const visValue = visDenom;
+            const engPost = visDenom > 0 ? ((total / visDenom) * 100).toFixed(1) : null;
             const medal =
               idx === 0 ? "🥇" : idx === 1 ? "🥈" : idx === 2 ? "🥉" : "";
             return `<div class="glass-card p-4 flex flex-col gap-3 hover:shadow-md transition-shadow">
@@ -3744,8 +3746,8 @@
             </div>
             <p class="text-sm font-medium text-slate-700 leading-snug">${medal} ${p.title}</p>
             <p class="text-xs text-slate-400">${fmtDate}${timeStr ? " · <b>" + timeStr + "</b>" : ""}</p>
-            <div class="grid grid-cols-2 gap-1.5 pt-2 border-t border-slate-100 text-center">
-              <div><p class="text-base font-bold text-club-dark">${(p.vistas || 0).toLocaleString()}</p><p class="text-[10px] text-slate-400">Vistas</p></div>
+            <div class="grid ${visLabel ? 'grid-cols-2' : 'grid-cols-1'} gap-1.5 pt-2 border-t border-slate-100 text-center">
+              ${visLabel ? `<div><p class="text-base font-bold text-club-dark">${visValue.toLocaleString()}</p><p class="text-[10px] text-slate-400">${visLabel}</p></div>` : ''}
               <div><p class="text-base font-bold text-club-gold">${total.toLocaleString()}</p><p class="text-[10px] text-slate-400">Interacc.</p></div>
             </div>
             <div class="grid grid-cols-3 gap-1 text-center text-xs text-slate-500">
@@ -3754,7 +3756,7 @@
               <div><span class="block font-semibold text-slate-700">${(p.compartidos || 0).toLocaleString()}</span>↗️</div>
             </div>
             <div class="flex gap-2 text-xs justify-between bg-slate-50 rounded-lg px-3 py-1.5">
-              <span class="text-slate-500">Eng: <b class="text-club-gold">${engPost !== "---" ? engPost + "%" : "—"}</b></span>
+              <span class="text-slate-500">Eng: <b class="text-club-gold">${engPost !== null ? engPost + "%" : "—"}</b></span>
             </div>
           </div>`;
           })
@@ -3803,8 +3805,9 @@
               month: "short",
             });
             const timeStr = p.publishedAt ? p.publishedAt.split("T")[1] : "";
-            const engPost =
-              p.vistas > 0 ? ((total / p.vistas) * 100).toFixed(1) : "---";
+            const tVisDenom = p.type === "Reel" ? (p.reproducciones || 0) : p.type === "Story" ? (p.vistas || 0) : 0;
+            const tVisVal = tVisDenom > 0 ? tVisDenom.toLocaleString() : (p.type === "Reel" || p.type === "Story" ? "0" : "—");
+            const engPost = tVisDenom > 0 ? ((total / tVisDenom) * 100).toFixed(1) : null;
             return `<tr class="hover:bg-slate-50 transition-colors text-sm">
             <td class="p-3 whitespace-nowrap">
               <span class="px-2 py-0.5 rounded-full text-xs font-semibold ${BADGE[p.type] || ""}">${p.type}</span>
@@ -3814,10 +3817,9 @@
             <td class="p-3 text-right">${(p.likes || 0).toLocaleString()}</td>
             <td class="p-3 text-right">${(p.comments || 0).toLocaleString()}</td>
             <td class="p-3 text-right">${(p.compartidos || 0).toLocaleString()}</td>
-            <td class="p-3 text-right">${(p.vistas || 0).toLocaleString()}</td>
-            <td class="p-3 text-right">${(p.reproducciones || 0).toLocaleString()}</td>
+            <td class="p-3 text-right">${tVisVal}</td>
             <td class="p-3 text-right font-semibold text-club-green">${total.toLocaleString()}</td>
-            <td class="p-3 text-right text-xs text-club-gold font-semibold">${engPost !== "---" ? engPost + "%" : "—"}</td>
+            <td class="p-3 text-right text-xs text-club-gold font-semibold">${engPost !== null ? engPost + "%" : "—"}</td>
             <td class="p-3 text-center">
               <div class="flex items-center justify-center gap-1">
                 <button onclick="editPost('${p.id}')" class="text-slate-300 hover:text-club-green transition-colors p-1" title="Editar"><i data-lucide="pencil" class="w-3.5 h-3.5"></i></button>
@@ -3844,8 +3846,7 @@
                     <th class="p-3 font-medium text-right">❤️ Likes</th>
                     <th class="p-3 font-medium text-right">💬 Coment.</th>
                     <th class="p-3 font-medium text-right">↗️ Compart.</th>
-                    <th class="p-3 font-medium text-right">️ Vistas</th>
-                    <th class="p-3 font-medium text-right">▶️ Reprod.</th>
+                    <th class="p-3 font-medium text-right">👁 Visibilidad</th>
                     <th class="p-3 font-medium text-right">Total Int.</th>
                     <th class="p-3 font-medium text-right">Eng.%</th>
                     <th class="p-3 font-medium text-center">Acción</th>
@@ -3919,7 +3920,7 @@
           0,
         );
         const wkLikes = thisWeek.reduce((s, p) => s + (p.likes || 0), 0);
-        const wkVistas = thisWeek.reduce((s, p) => s + (p.vistas || 0), 0);
+        const wkVis = thisWeek.reduce((s, p) => s + (p.reproducciones || 0) + (p.vistas || 0), 0);
 
         const trendHtml = (cur, prev) => {
           if (!prev) return "";
@@ -3942,7 +3943,7 @@
           <div class="glass-card p-4">
             <p class="text-xs text-slate-500 uppercase tracking-wide mb-1">Likes semana</p>
             <p class="text-2xl font-bold text-club-dark">${wkLikes.toLocaleString()}</p>
-            <p class="text-xs text-slate-400 mt-1">Vistas: ${wkVistas.toLocaleString()}</p>
+            <p class="text-xs text-slate-400 mt-1">Visibilidad: ${wkVis.toLocaleString()}</p>
           </div>
         `;
       }
