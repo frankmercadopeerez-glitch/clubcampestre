@@ -436,8 +436,8 @@
         .monthly-metric-btn {
           font-size: 0.68rem;
           font-weight: 600;
-          padding: 0.25rem 0.65rem;
-          border-radius: 5px;
+          padding: 0.25rem 0.75rem;
+          border-radius: 9999px;
           border: 1.5px solid #cbd5e1;
           background: #fff;
           color: #64748b;
@@ -1758,6 +1758,7 @@
       Chart.defaults.plugins.legend.labels.boxWidth = 10;
       Chart.defaults.plugins.legend.labels.boxHeight = 10;
       Chart.defaults.plugins.legend.labels.usePointStyle = true;
+      Chart.defaults.plugins.legend.labels.pointStyle = 'rect';
       Chart.defaults.plugins.legend.labels.pointStyleWidth = 10;
 
       // ── Week label helper ─────────────────────────────────────────────────
@@ -2758,7 +2759,7 @@
               plugins: {
                 legend: {
                   position: "bottom",
-                  labels: { usePointStyle: true, boxWidth: 10, padding: 16 },
+                  labels: { usePointStyle: true, pointStyle: 'rect', boxWidth: 10, padding: 16 },
                 },
                 tooltip: tooltipStyle(),
               },
@@ -2922,7 +2923,7 @@
               plugins: {
                 legend: {
                   position: "bottom",
-                  labels: { usePointStyle: true, boxWidth: 6 },
+                  labels: { usePointStyle: true, pointStyle: 'rect', boxWidth: 6 },
                 },
                 tooltip: tooltipStyle(),
               },
