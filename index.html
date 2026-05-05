@@ -570,7 +570,6 @@
                 <option value="Foto">Foto</option>
                 <option value="Carrusel">Carrusel</option>
                 <option value="Story">Story</option>
-                <option value="Video">Video</option>
               </select>
             </div>
             <div>
@@ -593,8 +592,8 @@
             >
               Visibilidad
             </p>
-            <div class="grid grid-cols-3 gap-3">
-              <div>
+            <div class="grid grid-cols-2 gap-3">
+              <div id="post-reprod-wrap" class="hidden">
                 <label class="block text-xs font-medium text-slate-700 mb-1"
                   >▶️ Reproducciones</label
                 >
@@ -606,13 +605,13 @@
                   class="w-full px-2 py-1.5 text-sm border border-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-club-green/50"
                 />
               </div>
-              <div>
+              <div id="post-vistas-wrap" class="hidden">
                 <label class="block text-xs font-medium text-slate-700 mb-1"
-                  >👥 Cuentas alcanzadas</label
+                  >👁️ Vistas</label
                 >
                 <input
                   type="number"
-                  id="post-reach"
+                  id="post-vistas"
                   min="0"
                   placeholder="0"
                   class="w-full px-2 py-1.5 text-sm border border-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-club-green/50"
@@ -836,7 +835,7 @@
               id="kpi-interactions-trend"
             >
               <span class="text-slate-400 text-xs"
-                >Likes + compartidos (historias)</span
+                >Likes + interacc. últimos 7 días</span
               >
             </div>
             <i data-lucide="heart" class="kpi-icon text-rose-400"></i>
@@ -845,7 +844,7 @@
             <span class="kpi-label">Engagement Rate</span>
             <span class="kpi-value" id="kpi-engagement">---</span>
             <div class="mt-1 text-xs text-white/50">
-              Basado en alcance reciente
+              Promedio últimas historias
             </div>
             <i
               data-lucide="zap"
@@ -887,19 +886,6 @@
                   <p
                     class="text-xl font-bold text-slate-800 mt-0.5"
                     id="qs-likes"
-                  >
-                    0
-                  </p>
-                </div>
-                <div class="bg-slate-50 rounded-lg p-3 text-center">
-                  <p
-                    class="text-[10px] text-slate-400 uppercase tracking-wide font-semibold"
-                  >
-                    Avg. Alcance
-                  </p>
-                  <p
-                    class="text-xl font-bold text-slate-800 mt-0.5"
-                    id="qs-reach"
                   >
                     0
                   </p>
@@ -990,7 +976,6 @@
                       <option value="Foto">Foto</option>
                       <option value="Carrusel">Carrusel</option>
                       <option value="Story">Story</option>
-                      <option value="Video">Video</option>
                     </select>
                   </div>
                   <div>
@@ -1012,8 +997,8 @@
                   >
                     Visibilidad
                   </p>
-                  <div class="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                    <div>
+                  <div class="grid grid-cols-2 gap-2">
+                    <div id="panel-post-reprod-wrap" class="hidden">
                       <label class="block text-xs text-slate-600 mb-1"
                         >▶️ Reprod.</label
                       >
@@ -1025,13 +1010,13 @@
                         class="w-full px-2 py-1.5 text-sm border border-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-club-green/50"
                       />
                     </div>
-                    <div>
+                    <div id="panel-post-vistas-wrap" class="hidden">
                       <label class="block text-xs text-slate-600 mb-1"
-                        >👥 Alcance</label
+                        >👁️ Vistas</label
                       >
                       <input
                         type="number"
-                        id="panel-post-reach"
+                        id="panel-post-vistas"
                         min="0"
                         placeholder="0"
                         class="w-full px-2 py-1.5 text-sm border border-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-club-green/50"
@@ -1048,7 +1033,7 @@
                   <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
                     <div>
                       <label class="block text-xs text-slate-600 mb-1"
-                        >Likes</label
+                        >❤️ Likes</label
                       >
                       <input
                         type="number"
@@ -1060,7 +1045,7 @@
                     </div>
                     <div>
                       <label class="block text-xs text-slate-600 mb-1"
-                        >Coment.</label
+                        >💬 Coment.</label
                       >
                       <input
                         type="number"
@@ -1072,7 +1057,7 @@
                     </div>
                     <div>
                       <label class="block text-xs text-slate-600 mb-1"
-                        >Compart.</label
+                        >↗️ Compart.</label
                       >
                       <input
                         type="number"
@@ -1947,7 +1932,8 @@
         document.getElementById("post-title").value = p.title || "";
         document.getElementById("post-reproducciones").value =
           p.reproducciones || 0;
-        document.getElementById("post-reach").value = p.reach || 0;
+        document.getElementById("post-vistas").value = p.vistas || 0;
+        toggleVisFields("post", p.type || "");
         document.getElementById("post-likes").value = p.likes || 0;
         document.getElementById("post-comments").value = p.comments || 0;
         document.getElementById("post-compartidos").value = p.compartidos || 0;
@@ -1959,6 +1945,31 @@
         modalOverlay.classList.remove("hidden");
         lucide.createIcons();
       };
+
+      // Toggle Reproducciones (Reel) vs Vistas (otros tipos) en formularios
+      function toggleVisFields(prefix, type) {
+        const isReel = type === "Reel";
+        const hasType = type !== "";
+        document
+          .getElementById(prefix + "-reprod-wrap")
+          .classList.toggle("hidden", !isReel);
+        document
+          .getElementById(prefix + "-vistas-wrap")
+          .classList.toggle("hidden", isReel || !hasType);
+        if (!isReel)
+          document.getElementById(prefix + "-reproducciones").value = 0;
+        if (isReel) document.getElementById(prefix + "-vistas").value = 0;
+      }
+      document
+        .getElementById("post-type")
+        .addEventListener("change", function () {
+          toggleVisFields("post", this.value);
+        });
+      document
+        .getElementById("panel-post-type")
+        .addEventListener("change", function () {
+          toggleVisFields("panel-post", this.value);
+        });
 
       postForm.addEventListener("submit", async (e) => {
         e.preventDefault();
@@ -1974,7 +1985,7 @@
             document.getElementById("post-title").value || "(Sin descripcion)",
           reproducciones:
             parseInt(document.getElementById("post-reproducciones").value) || 0,
-          reach: parseInt(document.getElementById("post-reach").value) || 0,
+          vistas: parseInt(document.getElementById("post-vistas").value) || 0,
           likes: parseInt(document.getElementById("post-likes").value) || 0,
           comments:
             parseInt(document.getElementById("post-comments").value) || 0,
@@ -2052,8 +2063,8 @@
             parseInt(
               document.getElementById("panel-post-reproducciones").value,
             ) || 0,
-          reach:
-            parseInt(document.getElementById("panel-post-reach").value) || 0,
+          vistas:
+            parseInt(document.getElementById("panel-post-vistas").value) || 0,
           likes:
             parseInt(document.getElementById("panel-post-likes").value) || 0,
           comments:
@@ -2345,7 +2356,6 @@
           ? monthPosts
               .map((p) => ({
                 date: (p.publishedAt || p.date || "").split("T")[0],
-                reach: p.reach || 0,
                 likes: p.likes || 0,
                 comments: p.comments || 0,
                 shares: p.compartidos || 0,
@@ -2694,7 +2704,7 @@
             (usingPostsAsSource ? " publicaciones" : " registros");
           document.getElementById("monthly-table-head").innerHTML =
             usingPostsAsSource
-              ? `<th class="p-3 font-medium">Fecha</th><th class="p-3 font-medium">Tipo</th><th class="p-3 font-medium">Título</th><th class="p-3 font-medium text-right">Alcance</th><th class="p-3 font-medium text-right">❤️</th><th class="p-3 font-medium text-right hidden sm:table-cell">💬</th><th class="p-3 font-medium text-right hidden sm:table-cell">🔖</th><th class="p-3 font-medium text-right">Total</th>`
+              ? `<th class="p-3 font-medium">Fecha</th><th class="p-3 font-medium">Tipo</th><th class="p-3 font-medium">Título</th><th class="p-3 font-medium text-right">❤️</th><th class="p-3 font-medium text-right hidden sm:table-cell">💬</th><th class="p-3 font-medium text-right hidden sm:table-cell">🔖</th><th class="p-3 font-medium text-right">Total</th>`
               : `<th class="p-3 font-medium">Fecha</th><th class="p-3 font-medium">Día</th><th class="p-3 font-medium text-right">❤️</th><th class="p-3 font-medium text-right hidden sm:table-cell">💬</th><th class="p-3 font-medium text-right hidden sm:table-cell">🔖</th><th class="p-3 font-medium text-right hidden sm:table-cell">↗️</th><th class="p-3 font-medium text-right">Total</th>`;
           const BADGE_CLS = {
             Reel: "badge-reel",
@@ -2720,7 +2730,6 @@
                     <td class="p-3 font-medium text-slate-700 whitespace-nowrap">${dateStr}</td>
                     <td class="p-3"><span class="badge ${badgeCls}">${r.type || "-"}</span></td>
                     <td class="p-3 text-slate-600 text-xs max-w-[160px] truncate">${r.title || "-"}</td>
-                    <td class="p-3 text-right text-blue-600">${(r.reach || 0).toLocaleString()}</td>
                     <td class="p-3 text-right text-pink-600">${(r.likes || 0).toLocaleString()}</td>
                     <td class="p-3 text-right text-blue-600 hidden sm:table-cell">${(r.comments || 0).toLocaleString()}</td>
                     <td class="p-3 text-right font-bold text-club-green">${total.toLocaleString()}</td>
@@ -2751,24 +2760,17 @@
       function renderQuickStats() {
         const qsPosts = document.getElementById("qs-posts");
         const qsLikes = document.getElementById("qs-likes");
-        const qsReach = document.getElementById("qs-reach");
         const topContent = document.getElementById("top-post-content");
         if (!qsPosts) return;
 
         const n = globalPosts.length;
         const totalLikes = globalPosts.reduce((s, p) => s + (p.likes || 0), 0);
-        const totalReach = globalPosts.reduce(
-          (s, p) => s + (p.reach || p.vistas || 0),
-          0,
-        );
 
         qsPosts.textContent = n;
         qsLikes.textContent =
           totalLikes >= 1000
             ? (totalLikes / 1000).toFixed(1) + "k"
             : totalLikes;
-        qsReach.textContent =
-          n > 0 ? Math.round(totalReach / n).toLocaleString("es") : "0";
 
         if (!topContent) return;
         if (n === 0) {
@@ -2807,14 +2809,10 @@
               <p class="text-xs text-slate-400 mt-0.5">${fmtD}</p>
             </div>
           </div>
-          <div class="grid grid-cols-2 gap-2 mt-3">
+          <div class="mt-3">
             <div class="bg-amber-50 rounded-lg p-2 text-center">
-              <p class="text-[10px] text-amber-600 font-semibold uppercase">Engagement</p>
+              <p class="text-[10px] text-amber-600 font-semibold uppercase">Interacciones</p>
               <p class="text-base font-bold text-amber-700">${eng.toLocaleString("es")}</p>
-            </div>
-            <div class="bg-green-50 rounded-lg p-2 text-center">
-              <p class="text-[10px] text-green-600 font-semibold uppercase">Alcance</p>
-              <p class="text-base font-bold text-green-700">${(best.reach || best.vistas || 0).toLocaleString("es")}</p>
             </div>
           </div>`;
       }
@@ -2841,7 +2839,7 @@
             ? (p.publishedAt.split("T")[1] || "").slice(0, 5)
             : "",
           total: (p.likes || 0) + (p.comments || 0) + (p.compartidos || 0),
-          reach: p.reach || p.vistas || 0,
+          vistas: p.vistas || 0,
         }));
 
         const storyItems = globalData.map((r) => {
@@ -2855,7 +2853,7 @@
             dateStr: r.date,
             timeStr: r.time || "",
             total,
-            reach: 0,
+            vistas: 0,
           };
         });
 
@@ -2875,7 +2873,7 @@
               month: "short",
             });
             const engPost =
-              p.reach > 0 ? ((p.total / p.reach) * 100).toFixed(1) : null;
+              p.vistas > 0 ? ((p.total / p.vistas) * 100).toFixed(1) : null;
             return `<div class="flex items-center justify-between py-2 border-b border-slate-100 last:border-0 gap-2">
             <div class="flex items-center gap-2 min-w-0">
               <span class="px-1.5 py-0.5 rounded text-[10px] font-semibold ${BADGE[p.type] || "bg-slate-100 text-slate-600"} shrink-0">${p.type}</span>
@@ -2899,8 +2897,6 @@
       }
 
       function calculateKPIs() {
-        const cur7 = globalData.slice(0, 7);
-        const prev7 = globalData.slice(7, 14);
         // Seguidores: from weekly records
         const latestWeekly = globalWeekly[0];
         const prevWeekly = globalWeekly[1];
@@ -2919,18 +2915,57 @@
           document.getElementById("kpi-followers-trend").innerHTML =
             `<span class="text-slate-400">Esperando datos semanales...</span>`;
         }
-        // Interactions: from daily records + posts last 7 days
-        if (globalData.length === 0) {
+        // Interactions: last 7 days from stories (instagram_stats) + posts (instagram_posts)
+        const hasAnyData = globalData.length > 0 || globalPosts.length > 0;
+        if (!hasAnyData) {
           resetKPIsInteractions();
           return;
         }
-        const curInt = sumInteractions(cur7);
-        const prevInt = sumInteractions(prev7);
+        const now = new Date();
+        const d7ago = new Date(now - 7 * 86400000);
+        const d14ago = new Date(now - 14 * 86400000);
+        // Story records from instagram_stats
+        const cur7s = globalData.filter(
+          (x) => new Date(x.date + "T00:00:00") >= d7ago,
+        );
+        const prev7s = globalData.filter((x) => {
+          const d = new Date(x.date + "T00:00:00");
+          return d >= d14ago && d < d7ago;
+        });
+        // Post records from instagram_posts (last 7 days)
+        const cur7p = globalPosts.filter(
+          (x) =>
+            new Date(
+              (x.publishedAt || x.date || "").split("T")[0] + "T00:00:00",
+            ) >= d7ago,
+        );
+        const prev7p = globalPosts.filter((x) => {
+          const d = new Date(
+            (x.publishedAt || x.date || "").split("T")[0] + "T00:00:00",
+          );
+          return d >= d14ago && d < d7ago;
+        });
+        const curInt =
+          cur7s.reduce((s, x) => s + (x.likes || 0) + (x.shares || 0), 0) +
+          cur7p.reduce(
+            (s, p) =>
+              s + (p.likes || 0) + (p.comments || 0) + (p.compartidos || 0),
+            0,
+          );
+        const prevInt =
+          prev7s.reduce((s, x) => s + (x.likes || 0) + (x.shares || 0), 0) +
+          prev7p.reduce(
+            (s, p) =>
+              s + (p.likes || 0) + (p.comments || 0) + (p.compartidos || 0),
+            0,
+          );
         document.getElementById("kpi-interactions").textContent =
           curInt.toLocaleString();
         renderTrend("kpi-interactions-trend", curInt, prevInt, "vs sem. ant.");
-        const eng = cur7.length > 0 ? (curInt / cur7.length).toFixed(1) : "0.0";
-        document.getElementById("kpi-engagement").textContent = eng + " /día";
+        const totalRecs = cur7s.length + cur7p.length;
+        const eng =
+          totalRecs > 0 ? (curInt / totalRecs).toFixed(1) : curInt.toFixed(1);
+        document.getElementById("kpi-engagement").textContent = eng + " /pub.";
       }
 
       function renderTrend(id, cur, prev, label) {
@@ -3218,16 +3253,6 @@
                 pointRadius: 4,
                 pointHoverRadius: 7,
               },
-              {
-                label: "Alcance",
-                data: source.map((x) => x.reach || x.vistas || 0),
-                borderColor: "#145333",
-                backgroundColor: "transparent",
-                borderWidth: 2,
-                tension: 0.35,
-                pointRadius: 3,
-                yAxisID: "y1",
-              },
             ]
           : [
               {
@@ -3273,17 +3298,6 @@
                 title: {
                   display: true,
                   text: "Interacciones",
-                  font: { family: "Poppins", size: 11 },
-                },
-              },
-              y1: {
-                type: "linear",
-                display: usingPosts,
-                position: "right",
-                grid: { display: false },
-                title: {
-                  display: usingPosts,
-                  text: "Alcance",
                   font: { family: "Poppins", size: 11 },
                 },
               },
@@ -3519,7 +3533,7 @@
         globalPosts.forEach((p) => {
           const inter =
             (p.likes || 0) + (p.comments || 0) + (p.compartidos || 0);
-          const denom = p.reach || p.vistas || 0;
+          const denom = p.vistas || 0;
           if (denom > 0) {
             totalEng += (inter / denom) * 100;
             engCount++;
@@ -3538,9 +3552,6 @@
           }
         });
         const avgEng = engCount > 0 ? (totalEng / engCount).toFixed(1) : "--";
-        const avgReach = Math.round(
-          globalPosts.reduce((s, p) => s + (p.reach || 0), 0) / totalPosts,
-        );
         const now = new Date();
         const weekAgo = new Date(now - 7 * 86400000);
         const postsThisWeek = globalPosts.filter(
@@ -3564,12 +3575,6 @@
             value: bestFormat || "--",
             icon: "award",
             color: "text-club-gold",
-          },
-          {
-            label: "Alcance promedio",
-            value: avgReach.toLocaleString(),
-            icon: "users",
-            color: "text-slate-600",
           },
         ]
           .map(
@@ -3596,9 +3601,8 @@
           const d = new Date(item.date + "T00:00:00");
           const wk = getISOWeek(d);
           const key = d.getFullYear() + "-W" + String(wk).padStart(2, "0");
-          if (!weeks[key]) weeks[key] = { interactions: 0, reach: 0 };
+          if (!weeks[key]) weeks[key] = { interactions: 0 };
           weeks[key].interactions += (item.likes || 0) + (item.shares || 0);
-          weeks[key].reach += item.reach || 0;
         });
         const sortedWeeks = Object.keys(weeks).sort().slice(-12);
         weeklyEngagementInst = new Chart(ctx, {
@@ -3607,13 +3611,8 @@
             labels: sortedWeeks.map((k) => weekKeyToLabel(k)),
             datasets: [
               {
-                label: "Engagement Rate (%)",
-                data: sortedWeeks.map((wk) => {
-                  const { interactions, reach } = weeks[wk];
-                  return reach > 0
-                    ? parseFloat(((interactions / reach) * 100).toFixed(2))
-                    : 0;
-                }),
+                label: "Interacciones",
+                data: sortedWeeks.map((wk) => weeks[wk].interactions),
                 backgroundColor: "rgba(20,83,51,0.75)",
                 borderRadius: 6,
                 borderWidth: 0,
@@ -3655,13 +3654,11 @@
           Video: "badge-video",
         };
 
-        // Sort by total interactions desc for cards
+        // Sort by most recent first for cards
         const sortedByInt = [...globalPosts].sort(
           (a, b) =>
-            (b.likes || 0) +
-            (b.comments || 0) +
-            (b.compartidos || 0) -
-            ((a.likes || 0) + (a.comments || 0) + (a.compartidos || 0)),
+            new Date(b.publishedAt || b.date) -
+            new Date(a.publishedAt || a.date),
         );
 
         grid.innerHTML = sortedByInt
@@ -3676,11 +3673,7 @@
             });
             const timeStr = p.publishedAt ? p.publishedAt.split("T")[1] : "";
             const engPost =
-              p.reach > 0
-                ? ((total / p.reach) * 100).toFixed(1)
-                : p.vistas > 0
-                  ? ((total / p.vistas) * 100).toFixed(1)
-                  : "---";
+              p.vistas > 0 ? ((total / p.vistas) * 100).toFixed(1) : "---";
             const medal =
               idx === 0 ? "🥇" : idx === 1 ? "🥈" : idx === 2 ? "🥉" : "";
             return `<div class="glass-card p-4 flex flex-col gap-3 hover:shadow-md transition-shadow">
@@ -3693,9 +3686,8 @@
             </div>
             <p class="text-sm font-medium text-slate-700 leading-snug">${medal} ${p.title}</p>
             <p class="text-xs text-slate-400">${fmtDate}${timeStr ? " · <b>" + timeStr + "</b>" : ""}</p>
-            <div class="grid grid-cols-3 gap-1.5 pt-2 border-t border-slate-100 text-center">
+            <div class="grid grid-cols-2 gap-1.5 pt-2 border-t border-slate-100 text-center">
               <div><p class="text-base font-bold text-club-dark">${(p.vistas || 0).toLocaleString()}</p><p class="text-[10px] text-slate-400">Vistas</p></div>
-              <div><p class="text-base font-bold text-club-green">${(p.reach || 0).toLocaleString()}</p><p class="text-[10px] text-slate-400">Ctas. alcanz.</p></div>
               <div><p class="text-base font-bold text-club-gold">${total.toLocaleString()}</p><p class="text-[10px] text-slate-400">Interacc.</p></div>
             </div>
             <div class="grid grid-cols-3 gap-1 text-center text-xs text-slate-500">
@@ -3729,11 +3721,7 @@
             });
             const timeStr = p.publishedAt ? p.publishedAt.split("T")[1] : "";
             const engPost =
-              p.reach > 0
-                ? ((total / p.reach) * 100).toFixed(1)
-                : p.vistas > 0
-                  ? ((total / p.vistas) * 100).toFixed(1)
-                  : "---";
+              p.vistas > 0 ? ((total / p.vistas) * 100).toFixed(1) : "---";
             return `<tr class="hover:bg-slate-50 transition-colors text-sm">
             <td class="p-3 whitespace-nowrap">
               <span class="px-2 py-0.5 rounded-full text-xs font-semibold ${BADGE[p.type] || ""}">${p.type}</span>
@@ -3745,7 +3733,6 @@
             <td class="p-3 text-right">${(p.compartidos || 0).toLocaleString()}</td>
             <td class="p-3 text-right">${(p.vistas || 0).toLocaleString()}</td>
             <td class="p-3 text-right">${(p.reproducciones || 0).toLocaleString()}</td>
-            <td class="p-3 text-right">${(p.reach || 0).toLocaleString()}</td>
             <td class="p-3 text-right font-semibold text-club-green">${total.toLocaleString()}</td>
             <td class="p-3 text-right text-xs text-club-gold font-semibold">${engPost !== "---" ? engPost + "%" : "—"}</td>
             <td class="p-3 text-center">
@@ -3777,7 +3764,6 @@
                     <th class="p-3 font-medium text-right">🔖 Guard.</th>
                     <th class="p-3 font-medium text-right">👁️ Vistas</th>
                     <th class="p-3 font-medium text-right">▶️ Reprod.</th>
-                    <th class="p-3 font-medium text-right">👥 Ctas. alc.</th>
                     <th class="p-3 font-medium text-right">Total Int.</th>
                     <th class="p-3 font-medium text-right">Eng.%</th>
                     <th class="p-3 font-medium text-center">Acción</th>
@@ -3837,7 +3823,6 @@
         );
         const wkLikes = thisWeek.reduce((s, p) => s + (p.likes || 0), 0);
         const wkVistas = thisWeek.reduce((s, p) => s + (p.vistas || 0), 0);
-        const wkAlcance = thisWeek.reduce((s, p) => s + (p.reach || 0), 0);
 
         const trendHtml = (cur, prev) => {
           if (!prev) return "";
@@ -3862,11 +3847,7 @@
             <p class="text-2xl font-bold text-club-dark">${wkLikes.toLocaleString()}</p>
             <p class="text-xs text-slate-400 mt-1">Vistas: ${wkVistas.toLocaleString()}</p>
           </div>
-          <div class="glass-card p-4">
-            <p class="text-xs text-slate-500 uppercase tracking-wide mb-1">Cuentas alcanzadas</p>
-            <p class="text-2xl font-bold text-club-dark">${wkAlcance.toLocaleString()}</p>
-            <p class="text-xs text-slate-400 mt-1">Semana actual</p>
-          </div>`;
+        `;
       }
 
       document.querySelectorAll(".tab-btn").forEach((btn) => {
