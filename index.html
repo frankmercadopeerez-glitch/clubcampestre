@@ -3960,8 +3960,9 @@
         // Patch renderPostsGrid to strip action column buttons after render
         const _origRender = window.renderPostsGrid;
         const _patchActions = () => {
-          document.querySelectorAll("[onclick^='editPost'], [onclick^='deletePost']")
-            .forEach((btn) => btn.style.display = "none");
+          document
+            .querySelectorAll("[onclick^='editPost'], [onclick^='deletePost']")
+            .forEach((btn) => (btn.style.display = "none"));
         };
         // Badge showing view-only
         const badge = document.createElement("div");
@@ -3971,7 +3972,10 @@
         document.body.appendChild(badge);
         // Patch lucide.createIcons to also strip buttons each time it's called
         const _origLucide = lucide.createIcons.bind(lucide);
-        lucide.createIcons = (...args) => { _origLucide(...args); _patchActions(); };
+        lucide.createIcons = (...args) => {
+          _origLucide(...args);
+          _patchActions();
+        };
         _patchActions();
       }
       // ───────────────────────────────────────────────────────────────────
