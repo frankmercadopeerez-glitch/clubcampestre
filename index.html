@@ -436,17 +436,19 @@
         .monthly-metric-btn {
           font-size: 0.68rem;
           font-weight: 600;
-          padding: 0.25rem 0.75rem;
+          padding: 0.25rem 0.85rem;
           border-radius: 9999px;
-          border: 1.5px solid #cbd5e1;
-          background: #fff;
-          color: #64748b;
+          border: 1.5px solid rgba(255, 255, 255, 0.18);
+          background: rgba(255, 255, 255, 0.07);
+          color: rgba(255, 255, 255, 0.55);
           cursor: pointer;
-          transition: all 0.15s;
+          transition: all 0.18s;
+          backdrop-filter: blur(4px);
         }
         .monthly-metric-btn:hover {
-          border-color: #94a3b8;
-          color: #334155;
+          border-color: rgba(255, 255, 255, 0.35);
+          color: rgba(255, 255, 255, 0.85);
+          background: rgba(255, 255, 255, 0.12);
         }
 
         /* Form inputs */
@@ -2775,9 +2777,10 @@
           document.querySelectorAll(".monthly-metric-btn").forEach((btn) => {
             const syncBtn = (b) => {
               const on = b.classList.contains("active");
-              b.style.background = on ? b.dataset.color : "";
-              b.style.color = on ? "#fff" : "";
+              b.style.background = on ? b.dataset.color + "22" : "";
+              b.style.color = on ? b.dataset.color : "";
               b.style.borderColor = on ? b.dataset.color : "";
+              b.style.fontWeight = on ? "700" : "";
             };
             syncBtn(btn);
             btn.onclick = () => {
@@ -2944,9 +2947,10 @@
           document.querySelectorAll(".monthly-metric-btn").forEach((btn) => {
             const syncBtn = (b) => {
               const on = b.classList.contains("active");
-              b.style.background = on ? b.dataset.color : "";
-              b.style.color = on ? "#fff" : "";
+              b.style.background = on ? b.dataset.color + "22" : "";
+              b.style.color = on ? b.dataset.color : "";
               b.style.borderColor = on ? b.dataset.color : "";
+              b.style.fontWeight = on ? "700" : "";
             };
             syncBtn(btn);
             btn.onclick = () => {
