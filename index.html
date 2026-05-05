@@ -67,8 +67,16 @@
         font-family: "Poppins", sans-serif;
         background: #0b1628;
         background-image:
-          radial-gradient(ellipse at 18% 0%, rgba(20, 83, 51, 0.2) 0%, transparent 48%),
-          radial-gradient(ellipse at 82% 100%, rgba(15, 76, 98, 0.2) 0%, transparent 48%);
+          radial-gradient(
+            ellipse at 18% 0%,
+            rgba(20, 83, 51, 0.2) 0%,
+            transparent 48%
+          ),
+          radial-gradient(
+            ellipse at 82% 100%,
+            rgba(15, 76, 98, 0.2) 0%,
+            transparent 48%
+          );
         min-height: 100vh;
       }
       .glass-card {
@@ -172,7 +180,9 @@
         gap: 0.25rem;
         position: relative;
         overflow: hidden;
-        transition: box-shadow 0.2s ease, transform 0.2s ease;
+        transition:
+          box-shadow 0.2s ease,
+          transform 0.2s ease;
       }
       .kpi-card:hover {
         transform: translateY(-2px);
@@ -747,7 +757,14 @@
     <header
       id="main-header"
       class="text-white sticky top-0 z-50 transition-shadow"
-      style="background: linear-gradient(90deg, #0a1e35 0%, #0f4c62 60%, #0a1e35 100%);"
+      style="
+        background: linear-gradient(
+          90deg,
+          #0a1e35 0%,
+          #0f4c62 60%,
+          #0a1e35 100%
+        );
+      "
     >
       <div
         class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between"
@@ -785,9 +802,7 @@
     </header>
 
     <!-- Navigation Tabs -->
-    <nav
-      class="bg-[#0b1e38] border-b border-white/10 sticky top-14 z-40"
-    >
+    <nav class="bg-[#0b1e38] border-b border-white/10 sticky top-14 z-40">
       <div
         class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 flex overflow-x-auto scrollbar-none"
       >
@@ -916,23 +931,63 @@
           <div class="lg:col-span-1 flex flex-col gap-5">
             <!-- Quick stats summary -->
             <div class="glass-card p-4" id="quick-stats-card">
-              <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">Resumen rápido</p>
+              <p
+                class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3"
+              >
+                Resumen rápido
+              </p>
               <div class="grid grid-cols-2 gap-3">
                 <div class="bg-slate-50 rounded-lg p-3 text-center">
-                  <p class="text-[10px] text-slate-400 uppercase tracking-wide font-semibold">Publicaciones</p>
-                  <p class="text-xl font-bold text-slate-800 mt-0.5" id="qs-posts">0</p>
+                  <p
+                    class="text-[10px] text-slate-400 uppercase tracking-wide font-semibold"
+                  >
+                    Publicaciones
+                  </p>
+                  <p
+                    class="text-xl font-bold text-slate-800 mt-0.5"
+                    id="qs-posts"
+                  >
+                    0
+                  </p>
                 </div>
                 <div class="bg-slate-50 rounded-lg p-3 text-center">
-                  <p class="text-[10px] text-slate-400 uppercase tracking-wide font-semibold">Total Likes</p>
-                  <p class="text-xl font-bold text-slate-800 mt-0.5" id="qs-likes">0</p>
+                  <p
+                    class="text-[10px] text-slate-400 uppercase tracking-wide font-semibold"
+                  >
+                    Total Likes
+                  </p>
+                  <p
+                    class="text-xl font-bold text-slate-800 mt-0.5"
+                    id="qs-likes"
+                  >
+                    0
+                  </p>
                 </div>
                 <div class="bg-slate-50 rounded-lg p-3 text-center">
-                  <p class="text-[10px] text-slate-400 uppercase tracking-wide font-semibold">Avg. Alcance</p>
-                  <p class="text-xl font-bold text-slate-800 mt-0.5" id="qs-reach">0</p>
+                  <p
+                    class="text-[10px] text-slate-400 uppercase tracking-wide font-semibold"
+                  >
+                    Avg. Alcance
+                  </p>
+                  <p
+                    class="text-xl font-bold text-slate-800 mt-0.5"
+                    id="qs-reach"
+                  >
+                    0
+                  </p>
                 </div>
                 <div class="bg-slate-50 rounded-lg p-3 text-center">
-                  <p class="text-[10px] text-slate-400 uppercase tracking-wide font-semibold">Guardados</p>
-                  <p class="text-xl font-bold text-slate-800 mt-0.5" id="qs-saves">0</p>
+                  <p
+                    class="text-[10px] text-slate-400 uppercase tracking-wide font-semibold"
+                  >
+                    Guardados
+                  </p>
+                  <p
+                    class="text-xl font-bold text-slate-800 mt-0.5"
+                    id="qs-saves"
+                  >
+                    0
+                  </p>
                 </div>
               </div>
             </div>
@@ -1090,7 +1145,9 @@
                   </p>
                   <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
                     <div>
-                      <label class="block text-xs text-slate-600 mb-1">Likes</label>
+                      <label class="block text-xs text-slate-600 mb-1"
+                        >Likes</label
+                      >
                       <input
                         type="number"
                         id="panel-post-likes"
@@ -1206,7 +1263,9 @@
 
             <!-- Mejor publicación -->
             <div class="glass-card p-4" id="top-post-card">
-              <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3 flex items-center gap-1.5">
+              <p
+                class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3 flex items-center gap-1.5"
+              >
                 <i data-lucide="award" class="w-3.5 h-3.5 text-club-gold"></i>
                 Mejor publicación
               </p>
@@ -1239,10 +1298,20 @@
               </div>
               <div class="w-full h-72 relative">
                 <canvas id="mainChart"></canvas>
-                <div id="main-chart-empty" class="absolute inset-0 flex flex-col items-center justify-center text-slate-300 pointer-events-none">
-                  <i data-lucide="bar-chart-2" class="w-10 h-10 mb-2 opacity-30"></i>
-                  <p class="text-sm font-medium opacity-50">Sin datos registrados aún</p>
-                  <p class="text-xs opacity-35 mt-0.5">Registra publicaciones para ver la evolución</p>
+                <div
+                  id="main-chart-empty"
+                  class="absolute inset-0 flex flex-col items-center justify-center text-slate-300 pointer-events-none"
+                >
+                  <i
+                    data-lucide="bar-chart-2"
+                    class="w-10 h-10 mb-2 opacity-30"
+                  ></i>
+                  <p class="text-sm font-medium opacity-50">
+                    Sin datos registrados aún
+                  </p>
+                  <p class="text-xs opacity-35 mt-0.5">
+                    Registra publicaciones para ver la evolución
+                  </p>
                 </div>
               </div>
             </div>
@@ -1257,9 +1326,14 @@
               </div>
               <div class="w-full h-52 relative">
                 <canvas id="followersChart"></canvas>
-                <div id="followers-chart-empty" class="absolute inset-0 flex flex-col items-center justify-center text-slate-300 pointer-events-none">
+                <div
+                  id="followers-chart-empty"
+                  class="absolute inset-0 flex flex-col items-center justify-center text-slate-300 pointer-events-none"
+                >
                   <i data-lucide="users" class="w-8 h-8 mb-1.5 opacity-30"></i>
-                  <p class="text-sm font-medium opacity-50">Sin datos de seguidores</p>
+                  <p class="text-sm font-medium opacity-50">
+                    Sin datos de seguidores
+                  </p>
                 </div>
               </div>
             </div>
@@ -1363,9 +1437,7 @@
         <div class="flex items-center justify-between">
           <div>
             <h2 class="page-title">Publicaciones</h2>
-            <p class="page-subtitle">
-              Posts, Reels y contenido registrado
-            </p>
+            <p class="page-subtitle">Posts, Reels y contenido registrado</p>
           </div>
           <button
             id="btn-add-post-top"
@@ -2456,29 +2528,57 @@
           .filter((r) => (r.date || "").startsWith(prefix))
           .sort((a, b) => new Date(a.date) - new Date(b.date));
 
-        const monthPosts = globalPosts.filter((p) =>
-          (p.date || "").startsWith(prefix),
+        const monthPosts = globalPosts.filter(
+          (p) => (p.date || p.publishedAt || "").slice(0, 7) === prefix,
         );
         const period = document.getElementById("monthly-period-filter").value;
 
+        // Normalize posts into same shape as story records for chart/table use
+        const usingPostsAsSource = monthData.length === 0;
+        const chartSource = usingPostsAsSource
+          ? monthPosts
+              .map((p) => ({
+                date: (p.publishedAt || p.date || "").split("T")[0],
+                storyViews: p.reach || p.vistas || 0,
+                likes: p.likes || 0,
+                comments: p.comments || 0,
+                saves: p.saves || 0,
+                shares: p.compartidos || 0,
+                title: p.title,
+                type: p.type,
+              }))
+              .sort((a, b) => new Date(a.date) - new Date(b.date))
+          : monthData;
+
         // ─── KPIs ───
-        const totalViews = monthData.reduce(
+        const totalViews = chartSource.reduce(
           (s, r) => s + (r.storyViews || 0),
           0,
         );
-        const totalLikes = monthData.reduce((s, r) => s + (r.likes || 0), 0);
-        const totalComments = monthData.reduce(
+        const totalLikes = chartSource.reduce((s, r) => s + (r.likes || 0), 0);
+        const totalComments = chartSource.reduce(
           (s, r) => s + (r.comments || 0),
           0,
         );
-        const totalSaves = monthData.reduce((s, r) => s + (r.saves || 0), 0);
-        const totalShares = monthData.reduce((s, r) => s + (r.shares || 0), 0);
+        const totalSaves = chartSource.reduce((s, r) => s + (r.saves || 0), 0);
+        const totalShares = chartSource.reduce(
+          (s, r) => s + (r.shares || 0),
+          0,
+        );
         const totalInt = totalLikes + totalComments + totalSaves + totalShares;
+        const totalReach = chartSource.reduce(
+          (s, r) => s + (r.storyViews || 0),
+          0,
+        );
         const avgEng =
-          totalViews > 0 ? ((totalInt / totalViews) * 100).toFixed(2) : "0.00";
+          totalReach > 0
+            ? ((totalInt / totalReach) * 100).toFixed(2)
+            : monthPosts.length > 0
+              ? (totalInt / monthPosts.length).toFixed(0)
+              : "0.00";
         document.getElementById("monthly-kpis").innerHTML = [
           {
-            label: "Vistas Historia",
+            label: usingPostsAsSource ? "Alcance total" : "Vistas Historia",
             val: totalViews.toLocaleString(),
             icon: "eye",
             color: "border-blue-400",
@@ -2521,7 +2621,7 @@
           document.getElementById("monthly-table-title").textContent =
             "Detalle por semana";
           const weeks = {};
-          monthData.forEach((r) => {
+          chartSource.forEach((r) => {
             const d = new Date(r.date + "T00:00:00");
             const wk = getISOWeek(d);
             const yr = d.getFullYear();
@@ -2670,7 +2770,7 @@
           document.getElementById("monthly-table-title").textContent =
             "Detalle diario";
           const DAYS = ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"];
-          const labels = monthData.map((r) => {
+          const labels = chartSource.map((r) => {
             const d = new Date(r.date + "T00:00:00");
             return d.getDate() + " " + DAYS[d.getDay()];
           });
@@ -2744,7 +2844,7 @@
             const isBar = def.type === "bar";
             return {
               label: def.label,
-              data: monthData.map(def.fn),
+              data: chartSource.map(def.fn),
               type: def.type,
               backgroundColor: isBar ? def.color : "transparent",
               borderColor: isBar ? undefined : def.color,
@@ -2809,11 +2909,21 @@
           });
 
           document.getElementById("monthly-record-count").textContent =
-            monthData.length + " registros";
+            chartSource.length +
+            (usingPostsAsSource ? " publicaciones" : " registros");
           document.getElementById("monthly-table-head").innerHTML =
-            `<th class="p-3 font-medium">Fecha</th><th class="p-3 font-medium">Día</th><th class="p-3 font-medium text-right">Vistas</th><th class="p-3 font-medium text-right">❤️</th><th class="p-3 font-medium text-right hidden sm:table-cell">💬</th><th class="p-3 font-medium text-right hidden sm:table-cell">🔖</th><th class="p-3 font-medium text-right hidden sm:table-cell">↗️</th><th class="p-3 font-medium text-right">Total</th><th class="p-3 font-medium text-right">Eng%</th>`;
+            usingPostsAsSource
+              ? `<th class="p-3 font-medium">Fecha</th><th class="p-3 font-medium">Tipo</th><th class="p-3 font-medium">Título</th><th class="p-3 font-medium text-right">Alcance</th><th class="p-3 font-medium text-right">❤️</th><th class="p-3 font-medium text-right hidden sm:table-cell">💬</th><th class="p-3 font-medium text-right hidden sm:table-cell">🔖</th><th class="p-3 font-medium text-right">Total</th>`
+              : `<th class="p-3 font-medium">Fecha</th><th class="p-3 font-medium">Día</th><th class="p-3 font-medium text-right">Vistas</th><th class="p-3 font-medium text-right">❤️</th><th class="p-3 font-medium text-right hidden sm:table-cell">💬</th><th class="p-3 font-medium text-right hidden sm:table-cell">🔖</th><th class="p-3 font-medium text-right hidden sm:table-cell">↗️</th><th class="p-3 font-medium text-right">Total</th><th class="p-3 font-medium text-right">Eng%</th>`;
+          const BADGE_CLS = {
+            Reel: "badge-reel",
+            Foto: "badge-foto",
+            Carrusel: "badge-carrusel",
+            Story: "badge-story",
+            Video: "badge-video",
+          };
           document.getElementById("monthly-table-body").innerHTML =
-            monthData
+            chartSource
               .map((r) => {
                 const d = new Date(r.date + "T00:00:00");
                 const total =
@@ -2821,11 +2931,29 @@
                   (r.comments || 0) +
                   (r.saves || 0) +
                   (r.shares || 0);
+                const dateStr = d.toLocaleDateString("es-ES", {
+                  day: "2-digit",
+                  month: "short",
+                });
+                if (usingPostsAsSource) {
+                  const badgeCls =
+                    BADGE_CLS[r.type] || "bg-slate-100 text-slate-600";
+                  return `<tr class="hover:bg-slate-50">
+                    <td class="p-3 font-medium text-slate-700 whitespace-nowrap">${dateStr}</td>
+                    <td class="p-3"><span class="badge ${badgeCls}">${r.type || "-"}</span></td>
+                    <td class="p-3 text-slate-600 text-xs max-w-[160px] truncate">${r.title || "-"}</td>
+                    <td class="p-3 text-right text-blue-600">${(r.storyViews || 0).toLocaleString()}</td>
+                    <td class="p-3 text-right text-pink-600">${(r.likes || 0).toLocaleString()}</td>
+                    <td class="p-3 text-right text-blue-600 hidden sm:table-cell">${(r.comments || 0).toLocaleString()}</td>
+                    <td class="p-3 text-right text-amber-600 hidden sm:table-cell">${(r.saves || 0).toLocaleString()}</td>
+                    <td class="p-3 text-right font-bold text-club-green">${total.toLocaleString()}</td>
+                  </tr>`;
+                }
                 const eng =
                   (r.storyViews || 0) > 0
                     ? ((total / r.storyViews) * 100).toFixed(1)
                     : "0.0";
-                return `<tr class="hover:bg-slate-50"><td class="p-3 font-medium text-slate-700 whitespace-nowrap">${d.toLocaleDateString("es-ES", { day: "2-digit", month: "short" })}</td><td class="p-3 text-slate-400 text-xs">${DAYS[d.getDay()]}</td><td class="p-3 text-right">${(r.storyViews || 0).toLocaleString()}</td><td class="p-3 text-right text-pink-600">${(r.likes || 0).toLocaleString()}</td><td class="p-3 text-right text-blue-600 hidden sm:table-cell">${(r.comments || 0).toLocaleString()}</td><td class="p-3 text-right text-amber-600 hidden sm:table-cell">${(r.saves || 0).toLocaleString()}</td><td class="p-3 text-right text-green-600 hidden sm:table-cell">${(r.shares || 0).toLocaleString()}</td><td class="p-3 text-right font-bold text-club-green">${total.toLocaleString()}</td><td class="p-3 text-right text-xs text-slate-500">${eng}%</td></tr>`;
+                return `<tr class="hover:bg-slate-50"><td class="p-3 font-medium text-slate-700 whitespace-nowrap">${dateStr}</td><td class="p-3 text-slate-400 text-xs">${DAYS[d.getDay()]}</td><td class="p-3 text-right">${(r.storyViews || 0).toLocaleString()}</td><td class="p-3 text-right text-pink-600">${(r.likes || 0).toLocaleString()}</td><td class="p-3 text-right text-blue-600 hidden sm:table-cell">${(r.comments || 0).toLocaleString()}</td><td class="p-3 text-right text-amber-600 hidden sm:table-cell">${(r.saves || 0).toLocaleString()}</td><td class="p-3 text-right text-green-600 hidden sm:table-cell">${(r.shares || 0).toLocaleString()}</td><td class="p-3 text-right font-bold text-club-green">${total.toLocaleString()}</td><td class="p-3 text-right text-xs text-slate-500">${eng}%</td></tr>`;
               })
               .join("") ||
             `<tr><td colspan="9" class="p-8 text-center text-slate-400">Sin datos para este mes.</td></tr>`;
@@ -2857,33 +2985,69 @@
 
         const n = globalPosts.length;
         const totalLikes = globalPosts.reduce((s, p) => s + (p.likes || 0), 0);
-        const totalReach = globalPosts.reduce((s, p) => s + (p.reach || p.vistas || 0), 0);
+        const totalReach = globalPosts.reduce(
+          (s, p) => s + (p.reach || p.vistas || 0),
+          0,
+        );
         const totalSaves = globalPosts.reduce((s, p) => s + (p.saves || 0), 0);
 
         qsPosts.textContent = n;
-        qsLikes.textContent = totalLikes >= 1000 ? (totalLikes / 1000).toFixed(1) + "k" : totalLikes;
-        qsReach.textContent = n > 0 ? Math.round(totalReach / n).toLocaleString("es") : "0";
-        qsSaves.textContent = totalSaves >= 1000 ? (totalSaves / 1000).toFixed(1) + "k" : totalSaves;
+        qsLikes.textContent =
+          totalLikes >= 1000
+            ? (totalLikes / 1000).toFixed(1) + "k"
+            : totalLikes;
+        qsReach.textContent =
+          n > 0 ? Math.round(totalReach / n).toLocaleString("es") : "0";
+        qsSaves.textContent =
+          totalSaves >= 1000
+            ? (totalSaves / 1000).toFixed(1) + "k"
+            : totalSaves;
 
         if (!topContent) return;
         if (n === 0) {
           topContent.innerHTML = `<p class="text-sm text-slate-400">Sin publicaciones aún.</p>`;
           return;
         }
-        const BADGE = { Reel:"badge-reel", Foto:"badge-foto", Carrusel:"badge-carrusel", Story:"badge-story", Video:"badge-video" };
+        const BADGE = {
+          Reel: "badge-reel",
+          Foto: "badge-foto",
+          Carrusel: "badge-carrusel",
+          Story: "badge-story",
+          Video: "badge-video",
+        };
         const best = [...globalPosts].sort((a, b) => {
-          const ea = (a.likes||0)+(a.comments||0)+(a.saves||0)+(a.compartidos||0);
-          const eb = (b.likes||0)+(b.comments||0)+(b.saves||0)+(b.compartidos||0);
+          const ea =
+            (a.likes || 0) +
+            (a.comments || 0) +
+            (a.saves || 0) +
+            (a.compartidos || 0);
+          const eb =
+            (b.likes || 0) +
+            (b.comments || 0) +
+            (b.saves || 0) +
+            (b.compartidos || 0);
           return eb - ea;
         })[0];
-        const eng = (best.likes||0)+(best.comments||0)+(best.saves||0)+(best.compartidos||0);
-        const d = new Date((best.publishedAt||best.date||"").split("T")[0]+"T00:00:00");
-        const fmtD = isNaN(d) ? "" : d.toLocaleDateString("es-ES",{day:"2-digit",month:"short",year:"numeric"});
+        const eng =
+          (best.likes || 0) +
+          (best.comments || 0) +
+          (best.saves || 0) +
+          (best.compartidos || 0);
+        const d = new Date(
+          (best.publishedAt || best.date || "").split("T")[0] + "T00:00:00",
+        );
+        const fmtD = isNaN(d)
+          ? ""
+          : d.toLocaleDateString("es-ES", {
+              day: "2-digit",
+              month: "short",
+              year: "numeric",
+            });
         topContent.innerHTML = `
           <div class="flex items-start gap-2">
-            <span class="badge ${BADGE[best.type]||"bg-slate-100 text-slate-600"} mt-0.5 shrink-0">${best.type||"Post"}</span>
+            <span class="badge ${BADGE[best.type] || "bg-slate-100 text-slate-600"} mt-0.5 shrink-0">${best.type || "Post"}</span>
             <div class="min-w-0">
-              <p class="text-sm font-semibold text-slate-800 leading-snug truncate">${best.title||"(Sin título)"}</p>
+              <p class="text-sm font-semibold text-slate-800 leading-snug truncate">${best.title || "(Sin título)"}</p>
               <p class="text-xs text-slate-400 mt-0.5">${fmtD}</p>
             </div>
           </div>
@@ -2894,7 +3058,7 @@
             </div>
             <div class="bg-green-50 rounded-lg p-2 text-center">
               <p class="text-[10px] text-green-600 font-semibold uppercase">Alcance</p>
-              <p class="text-base font-bold text-green-700">${(best.reach||best.vistas||0).toLocaleString("es")}</p>
+              <p class="text-base font-bold text-green-700">${(best.reach || best.vistas || 0).toLocaleString("es")}</p>
             </div>
           </div>`;
       }
@@ -3319,20 +3483,31 @@
         let usingPosts = false;
         let source = [];
         if (globalData.length > 0) {
-          const limit = chartFilter.value === "all" ? globalData.length : parseInt(chartFilter.value);
+          const limit =
+            chartFilter.value === "all"
+              ? globalData.length
+              : parseInt(chartFilter.value);
           source = [...globalData].slice(0, limit).reverse();
         } else if (globalPosts.length > 0) {
           usingPosts = true;
-          const limit = chartFilter.value === "all" ? globalPosts.length : parseInt(chartFilter.value);
+          const limit =
+            chartFilter.value === "all"
+              ? globalPosts.length
+              : parseInt(chartFilter.value);
           source = [...globalPosts]
-            .filter(p => p.publishedAt || p.date)
-            .sort((a, b) => new Date(a.publishedAt || a.date) - new Date(b.publishedAt || b.date))
+            .filter((p) => p.publishedAt || p.date)
+            .sort(
+              (a, b) =>
+                new Date(a.publishedAt || a.date) -
+                new Date(b.publishedAt || b.date),
+            )
             .slice(-limit);
         }
 
         if (source.length === 0) {
           if (emptyEl) emptyEl.style.display = "flex";
-          if (subtitleEl) subtitleEl.textContent = "Vistas, likes, comentarios y guardados";
+          if (subtitleEl)
+            subtitleEl.textContent = "Vistas, likes, comentarios y guardados";
           return;
         }
         if (emptyEl) emptyEl.style.display = "none";
@@ -3343,12 +3518,18 @@
             : "Vistas, likes, comentarios y guardados";
         }
 
-        const labels = source.map(x => fmtLabel(x.publishedAt || x.date));
+        const labels = source.map((x) => fmtLabel(x.publishedAt || x.date));
         const datasets = usingPosts
           ? [
               {
                 label: "Interacciones",
-                data: source.map(x => (x.likes || 0) + (x.comments || 0) + (x.saves || 0) + (x.compartidos || 0)),
+                data: source.map(
+                  (x) =>
+                    (x.likes || 0) +
+                    (x.comments || 0) +
+                    (x.saves || 0) +
+                    (x.compartidos || 0),
+                ),
                 borderColor: "#C5A059",
                 backgroundColor: "rgba(197,160,89,0.12)",
                 borderWidth: 2.5,
@@ -3359,7 +3540,7 @@
               },
               {
                 label: "Alcance",
-                data: source.map(x => x.reach || x.vistas || 0),
+                data: source.map((x) => x.reach || x.vistas || 0),
                 borderColor: "#145333",
                 backgroundColor: "transparent",
                 borderWidth: 2,
@@ -3371,7 +3552,9 @@
           : [
               {
                 label: "Interacciones",
-                data: source.map(x => (x.likes || 0) + (x.comments || 0) + (x.saves || 0)),
+                data: source.map(
+                  (x) => (x.likes || 0) + (x.comments || 0) + (x.saves || 0),
+                ),
                 borderColor: "#C5A059",
                 backgroundColor: "rgba(197,160,89,0.12)",
                 borderWidth: 2.5,
@@ -3383,7 +3566,7 @@
               },
               {
                 label: "Vistas Historia",
-                data: source.map(x => x.storyViews || 0),
+                data: source.map((x) => x.storyViews || 0),
                 borderColor: "#145333",
                 backgroundColor: "transparent",
                 borderWidth: 2,
@@ -3404,21 +3587,38 @@
             plugins: {
               legend: {
                 position: "bottom",
-                labels: { usePointStyle: true, boxWidth: 10, padding: 16, font: { family: "Poppins", size: 12 } },
+                labels: {
+                  usePointStyle: true,
+                  boxWidth: 10,
+                  padding: 16,
+                  font: { family: "Poppins", size: 12 },
+                },
               },
               tooltip: tooltipStyle(),
             },
             scales: {
               x: { grid: { display: false } },
               y: {
-                type: "linear", display: true, position: "left",
+                type: "linear",
+                display: true,
+                position: "left",
                 grid: { color: "#f1f5f9" },
-                title: { display: true, text: "Interacciones", font: { family: "Poppins", size: 11 } },
+                title: {
+                  display: true,
+                  text: "Interacciones",
+                  font: { family: "Poppins", size: 11 },
+                },
               },
               y1: {
-                type: "linear", display: true, position: "right",
+                type: "linear",
+                display: true,
+                position: "right",
                 grid: { display: false },
-                title: { display: true, text: usingPosts ? "Alcance" : "Vistas Historia", font: { family: "Poppins", size: 11 } },
+                title: {
+                  display: true,
+                  text: usingPosts ? "Alcance" : "Vistas Historia",
+                  font: { family: "Poppins", size: 11 },
+                },
               },
             },
           },
