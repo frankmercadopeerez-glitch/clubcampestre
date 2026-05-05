@@ -1758,7 +1758,7 @@
       Chart.defaults.plugins.legend.labels.boxWidth = 10;
       Chart.defaults.plugins.legend.labels.boxHeight = 10;
       Chart.defaults.plugins.legend.labels.usePointStyle = true;
-      Chart.defaults.plugins.legend.labels.pointStyle = 'rect';
+      Chart.defaults.plugins.legend.labels.pointStyle = "rect";
       Chart.defaults.plugins.legend.labels.pointStyleWidth = 10;
 
       // ── Week label helper ─────────────────────────────────────────────────
@@ -2759,7 +2759,12 @@
               plugins: {
                 legend: {
                   position: "bottom",
-                  labels: { usePointStyle: true, pointStyle: 'rect', boxWidth: 10, padding: 16 },
+                  labels: {
+                    usePointStyle: true,
+                    pointStyle: "rect",
+                    boxWidth: 10,
+                    padding: 16,
+                  },
                 },
                 tooltip: tooltipStyle(),
               },
@@ -2923,7 +2928,11 @@
               plugins: {
                 legend: {
                   position: "bottom",
-                  labels: { usePointStyle: true, pointStyle: 'rect', boxWidth: 6 },
+                  labels: {
+                    usePointStyle: true,
+                    pointStyle: "rect",
+                    boxWidth: 6,
+                  },
                 },
                 tooltip: tooltipStyle(),
               },
