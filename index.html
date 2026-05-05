@@ -913,7 +913,29 @@
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div class="lg:col-span-1 flex flex-col gap-8 lg:order-2">
+          <div class="lg:col-span-1 flex flex-col gap-5 lg:col-start-3">
+            <!-- Quick stats summary -->
+            <div class="glass-card p-4" id="quick-stats-card">
+              <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">Resumen rápido</p>
+              <div class="grid grid-cols-2 gap-3">
+                <div class="bg-slate-50 rounded-lg p-3 text-center">
+                  <p class="text-[10px] text-slate-400 uppercase tracking-wide font-semibold">Publicaciones</p>
+                  <p class="text-xl font-bold text-slate-800 mt-0.5" id="qs-posts">0</p>
+                </div>
+                <div class="bg-slate-50 rounded-lg p-3 text-center">
+                  <p class="text-[10px] text-slate-400 uppercase tracking-wide font-semibold">Total Likes</p>
+                  <p class="text-xl font-bold text-slate-800 mt-0.5" id="qs-likes">0</p>
+                </div>
+                <div class="bg-slate-50 rounded-lg p-3 text-center">
+                  <p class="text-[10px] text-slate-400 uppercase tracking-wide font-semibold">Avg. Alcance</p>
+                  <p class="text-xl font-bold text-slate-800 mt-0.5" id="qs-reach">0</p>
+                </div>
+                <div class="bg-slate-50 rounded-lg p-3 text-center">
+                  <p class="text-[10px] text-slate-400 uppercase tracking-wide font-semibold">Guardados</p>
+                  <p class="text-xl font-bold text-slate-800 mt-0.5" id="qs-saves">0</p>
+                </div>
+              </div>
+            </div>
             <!-- hidden stubs: kept for JS compatibility -->
             <button id="btn-open-post-modal" class="hidden"></button>
             <form id="stats-form" class="hidden">
@@ -1180,16 +1202,27 @@
                 </button>
               </form>
             </div>
+
+            <!-- Mejor publicación -->
+            <div class="glass-card p-4" id="top-post-card">
+              <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3 flex items-center gap-1.5">
+                <i data-lucide="award" class="w-3.5 h-3.5 text-club-gold"></i>
+                Mejor publicación
+              </p>
+              <div id="top-post-content">
+                <p class="text-sm text-slate-400">Sin publicaciones aún.</p>
+              </div>
+            </div>
           </div>
 
-          <div class="lg:col-span-2 flex flex-col gap-6 lg:order-1">
+          <div class="lg:col-span-2 flex flex-col gap-6 lg:col-start-1 lg:row-start-1">
             <div class="glass-card p-4 md:p-6">
               <div class="flex items-center justify-between mb-4">
                 <div>
                   <h2 class="text-sm font-semibold text-slate-800">
                     Evolución de interacciones
                   </h2>
-                  <p class="text-xs text-slate-400">
+                  <p class="text-xs text-slate-400" id="main-chart-subtitle">
                     Vistas, likes, comentarios y guardados
                   </p>
                 </div>
@@ -1833,6 +1866,10 @@
             );
             renderPostsGrid();
             renderInsights();
+            renderMainChart();
+            renderRecentPostsOverview();
+            renderQuickStats();
+            lucide.createIcons();
           },
           (err) => console.error(err),
         );
@@ -2805,7 +2842,60 @@
         renderPostsGrid();
         renderWeeklyHistory();
         renderRecentPostsOverview();
+        renderQuickStats();
         lucide.createIcons();
+      }
+
+      function renderQuickStats() {
+        const qsPosts = document.getElementById("qs-posts");
+        const qsLikes = document.getElementById("qs-likes");
+        const qsReach = document.getElementById("qs-reach");
+        const qsSaves = document.getElementById("qs-saves");
+        const topContent = document.getElementById("top-post-content");
+        if (!qsPosts) return;
+
+        const n = globalPosts.length;
+        const totalLikes = globalPosts.reduce((s, p) => s + (p.likes || 0), 0);
+        const totalReach = globalPosts.reduce((s, p) => s + (p.reach || p.vistas || 0), 0);
+        const totalSaves = globalPosts.reduce((s, p) => s + (p.saves || 0), 0);
+
+        qsPosts.textContent = n;
+        qsLikes.textContent = totalLikes >= 1000 ? (totalLikes / 1000).toFixed(1) + "k" : totalLikes;
+        qsReach.textContent = n > 0 ? Math.round(totalReach / n).toLocaleString("es") : "0";
+        qsSaves.textContent = totalSaves >= 1000 ? (totalSaves / 1000).toFixed(1) + "k" : totalSaves;
+
+        if (!topContent) return;
+        if (n === 0) {
+          topContent.innerHTML = `<p class="text-sm text-slate-400">Sin publicaciones aún.</p>`;
+          return;
+        }
+        const BADGE = { Reel:"badge-reel", Foto:"badge-foto", Carrusel:"badge-carrusel", Story:"badge-story", Video:"badge-video" };
+        const best = [...globalPosts].sort((a, b) => {
+          const ea = (a.likes||0)+(a.comments||0)+(a.saves||0)+(a.compartidos||0);
+          const eb = (b.likes||0)+(b.comments||0)+(b.saves||0)+(b.compartidos||0);
+          return eb - ea;
+        })[0];
+        const eng = (best.likes||0)+(best.comments||0)+(best.saves||0)+(best.compartidos||0);
+        const d = new Date((best.publishedAt||best.date||"").split("T")[0]+"T00:00:00");
+        const fmtD = isNaN(d) ? "" : d.toLocaleDateString("es-ES",{day:"2-digit",month:"short",year:"numeric"});
+        topContent.innerHTML = `
+          <div class="flex items-start gap-2">
+            <span class="badge ${BADGE[best.type]||"bg-slate-100 text-slate-600"} mt-0.5 shrink-0">${best.type||"Post"}</span>
+            <div class="min-w-0">
+              <p class="text-sm font-semibold text-slate-800 leading-snug truncate">${best.title||"(Sin título)"}</p>
+              <p class="text-xs text-slate-400 mt-0.5">${fmtD}</p>
+            </div>
+          </div>
+          <div class="grid grid-cols-2 gap-2 mt-3">
+            <div class="bg-amber-50 rounded-lg p-2 text-center">
+              <p class="text-[10px] text-amber-600 font-semibold uppercase">Engagement</p>
+              <p class="text-base font-bold text-amber-700">${eng.toLocaleString("es")}</p>
+            </div>
+            <div class="bg-green-50 rounded-lg p-2 text-center">
+              <p class="text-[10px] text-green-600 font-semibold uppercase">Alcance</p>
+              <p class="text-base font-bold text-green-700">${(best.reach||best.vistas||0).toLocaleString("es")}</p>
+            </div>
+          </div>`;
       }
 
       function renderRecentPostsOverview() {
@@ -3221,28 +3311,66 @@
       function renderMainChart() {
         const ctx = document.getElementById("mainChart").getContext("2d");
         const emptyEl = document.getElementById("main-chart-empty");
+        const subtitleEl = document.getElementById("main-chart-subtitle");
         if (mainChartInstance) mainChartInstance.destroy();
-        if (globalData.length === 0) {
+
+        // Build source: prefer daily story data, fall back to posts
+        let usingPosts = false;
+        let source = [];
+        if (globalData.length > 0) {
+          const limit = chartFilter.value === "all" ? globalData.length : parseInt(chartFilter.value);
+          source = [...globalData].slice(0, limit).reverse();
+        } else if (globalPosts.length > 0) {
+          usingPosts = true;
+          const limit = chartFilter.value === "all" ? globalPosts.length : parseInt(chartFilter.value);
+          source = [...globalPosts]
+            .filter(p => p.publishedAt || p.date)
+            .sort((a, b) => new Date(a.publishedAt || a.date) - new Date(b.publishedAt || b.date))
+            .slice(-limit);
+        }
+
+        if (source.length === 0) {
           if (emptyEl) emptyEl.style.display = "flex";
+          if (subtitleEl) subtitleEl.textContent = "Vistas, likes, comentarios y guardados";
           return;
         }
         if (emptyEl) emptyEl.style.display = "none";
-        const limit =
-          chartFilter.value === "all"
-            ? globalData.length
-            : parseInt(chartFilter.value);
-        const cd = [...globalData].slice(0, limit).reverse();
-        const labels = cd.map((x) => fmtLabel(x.date));
-        mainChartInstance = new Chart(ctx, {
-          type: "line",
-          data: {
-            labels,
-            datasets: [
+
+        if (subtitleEl) {
+          subtitleEl.textContent = usingPosts
+            ? "Interacciones por publicación registrada"
+            : "Vistas, likes, comentarios y guardados";
+        }
+
+        const labels = source.map(x => fmtLabel(x.publishedAt || x.date));
+        const datasets = usingPosts
+          ? [
               {
                 label: "Interacciones",
-                data: cd.map(
-                  (x) => (x.likes || 0) + (x.comments || 0) + (x.saves || 0),
-                ),
+                data: source.map(x => (x.likes || 0) + (x.comments || 0) + (x.saves || 0) + (x.compartidos || 0)),
+                borderColor: "#C5A059",
+                backgroundColor: "rgba(197,160,89,0.12)",
+                borderWidth: 2.5,
+                tension: 0.35,
+                fill: true,
+                pointRadius: 4,
+                pointHoverRadius: 7,
+              },
+              {
+                label: "Alcance",
+                data: source.map(x => x.reach || x.vistas || 0),
+                borderColor: "#145333",
+                backgroundColor: "transparent",
+                borderWidth: 2,
+                tension: 0.35,
+                pointRadius: 3,
+                yAxisID: "y1",
+              },
+            ]
+          : [
+              {
+                label: "Interacciones",
+                data: source.map(x => (x.likes || 0) + (x.comments || 0) + (x.saves || 0)),
                 borderColor: "#C5A059",
                 backgroundColor: "rgba(197,160,89,0.12)",
                 borderWidth: 2.5,
@@ -3254,7 +3382,7 @@
               },
               {
                 label: "Vistas Historia",
-                data: cd.map((x) => x.storyViews || 0),
+                data: source.map(x => x.storyViews || 0),
                 borderColor: "#145333",
                 backgroundColor: "transparent",
                 borderWidth: 2,
@@ -3263,8 +3391,11 @@
                 yAxisID: "y1",
                 pointRadius: 2,
               },
-            ],
-          },
+            ];
+
+        mainChartInstance = new Chart(ctx, {
+          type: "line",
+          data: { labels, datasets },
           options: {
             responsive: true,
             maintainAspectRatio: false,
@@ -3272,38 +3403,21 @@
             plugins: {
               legend: {
                 position: "bottom",
-                labels: {
-                  usePointStyle: true,
-                  boxWidth: 10,
-                  padding: 16,
-                  font: { family: "Inter", size: 12 },
-                },
+                labels: { usePointStyle: true, boxWidth: 10, padding: 16, font: { family: "Poppins", size: 12 } },
               },
               tooltip: tooltipStyle(),
             },
             scales: {
               x: { grid: { display: false } },
               y: {
-                type: "linear",
-                display: true,
-                position: "left",
+                type: "linear", display: true, position: "left",
                 grid: { color: "#f1f5f9" },
-                title: {
-                  display: true,
-                  text: "Interacciones",
-                  font: { family: "Inter", size: 11 },
-                },
+                title: { display: true, text: "Interacciones", font: { family: "Poppins", size: 11 } },
               },
               y1: {
-                type: "linear",
-                display: true,
-                position: "right",
+                type: "linear", display: true, position: "right",
                 grid: { display: false },
-                title: {
-                  display: true,
-                  text: "Vistas Historia",
-                  font: { family: "Inter", size: 11 },
-                },
+                title: { display: true, text: usingPosts ? "Alcance" : "Vistas Historia", font: { family: "Poppins", size: 11 } },
               },
             },
           },
