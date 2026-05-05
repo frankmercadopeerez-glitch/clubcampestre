@@ -65,20 +65,26 @@
     <style>
       body {
         font-family: "Poppins", sans-serif;
-        background-color: #f1f5f9;
+        background: #0b1628;
+        background-image:
+          radial-gradient(ellipse at 18% 0%, rgba(20, 83, 51, 0.2) 0%, transparent 48%),
+          radial-gradient(ellipse at 82% 100%, rgba(15, 76, 98, 0.2) 0%, transparent 48%);
+        min-height: 100vh;
       }
       .glass-card {
         background: #ffffff;
-        border: 1px solid #e2e8f0;
-        border-radius: 0.875rem;
+        border: 1px solid rgba(226, 232, 240, 0.5);
+        border-radius: 1rem;
         box-shadow:
-          0 1px 3px rgba(0, 0, 0, 0.06),
-          0 1px 2px rgba(0, 0, 0, 0.04);
+          0 4px 24px rgba(0, 0, 0, 0.28),
+          0 1px 6px rgba(0, 0, 0, 0.16);
         isolation: isolate;
         position: relative;
       }
       .glass-card:hover {
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        box-shadow:
+          0 8px 32px rgba(0, 0, 0, 0.34),
+          0 2px 8px rgba(0, 0, 0, 0.18);
         transition: box-shadow 0.2s ease;
       }
 
@@ -91,18 +97,18 @@
         background: transparent;
       }
       ::-webkit-scrollbar-thumb {
-        background: #cbd5e1;
+        background: rgba(255, 255, 255, 0.15);
         border-radius: 10px;
       }
       ::-webkit-scrollbar-thumb:hover {
-        background: #94a3b8;
+        background: rgba(255, 255, 255, 0.3);
       }
 
       /* Spinner */
       .loader {
-        border: 2px solid #e2e8f0;
+        border: 2px solid rgba(255, 255, 255, 0.12);
         border-radius: 50%;
-        border-top: 2px solid #145333;
+        border-top: 2px solid #c5a059;
         width: 18px;
         height: 18px;
         animation: spin 0.8s linear infinite;
@@ -117,11 +123,11 @@
       /* ── Tabs ─────────────────────────────────────────────── */
       .tab-btn {
         position: relative;
-        color: #64748b;
+        color: rgba(255, 255, 255, 0.5);
         font-weight: 500;
         letter-spacing: 0.01em;
         border-radius: 0;
-        padding: 0.625rem 1rem;
+        padding: 0.7rem 1rem;
         transition:
           color 0.15s,
           background 0.15s;
@@ -129,7 +135,7 @@
       .tab-btn::after {
         content: "";
         position: absolute;
-        bottom: -2px;
+        bottom: -1px;
         left: 0;
         right: 0;
         height: 2px;
@@ -138,47 +144,61 @@
         transition: background 0.15s;
       }
       .tab-btn:hover {
-        color: #145333;
-        background: #f1f5f9;
+        color: rgba(255, 255, 255, 0.9);
+        background: rgba(255, 255, 255, 0.07);
         border-radius: 0.5rem 0.5rem 0 0;
       }
       .tab-btn.active {
-        color: #145333;
+        color: #c5a059;
         font-weight: 600;
         background: transparent;
       }
       .tab-btn.active::after {
-        background: #145333;
+        background: #c5a059;
       }
 
       /* ── KPI cards ─────────────────────────────────────────── */
       .kpi-card {
         background: #fff;
-        border-radius: 0.875rem;
+        border-radius: 1rem;
         padding: 1.25rem 1.5rem;
-        border: 1px solid #e2e8f0;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+        border: 1px solid rgba(226, 232, 240, 0.5);
+        border-top: 3px solid #145333;
+        box-shadow:
+          0 4px 20px rgba(0, 0, 0, 0.22),
+          0 1px 4px rgba(0, 0, 0, 0.12);
         display: flex;
         flex-direction: column;
         gap: 0.25rem;
         position: relative;
         overflow: hidden;
+        transition: box-shadow 0.2s ease, transform 0.2s ease;
+      }
+      .kpi-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 28px rgba(0, 0, 0, 0.28);
+      }
+      .kpi-card:nth-child(2) {
+        border-top-color: #0f4c62;
+      }
+      .kpi-card:nth-child(3) {
+        border-top-color: #c5a059;
       }
       .kpi-card .kpi-icon {
         position: absolute;
         right: 1rem;
         top: 50%;
         transform: translateY(-50%);
-        opacity: 0.06;
+        opacity: 0.07;
         width: 4rem;
         height: 4rem;
       }
       .kpi-card .kpi-label {
-        font-size: 0.7rem;
+        font-size: 0.68rem;
         font-weight: 600;
-        letter-spacing: 0.08em;
+        letter-spacing: 0.09em;
         text-transform: uppercase;
-        color: #94a3b8;
+        color: #64748b;
       }
       .kpi-card .kpi-value {
         font-size: 1.75rem;
@@ -189,6 +209,11 @@
       .kpi-card.kpi-accent {
         background: linear-gradient(135deg, #145333 0%, #0d3b24 100%);
         border-color: transparent;
+        border-top: none;
+      }
+      .kpi-card.kpi-accent:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 28px rgba(20, 83, 51, 0.5);
       }
       .kpi-card.kpi-accent .kpi-label {
         color: rgba(232, 241, 236, 0.7);
@@ -261,7 +286,7 @@
 
       /* Sticky header shadow */
       header.scrolled {
-        box-shadow: 0 4px 20px rgba(11, 47, 29, 0.2);
+        box-shadow: 0 4px 24px rgba(0, 0, 0, 0.5);
       }
 
       /* Input focus ring consistent */
@@ -271,6 +296,19 @@
         outline: none;
         border-color: #145333;
         box-shadow: 0 0 0 3px rgba(20, 83, 51, 0.12);
+      }
+
+      /* Section page headings (on dark background) */
+      .page-title {
+        color: #ffffff;
+        font-size: 1.35rem;
+        font-weight: 700;
+        line-height: 1.3;
+      }
+      .page-subtitle {
+        color: rgba(255, 255, 255, 0.5);
+        font-size: 0.875rem;
+        margin-top: 0.25rem;
       }
 
       /* Section divider label */
@@ -318,7 +356,7 @@
 
         /* Nav tabs — smaller padding & font */
         .tab-btn {
-          padding: 0.5rem 0.7rem;
+          padding: 0.5rem 0.65rem;
           font-size: 0.72rem;
           gap: 0.3rem;
         }
@@ -708,7 +746,8 @@
     <!-- Header -->
     <header
       id="main-header"
-      class="bg-club-dark text-white sticky top-0 z-50 transition-shadow"
+      class="text-white sticky top-0 z-50 transition-shadow"
+      style="background: linear-gradient(90deg, #0a1e35 0%, #0f4c62 60%, #0a1e35 100%);"
     >
       <div
         class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between"
@@ -747,7 +786,7 @@
 
     <!-- Navigation Tabs -->
     <nav
-      class="bg-white border-b-2 border-slate-100 sticky top-14 z-40 shadow-sm"
+      class="bg-[#0b1e38] border-b border-white/10 sticky top-14 z-40"
     >
       <div
         class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 flex overflow-x-auto scrollbar-none"
@@ -811,8 +850,8 @@
         <!-- Page title -->
         <div class="flex items-center justify-between">
           <div>
-            <h2 class="text-xl font-bold text-slate-800">Resumen general</h2>
-            <p class="text-sm text-slate-400 mt-0.5">
+            <h2 class="page-title">Resumen general</h2>
+            <p class="page-subtitle">
               Métricas de Instagram actualizadas en tiempo real
             </p>
           </div>
@@ -874,7 +913,7 @@
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div class="lg:col-span-1 flex flex-col gap-8">
+          <div class="lg:col-span-1 flex flex-col gap-8 lg:order-2">
             <!-- hidden stubs: kept for JS compatibility -->
             <button id="btn-open-post-modal" class="hidden"></button>
             <form id="stats-form" class="hidden">
@@ -1143,7 +1182,7 @@
             </div>
           </div>
 
-          <div class="lg:col-span-2 flex flex-col gap-6">
+          <div class="lg:col-span-2 flex flex-col gap-6 lg:order-1">
             <div class="glass-card p-4 md:p-6">
               <div class="flex items-center justify-between mb-4">
                 <div>
@@ -1166,6 +1205,11 @@
               </div>
               <div class="w-full h-72 relative">
                 <canvas id="mainChart"></canvas>
+                <div id="main-chart-empty" class="absolute inset-0 flex flex-col items-center justify-center text-slate-300 pointer-events-none">
+                  <i data-lucide="bar-chart-2" class="w-10 h-10 mb-2 opacity-30"></i>
+                  <p class="text-sm font-medium opacity-50">Sin datos registrados aún</p>
+                  <p class="text-xs opacity-35 mt-0.5">Registra publicaciones para ver la evolución</p>
+                </div>
               </div>
             </div>
             <div class="glass-card p-4 md:p-6">
@@ -1179,6 +1223,10 @@
               </div>
               <div class="w-full h-52 relative">
                 <canvas id="followersChart"></canvas>
+                <div id="followers-chart-empty" class="absolute inset-0 flex flex-col items-center justify-center text-slate-300 pointer-events-none">
+                  <i data-lucide="users" class="w-8 h-8 mb-1.5 opacity-30"></i>
+                  <p class="text-sm font-medium opacity-50">Sin datos de seguidores</p>
+                </div>
               </div>
             </div>
             <!-- Publicaciones recientes -->
@@ -1213,10 +1261,8 @@
       <section id="tab-insights" class="hidden flex-col gap-6">
         <!-- Page title -->
         <div>
-          <h2 class="text-xl font-bold text-slate-800">
-            Análisis de rendimiento
-          </h2>
-          <p class="text-sm text-slate-400 mt-0.5">
+          <h2 class="page-title">Análisis de rendimiento</h2>
+          <p class="page-subtitle">
             Patrones de publicación y rendimiento por tipo de contenido
           </p>
         </div>
@@ -1282,8 +1328,8 @@
       <section id="tab-posts" class="hidden flex-col gap-6">
         <div class="flex items-center justify-between">
           <div>
-            <h2 class="text-xl font-bold text-slate-800">Publicaciones</h2>
-            <p class="text-sm text-slate-400 mt-0.5">
+            <h2 class="page-title">Publicaciones</h2>
+            <p class="page-subtitle">
               Posts, Reels y contenido registrado
             </p>
           </div>
@@ -1396,8 +1442,8 @@
       <section id="tab-monthly" class="hidden flex-col gap-6">
         <!-- Page title -->
         <div>
-          <h2 class="text-xl font-bold text-slate-800">Estadísticas</h2>
-          <p class="text-sm text-slate-400 mt-0.5">
+          <h2 class="page-title">Estadísticas</h2>
+          <p class="page-subtitle">
             Resumen semanal y mensual de todas las métricas
           </p>
         </div>
@@ -3174,8 +3220,13 @@
 
       function renderMainChart() {
         const ctx = document.getElementById("mainChart").getContext("2d");
+        const emptyEl = document.getElementById("main-chart-empty");
         if (mainChartInstance) mainChartInstance.destroy();
-        if (globalData.length === 0) return;
+        if (globalData.length === 0) {
+          if (emptyEl) emptyEl.style.display = "flex";
+          return;
+        }
+        if (emptyEl) emptyEl.style.display = "none";
         const limit =
           chartFilter.value === "all"
             ? globalData.length
@@ -3261,12 +3312,14 @@
 
       function renderFollowersChart() {
         const ctx = document.getElementById("followersChart").getContext("2d");
+        const emptyEl = document.getElementById("followers-chart-empty");
         if (followersChartInst) followersChartInst.destroy();
         if (globalWeekly.length < 2) {
-          // Fallback: no weekly data yet
+          if (emptyEl) emptyEl.style.display = "flex";
           ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
           return;
         }
+        if (emptyEl) emptyEl.style.display = "none";
         const sorted = [...globalWeekly].sort(
           (a, b) => new Date(a.date) - new Date(b.date),
         );
