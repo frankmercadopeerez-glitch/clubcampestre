@@ -357,6 +357,25 @@
       /* Chart.js global defaults set via JS after init */
 
       /* ── Mobile-first adjustments ──────────────────────────── */
+        /* Metric toggle buttons — global (outside media query) */
+        .monthly-metric-btn {
+          font-size: 0.72rem;
+          font-weight: 600;
+          padding: 0.3rem 0.9rem;
+          border-radius: 9999px;
+          border: 1.5px solid #cbd5e1;
+          background: #f8fafc;
+          color: #475569;
+          cursor: pointer;
+          transition: all 0.18s;
+          white-space: nowrap;
+        }
+        .monthly-metric-btn:hover {
+          border-color: #94a3b8;
+          background: #f1f5f9;
+          color: #1e293b;
+        }
+
       @media (max-width: 640px) {
         /* Header */
         header .h-14 {
@@ -433,22 +452,6 @@
         }
 
         /* Metric toggle buttons */
-        .monthly-metric-btn {
-          font-size: 0.68rem;
-          font-weight: 600;
-          padding: 0.28rem 0.85rem;
-          border-radius: 9999px;
-          border: 1.5px solid #cbd5e1;
-          background: #f8fafc;
-          color: #475569;
-          cursor: pointer;
-          transition: all 0.18s;
-        }
-        .monthly-metric-btn:hover {
-          border-color: #94a3b8;
-          background: #f1f5f9;
-          color: #1e293b;
-        }
 
         /* Form inputs */
         input,
