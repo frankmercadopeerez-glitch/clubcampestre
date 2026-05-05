@@ -3376,6 +3376,13 @@
           sums[day] += (item.likes || 0) + (item.shares || 0);
           counts[day] += 1;
         });
+        globalPosts.forEach((item) => {
+          const raw = item.publishedAt || item.date;
+          if (!raw) return;
+          const day = new Date(raw.includes("T") ? raw : raw + "T00:00:00").getDay();
+          sums[day] += (item.likes || 0) + (item.comments || 0) + (item.compartidos || 0);
+          counts[day] += 1;
+        });
         const avgs = sums.map((s, i) =>
           counts[i] > 0 ? Math.round(s / counts[i]) : 0,
         );
