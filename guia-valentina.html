@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Guía de Uso — Panel Instagram Club Campestre</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * { box-sizing: border-box; margin: 0; padding: 0; }
+      body {
+        font-family: "Poppins", sans-serif;
+        background: #f8fafc;
+        color: #1e293b;
+        line-height: 1.7;
+      }
+      .page {
+        max-width: 860px;
+        margin: 0 auto;
+        padding: 2.5rem 1.5rem 4rem;
+      }
+      /* Header */
+      .header {
+        background: linear-gradient(135deg, #0F4C62 0%, #145333 100%);
+        color: white;
+        border-radius: 16px;
+        padding: 2rem 2.5rem;
+        margin-bottom: 2.5rem;
+      }
+      .header h1 { font-size: 1.6rem; font-weight: 700; margin-bottom: 0.3rem; }
+      .header p { opacity: 0.8; font-size: 0.9rem; }
+      .badge-club {
+        display: inline-block;
+        background: #C5A059;
+        color: #0F4C62;
+        font-weight: 600;
+        font-size: 0.75rem;
+        padding: 0.2rem 0.7rem;
+        border-radius: 999px;
+        margin-bottom: 1rem;
+      }
+      /* Sections */
+      .section {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+        margin-bottom: 1.8rem;
+        overflow: hidden;
+      }
+      .section-header {
+        background: #0F4C62;
+        color: white;
+        padding: 0.85rem 1.5rem;
+        font-weight: 600;
+        font-size: 0.95rem;
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+      }
+      .section-body { padding: 1.4rem 1.5rem; }
+      h2 { font-size: 1rem; font-weight: 600; color: #0F4C62; margin: 1.2rem 0 0.5rem; }
+      h2:first-child { margin-top: 0; }
+      p { font-size: 0.875rem; color: #475569; margin-bottom: 0.7rem; }
+      ul, ol { padding-left: 1.4rem; margin-bottom: 0.7rem; }
+      li { font-size: 0.875rem; color: #475569; margin-bottom: 0.3rem; }
+      /* Callouts */
+      .tip {
+        background: #f0fdf4;
+        border-left: 3px solid #145333;
+        padding: 0.7rem 1rem;
+        border-radius: 0 8px 8px 0;
+        margin: 0.8rem 0;
+        font-size: 0.85rem;
+        color: #166534;
+      }
+      .warn {
+        background: #fffbeb;
+        border-left: 3px solid #C5A059;
+        padding: 0.7rem 1rem;
+        border-radius: 0 8px 8px 0;
+        margin: 0.8rem 0;
+        font-size: 0.85rem;
+        color: #92400e;
+      }
+      /* Formula box */
+      .formula {
+        background: #f1f5f9;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        padding: 0.8rem 1.2rem;
+        font-family: monospace;
+        font-size: 0.9rem;
+        color: #0F4C62;
+        margin: 0.6rem 0 1rem;
+      }
+      /* KPI cards preview */
+      .kpi-row {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 0.8rem;
+        margin: 0.8rem 0;
+      }
+      .kpi-box {
+        border: 1px solid #e2e8f0;
+        border-radius: 10px;
+        padding: 0.9rem 1rem;
+      }
+      .kpi-box .label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05em; color: #94a3b8; font-weight: 600; }
+      .kpi-box .val { font-size: 1.4rem; font-weight: 700; color: #0F4C62; margin: 0.2rem 0; }
+      .kpi-box .desc { font-size: 0.75rem; color: #64748b; }
+      /* Table */
+      table { width: 100%; border-collapse: collapse; font-size: 0.82rem; margin: 0.8rem 0; }
+      th { background: #f8fafc; color: #475569; font-weight: 600; padding: 0.5rem 0.7rem; text-align: left; border-bottom: 1px solid #e2e8f0; }
+      td { padding: 0.5rem 0.7rem; border-bottom: 1px solid #f1f5f9; color: #334155; vertical-align: top; }
+      .tag {
+        display: inline-block;
+        font-size: 0.7rem;
+        font-weight: 600;
+        padding: 0.15rem 0.5rem;
+        border-radius: 999px;
+        margin-right: 0.3rem;
+      }
+      .tag-reel { background: #dbeafe; color: #1d4ed8; }
+      .tag-foto { background: #dcfce7; color: #15803d; }
+      .tag-carrusel { background: #fef9c3; color: #854d0e; }
+      .tag-story { background: #f3e8ff; color: #7e22ce; }
+      /* Steps */
+      .steps { counter-reset: step; }
+      .step {
+        display: flex;
+        gap: 0.9rem;
+        margin-bottom: 0.8rem;
+        align-items: flex-start;
+      }
+      .step-num {
+        min-width: 1.6rem;
+        height: 1.6rem;
+        background: #C5A059;
+        color: white;
+        font-size: 0.75rem;
+        font-weight: 700;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        margin-top: 0.1rem;
+      }
+      .step-text { font-size: 0.875rem; color: #475569; }
+      /* Footer */
+      .footer {
+        text-align: center;
+        font-size: 0.78rem;
+        color: #94a3b8;
+        margin-top: 2.5rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid #e2e8f0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <!-- ── ENCABEZADO ── -->
+      <div class="header">
+        <div class="badge-club">Club Campestre de Cartagena</div>
+        <h1>📊 Guía del Panel de Instagram</h1>
+        <p>Para Valentina González — Gestión y lectura de métricas Instagram 2026</p>
+      </div>
+
+      <!-- ── 1. QUÉ ES EL PANEL ── -->
+      <div class="section">
+        <div class="section-header">📌 1. ¿Qué es este panel?</div>
+        <div class="section-body">
+          <p>
+            Es un <strong>dashboard privado</strong> donde se registran y visualizan las métricas de Instagram del Club Campestre de Cartagena. No se conecta automáticamente a Instagram — los datos se ingresan manualmente cada vez que publicas.
+          </p>
+          <p>Los datos se guardan en la nube (Firebase/Firestore) y se sincronizan en tiempo real. Puedes acceder desde cualquier dispositivo con internet.</p>
+          <div class="tip">✅ Cualquier publicación que registres aparece al instante en el panel, sin necesidad de refrescar la página.</div>
+        </div>
+      </div>
+
+      <!-- ── 2. NAVEGACIÓN ── -->
+      <div class="section">
+        <div class="section-header">🗂 2. Secciones del panel (pestañas)</div>
+        <div class="section-body">
+          <table>
+            <thead><tr><th>Pestaña</th><th>Qué contiene</th></tr></thead>
+            <tbody>
+              <tr><td><strong>🏠 Inicio</strong></td><td>Resumen general: KPIs principales, gráfica de interacciones, crecimiento de seguidores, últimas publicaciones.</td></tr>
+              <tr><td><strong>📅 Mensual</strong></td><td>Gráfica por mes con métricas seleccionables (likes, comentarios, compartidos, interacciones). Tabla detallada del mes.</td></tr>
+              <tr><td><strong>📈 Análisis</strong></td><td>Mejores días para publicar, rendimiento por tipo de contenido (Reel, Foto, etc.), engagement semanal.</td></tr>
+              <tr><td><strong>🖼 Publicaciones</strong></td><td>Todas las publicaciones registradas ordenadas por fecha más reciente. Tabla detallada con todas las métricas. Historial de stories.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ── 3. REGISTRAR PUBLICACIÓN ── -->
+      <div class="section">
+        <div class="section-header">✍️ 3. Cómo registrar una publicación</div>
+        <div class="section-body">
+          <p>Puedes registrar desde el <strong>panel lateral derecho</strong> (en la pantalla de Inicio) o desde el botón <strong>"Nueva publicación"</strong> en la pestaña Publicaciones (abre un formulario más detallado).</p>
+
+          <h2>Campos del formulario</h2>
+          <table>
+            <thead><tr><th>Campo</th><th>Qué poner</th><th>¿Obligatorio?</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Fecha</strong></td><td>El día en que se publicó el contenido en Instagram</td><td>Sí</td></tr>
+              <tr><td><strong>Hora</strong></td><td>La hora exacta de la publicación</td><td>No</td></tr>
+              <tr><td><strong>Tipo de contenido</strong></td><td>Reel / Foto / Carrusel / Story</td><td>Sí</td></tr>
+              <tr><td><strong>Descripción / Título</strong></td><td>Nombre corto para identificar la publicación. Ej: "Torneo de golf mayo"</td><td>No</td></tr>
+              <tr><td><strong>▶️ Reproducciones</strong></td><td>Solo aparece si seleccionas <span class="tag tag-reel">Reel</span> — número de veces que se reprodujo</td><td>No</td></tr>
+              <tr><td><strong>👁️ Vistas</strong></td><td>Solo aparece para Foto, Carrusel, Story — número de visualizaciones</td><td>No</td></tr>
+              <tr><td><strong>❤️ Likes</strong></td><td>Total de "me gusta" recibidos</td><td>No</td></tr>
+              <tr><td><strong>💬 Comentarios</strong></td><td>Número de comentarios</td><td>No</td></tr>
+              <tr><td><strong>↗️ Compartidos</strong></td><td>Veces que se compartió</td><td>No</td></tr>
+              <tr><td><strong>👥 Seguidores actuales</strong></td><td>Si cambió desde la última vez, ingrésalo. Registra automáticamente el crecimiento</td><td>No</td></tr>
+            </tbody>
+          </table>
+
+          <div class="warn">⚠️ Los datos de likes, compartidos, etc. se toman directamente de Instagram. Entra a cada publicación en la app de Instagram y copia los números.</div>
+
+          <h2>Pasos para registrar</h2>
+          <div class="steps">
+            <div class="step"><div class="step-num">1</div><div class="step-text">Abre Instagram y entra a tu publicación</div></div>
+            <div class="step"><div class="step-num">2</div><div class="step-text">Copia los datos: likes, comentarios, compartidos, y (si aplica) vistas o reproducciones</div></div>
+            <div class="step"><div class="step-num">3</div><div class="step-text">En el panel, selecciona el tipo de contenido y llena la fecha y la hora</div></div>
+            <div class="step"><div class="step-num">4</div><div class="step-text">Ingresa los números en los campos correspondientes</div></div>
+            <div class="step"><div class="step-num">5</div><div class="step-text">Presiona "Guardar Publicación" — el panel se actualiza automáticamente</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── 4. KPIs ── -->
+      <div class="section">
+        <div class="section-header">📊 4. Los KPIs principales (tarjetas de resumen)</div>
+        <div class="section-body">
+          <p>En la parte superior del panel (pestaña Inicio) hay 3 tarjetas con los indicadores más importantes:</p>
+
+          <div class="kpi-row">
+            <div class="kpi-box">
+              <div class="label">👥 Seguidores</div>
+              <div class="val">3,482</div>
+              <div class="desc">Seguidores totales registrados en el último registro semanal. El % compara con el registro anterior.</div>
+            </div>
+            <div class="kpi-box">
+              <div class="label">❤️ Interacciones 7 días</div>
+              <div class="val">47</div>
+              <div class="desc">Suma de todas las interacciones (likes + comentarios + compartidos) de publicaciones de los últimos 7 días.</div>
+            </div>
+            <div class="kpi-box">
+              <div class="label">⚡ Engagement Rate</div>
+              <div class="val">7.8 /pub.</div>
+              <div class="desc">Promedio de interacciones por publicación en los últimos 7 días.</div>
+            </div>
+          </div>
+
+          <div class="tip">💡 Si aparece "Sin datos" en Interacciones o Engagement, significa que no hay publicaciones registradas en los últimos 7 días. Registra las publicaciones recientes para que se actualicen.</div>
+        </div>
+      </div>
+
+      <!-- ── 5. ENGAGEMENT ── -->
+      <div class="section">
+        <div class="section-header">⚡ 5. Cómo se calcula el Engagement</div>
+        <div class="section-body">
+          <p>El panel calcula dos tipos de engagement:</p>
+
+          <h2>A. Engagement Rate del KPI (promedio diario)</h2>
+          <p>Es el promedio de interacciones por publicación en los últimos 7 días. Mide qué tan activa fue la audiencia en la última semana.</p>
+          <div class="formula">
+            Engagement = (Total interacciones últimos 7 días) ÷ (Número de publicaciones en 7 días)
+          </div>
+          <p><strong>Ejemplo:</strong> Si tuviste 3 publicaciones con 10, 15 y 8 interacciones → (10+15+8) ÷ 3 = <strong>11.0 /pub.</strong></p>
+          <p>Las interacciones incluyen: likes + comentarios + compartidos de posts, y likes + compartidos de stories (instagram_stats).</p>
+
+          <h2>B. Engagement % por publicación (en cada tarjeta)</h2>
+          <p>Mide qué porcentaje de las personas que vieron la publicación interactuaron con ella. Solo aplica a publicaciones que tengan Vistas o Reproducciones registradas.</p>
+          <div class="formula">
+            Eng% = (Likes + Comentarios + Compartidos) ÷ Vistas × 100
+          </div>
+          <p><strong>Ejemplo:</strong> 140 vistas, 5 likes, 1 comentario, 1 compartido → (5+1+1) ÷ 140 × 100 = <strong>5.0%</strong></p>
+
+          <div class="warn">⚠️ Si no ingresas vistas/reproducciones al registrar la publicación, el Eng% aparece como "—" en la tabla. Siempre que puedas, registra las vistas para tener este dato.</div>
+
+          <h2>C. ¿Qué cuenta como "interacción"?</h2>
+          <table>
+            <thead><tr><th>Tipo</th><th>Cuenta como interacción</th></tr></thead>
+            <tbody>
+              <tr><td><span class="tag tag-reel">Reel</span> / <span class="tag tag-foto">Foto</span> / <span class="tag tag-carrusel">Carrusel</span></td><td>❤️ Likes + 💬 Comentarios + ↗️ Compartidos</td></tr>
+              <tr><td><span class="tag tag-story">Story</span></td><td>❤️ Likes + ↗️ Compartidos</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ── 6. LECTURA DE DATOS ── -->
+      <div class="section">
+        <div class="section-header">🔍 6. Cómo leer los datos en cada sección</div>
+        <div class="section-body">
+
+          <h2>Tarjetas de publicaciones (pestaña Publicaciones)</h2>
+          <p>Cada tarjeta muestra:</p>
+          <ul>
+            <li><strong>Badge de tipo</strong>: Reel / Foto / Carrusel / Story</li>
+            <li><strong>Título</strong>: El nombre que le pusiste al registrarla</li>
+            <li><strong>Fecha y hora</strong> de publicación</li>
+            <li><strong>👁️ Vistas</strong>: Para Foto/Carrusel/Story. En Reels este valor es 0 porque usan Reproducciones</li>
+            <li><strong>Interacc.</strong>: Total de interacciones (likes + comentarios + compartidos)</li>
+            <li><strong>❤️ / 💬 / ↗️</strong>: Desglose individual de cada métrica</li>
+            <li><strong>Eng: X%</strong>: Engagement % (solo si hay vistas registradas)</li>
+          </ul>
+          <p>Las tarjetas se ordenan de la <strong>más reciente a la más antigua</strong>.</p>
+
+          <h2>Tabla detallada (pestaña Publicaciones)</h2>
+          <p>Debajo de las tarjetas hay una tabla con todas las publicaciones. Columnas:</p>
+          <table>
+            <thead><tr><th>Columna</th><th>Qué significa</th></tr></thead>
+            <tbody>
+              <tr><td>Formato</td><td>Tipo de contenido (Reel, Foto, etc.)</td></tr>
+              <tr><td>Descripción</td><td>El título que le asignaste</td></tr>
+              <tr><td>Fecha / Hora</td><td>Cuándo se publicó</td></tr>
+              <tr><td>❤️ Likes</td><td>Número de likes recibidos</td></tr>
+              <tr><td>💬 Coment.</td><td>Número de comentarios</td></tr>
+              <tr><td>↗️ Compart.</td><td>Veces compartida</td></tr>
+              <tr><td>👁️ Vistas</td><td>Vistas (para Foto, Carrusel, Story)</td></tr>
+              <tr><td>▶️ Reprod.</td><td>Reproducciones (solo para Reels)</td></tr>
+              <tr><td>Total Int.</td><td>Suma de likes + comentarios + compartidos</td></tr>
+              <tr><td>Eng.%</td><td>Engagement % calculado sobre vistas</td></tr>
+              <tr><td>Acción</td><td>✏️ Editar o 🗑️ Eliminar la publicación</td></tr>
+            </tbody>
+          </table>
+
+          <h2>Gráfica mensual</h2>
+          <p>Muestra la evolución de métricas durante el mes seleccionado. Puedes elegir qué métrica visualizar con los botones de arriba: <strong>Likes / Comentarios / Compartidos / Interacciones</strong>. Debajo de la gráfica hay una tabla con los valores exactos por día.</p>
+
+          <h2>Análisis de rendimiento</h2>
+          <ul>
+            <li><strong>Mejores días</strong>: Barras que muestran qué días de la semana tienen más interacciones en promedio. Úsalo para decidir cuándo publicar.</li>
+            <li><strong>Rendimiento por tipo</strong>: Cuántas interacciones promedio genera cada tipo de contenido (Reel vs Foto vs Story, etc.)</li>
+            <li><strong>Engagement semanal comparativo</strong>: Evolución de interacciones semana a semana en las últimas 12 semanas.</li>
+          </ul>
+
+          <h2>Resumen rápido (Inicio)</h2>
+          <ul>
+            <li><strong>Publicaciones</strong>: Total de publicaciones registradas en el panel</li>
+            <li><strong>Total Likes</strong>: Suma de todos los likes de todas las publicaciones</li>
+            <li><strong>Mejor publicación</strong>: La que más interacciones totales acumuló</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- ── 7. HISTORIAL DE STORIES ── -->
+      <div class="section">
+        <div class="section-header">📖 7. Historial de Stories (sección inferior)</div>
+        <div class="section-body">
+          <p>En la parte de abajo de la pestaña <strong>Publicaciones</strong> hay una tabla de historial de stories. Aquí se registran stories con solo likes y compartidos (sin comentarios).</p>
+          <p>Tiene tres vistas:</p>
+          <ul>
+            <li><strong>Diario</strong>: Un registro por cada story</li>
+            <li><strong>Semanal</strong>: Suma de interacciones agrupada por semana</li>
+            <li><strong>Mensual</strong>: Suma de interacciones agrupada por mes</li>
+          </ul>
+          <div class="tip">💡 Si registras una story como publicación normal (tipo Story), también aparecerá en las tarjetas y en la tabla detallada. Usa el historial de stories para el seguimiento más granular día a día.</div>
+        </div>
+      </div>
+
+      <!-- ── 8. EDITAR / ELIMINAR ── -->
+      <div class="section">
+        <div class="section-header">✏️ 8. Editar o eliminar publicaciones</div>
+        <div class="section-body">
+          <p>Cada publicación tiene botones de acción:</p>
+          <ul>
+            <li><strong>✏️ Editar</strong>: Abre el formulario con los datos actuales para que los corrijas y guardes de nuevo</li>
+            <li><strong>🗑️ Eliminar</strong>: Borra la publicación permanentemente (pide confirmación)</li>
+          </ul>
+          <div class="warn">⚠️ La eliminación es permanente. No se puede deshacer. Verifica bien antes de eliminar.</div>
+        </div>
+      </div>
+
+      <!-- ── 9. SEGUIDORES ── -->
+      <div class="section">
+        <div class="section-header">👥 9. Registro de seguidores</div>
+        <div class="section-body">
+          <p>El número de seguidores <strong>no se actualiza automáticamente</strong>. Se registra de dos maneras:</p>
+          <ol>
+            <li>Al guardar una publicación, si llenas el campo <strong>"Seguidores actuales"</strong>, el panel registra automáticamente ese número con la fecha.</li>
+            <li>Esos registros se ven en la gráfica de <strong>Crecimiento de seguidores</strong> en la pantalla de Inicio.</li>
+          </ol>
+          <div class="tip">✅ Recomendación: actualiza los seguidores al menos una vez por semana, de preferencia siempre el mismo día (ej: todos los lunes).</div>
+        </div>
+      </div>
+
+      <!-- ── 10. FRECUENCIA ── -->
+      <div class="section">
+        <div class="section-header">📆 10. Rutina recomendada</div>
+        <div class="section-body">
+          <table>
+            <thead><tr><th>Frecuencia</th><th>Qué hacer</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Cada vez que publiques</strong></td><td>Registrar la publicación con tipo, título, likes, comentarios, compartidos y vistas/reproducciones</td></tr>
+              <tr><td><strong>1 vez por semana</strong></td><td>Actualizar el número de seguidores en la próxima publicación que registres</td></tr>
+              <tr><td><strong>1 vez por mes</strong></td><td>Revisar la pestaña Mensual y Análisis para evaluar el rendimiento general y decidir qué tipo de contenido priorizar</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ── FOOTER ── -->
+      <div class="footer">
+        Panel Instagram — Club Campestre de Cartagena · Guía versión mayo 2026
+      </div>
+    </div>
+  </body>
+</html>
