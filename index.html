@@ -3786,7 +3786,9 @@
             new Date(a.publishedAt || a.date),
         );
         const TABLE_PAGE_SIZE = 12;
-        let visibleTableCount = parseInt(tableWrap.dataset.visibleTableCount || "0") || TABLE_PAGE_SIZE;
+        let visibleTableCount =
+          parseInt(tableWrap.dataset.visibleTableCount || "0") ||
+          TABLE_PAGE_SIZE;
         if (!tableWrap.dataset.tableInitialized) {
           visibleTableCount = TABLE_PAGE_SIZE;
           tableWrap.dataset.tableInitialized = "1";
@@ -3864,10 +3866,12 @@
           tMoreBtn.className = "flex justify-center mt-3 mb-1";
           tMoreBtn.innerHTML = `<button id="btn-load-more-table" class="bg-white border border-slate-200 hover:border-club-green text-slate-600 hover:text-club-green font-semibold px-6 py-2.5 rounded-xl text-sm transition-colors shadow-sm">Ver más (${tableRemaining} restantes)</button>`;
           tableWrap.appendChild(tMoreBtn);
-          document.getElementById("btn-load-more-table").addEventListener("click", () => {
-            tableWrap.dataset.visibleTableCount = sortedByDate.length;
-            renderPostsGrid();
-          });
+          document
+            .getElementById("btn-load-more-table")
+            .addEventListener("click", () => {
+              tableWrap.dataset.visibleTableCount = sortedByDate.length;
+              renderPostsGrid();
+            });
         }
 
         // ---- Weekly KPI summary ----
