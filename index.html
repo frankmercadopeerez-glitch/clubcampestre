@@ -2011,13 +2011,12 @@
               doc(db, "instagram_posts", editingPostId),
               postRecord,
             );
-            // On edit, write followers to TODAY's date so it's always the most recent entry
+            // On edit, write followers keyed to the post's own date (preserves historical chart)
             if (postFollowers > 0) {
-              const todayKey = new Date().toISOString().split("T")[0];
               await setDoc(
-                doc(db, "instagram_weekly", todayKey),
+                doc(db, "instagram_weekly", postDate),
                 {
-                  date: todayKey,
+                  date: postDate,
                   followers: postFollowers,
                   visits: 0,
                   updatedAt: new Date().toISOString(),
@@ -2918,9 +2917,8 @@
       }
 
       function calculateKPIs() {
-        // Seguidores: from weekly records (most recent), fallback to most recent post with followers
-        const latestWeekly = globalWeekly[0]; // sorted desc by date
-        const prevWeekly = globalWeekly[1];
+        // Seguidores: driven entirely by posts that carry a followers value.
+        // Most recent entry = current; second most recent = previous (for trend).
         const postWithFollowers = [...globalPosts]
           .filter((p) => p.followers > 0)
           .sort(
@@ -2928,10 +2926,8 @@
               new Date(b.publishedAt || b.date) -
               new Date(a.publishedAt || a.date),
           );
-        const latestFollowersFromPost = postWithFollowers[0]?.followers || 0;
-        const latestFollowers =
-          latestWeekly?.followers || latestFollowersFromPost || 0;
-        const prevFollowers = prevWeekly?.followers || latestFollowers;
+        const latestFollowers = postWithFollowers[0]?.followers || 0;
+        const prevFollowers = postWithFollowers[1]?.followers || latestFollowers;
         document.getElementById("kpi-followers").textContent =
           latestFollowers > 0 ? latestFollowers.toLocaleString() : "Sin datos";
         if (latestFollowers > 0) {
@@ -2939,11 +2935,11 @@
             "kpi-followers-trend",
             latestFollowers,
             prevFollowers,
-            "vs sem. ant.",
+            "vs registro ant.",
           );
         } else {
           document.getElementById("kpi-followers-trend").innerHTML =
-            `<span class="text-slate-400">Esperando datos semanales...</span>`;
+            `<span class="text-slate-400">Agrega seguidores en un post...</span>`;
         }
         // Interactions: last 7 days from stories (instagram_stats) + posts (instagram_posts)
         const hasAnyData = globalData.length > 0 || globalPosts.length > 0;
