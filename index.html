@@ -2009,6 +2009,19 @@
               doc(db, "instagram_posts", editingPostId),
               postRecord,
             );
+            // Also update weekly followers record when editing
+            if (postFollowers > 0) {
+              await setDoc(
+                doc(db, "instagram_weekly", postDate),
+                {
+                  date: postDate,
+                  followers: postFollowers,
+                  visits: 0,
+                  updatedAt: new Date().toISOString(),
+                },
+                { merge: true },
+              );
+            }
             showToast("Publicación actualizada");
           } else {
             await addDoc(collection(db, "instagram_posts"), postRecord);
@@ -2902,10 +2915,10 @@
       }
 
       function calculateKPIs() {
-        // Seguidores: from weekly records OR most recent post with followers field
-        const latestWeekly = globalWeekly[0];
+        // Seguidores: pick the most recent source between globalWeekly and globalPosts
+        const latestWeekly = globalWeekly[0]; // sorted desc by date
         const prevWeekly = globalWeekly[1];
-        // Fallback: scan globalPosts sorted by date for latest followers value
+        // Most recent post that has a followers value
         const postWithFollowers = [...globalPosts]
           .filter((p) => p.followers > 0)
           .sort(
@@ -2913,10 +2926,31 @@
               new Date(b.publishedAt || b.date) -
               new Date(a.publishedAt || a.date),
           );
-        const latestFollowersFromPost = postWithFollowers[0]?.followers || 0;
-        const latestFollowers =
-          latestWeekly?.followers || latestFollowersFromPost || 0;
-        const prevFollowers = prevWeekly?.followers || latestFollowers;
+        const latestPost = postWithFollowers[0];
+        // Compare dates and use the most recent source
+        let latestFollowers = 0;
+        let prevFollowers = 0;
+        const weeklyDate = latestWeekly?.date
+          ? new Date(latestWeekly.date)
+          : null;
+        const postDate2 = latestPost
+          ? new Date((latestPost.publishedAt || latestPost.date || "").split("T")[0])
+          : null;
+        if (weeklyDate && postDate2) {
+          if (postDate2 >= weeklyDate) {
+            latestFollowers = latestPost.followers;
+            prevFollowers = latestWeekly?.followers || latestFollowers;
+          } else {
+            latestFollowers = latestWeekly.followers || 0;
+            prevFollowers = prevWeekly?.followers || latestFollowers;
+          }
+        } else if (weeklyDate) {
+          latestFollowers = latestWeekly.followers || 0;
+          prevFollowers = prevWeekly?.followers || latestFollowers;
+        } else if (postDate2) {
+          latestFollowers = latestPost.followers;
+          prevFollowers = latestFollowers;
+        }
         document.getElementById("kpi-followers").textContent =
           latestFollowers > 0 ? latestFollowers.toLocaleString() : "Sin datos";
         if (latestFollowers > 0) {
@@ -3697,7 +3731,8 @@
         );
 
         const PAGE_SIZE = 12;
-        let visibleCount = parseInt(grid.dataset.visibleCount || "0") || PAGE_SIZE;
+        let visibleCount =
+          parseInt(grid.dataset.visibleCount || "0") || PAGE_SIZE;
         // Reset to PAGE_SIZE on fresh render (data reload), keep expanded count if user clicked "Ver más"
         if (!grid.dataset.initialized) {
           visibleCount = PAGE_SIZE;
@@ -3754,10 +3789,12 @@
           moreBtn.className = "col-span-full flex justify-center mt-2";
           moreBtn.innerHTML = `<button id="btn-load-more-posts" class="bg-white border border-slate-200 hover:border-club-green text-slate-600 hover:text-club-green font-semibold px-6 py-2.5 rounded-xl text-sm transition-colors shadow-sm">Ver ${Math.min(remaining, PAGE_SIZE)} más de ${remaining} restantes</button>`;
           grid.appendChild(moreBtn);
-          document.getElementById("btn-load-more-posts").addEventListener("click", () => {
-            grid.dataset.visibleCount = visibleCount + PAGE_SIZE;
-            renderPostsGrid();
-          });
+          document
+            .getElementById("btn-load-more-posts")
+            .addEventListener("click", () => {
+              grid.dataset.visibleCount = visibleCount + PAGE_SIZE;
+              renderPostsGrid();
+            });
         }
 
         // ---- Weekly table ----
