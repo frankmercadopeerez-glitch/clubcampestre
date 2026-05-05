@@ -368,17 +368,17 @@
               <tr>
                 <td><strong>▶️ Reproducciones</strong></td>
                 <td>
-                  Solo aparece si seleccionas
-                  <span class="tag tag-reel">Reel</span> — número de veces que
-                  se reprodujo
+                  Solo para <span class="tag tag-reel">Reel</span> — número de
+                  veces que se reprodujo. Es el denominador del Eng%.
                 </td>
                 <td>No</td>
               </tr>
               <tr>
                 <td><strong>👁️ Vistas</strong></td>
                 <td>
-                  Solo aparece para Foto, Carrusel, Story — número de
-                  visualizaciones
+                  Solo para <span class="tag tag-story">Story</span> —
+                  visualizaciones. Para Fotos y Carruseles no aparece este
+                  campo.
                 </td>
                 <td>No</td>
               </tr>
@@ -524,22 +524,52 @@
 
           <h2>B. Engagement % por publicación (en cada tarjeta)</h2>
           <p>
-            Mide qué porcentaje de las personas que vieron la publicación
-            interactuaron con ella. Solo aplica a publicaciones que tengan
-            Vistas o Reproducciones registradas.
-          </p>
-          <div class="formula">
-            Eng% = (Likes + Comentarios + Compartidos) ÷ Vistas × 100
-          </div>
-          <p>
-            <strong>Ejemplo:</strong> 140 vistas, 5 likes, 1 comentario, 1
-            compartido → (5+1+1) ÷ 140 × 100 = <strong>5.0%</strong>
+            Mide qué porcentaje de las personas que vieron o reprodujeron la
+            publicación interactuaron con ella. <strong>Solo aplica a Reels y
+            Stories</strong> — los únicos tipos donde Instagram reporta una
+            métrica de visibilidad confiable.
           </p>
 
+          <table>
+            <thead>
+              <tr>
+                <th>Tipo de contenido</th>
+                <th>Fórmula Eng%</th>
+                <th>Denominador</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="tag tag-reel">Reel</span></td>
+                <td>(Likes + Coment. + Compartidos) ÷ Reproducciones × 100</td>
+                <td>Reproducciones</td>
+              </tr>
+              <tr>
+                <td><span class="tag tag-story">Story</span></td>
+                <td>(Likes + Compartidos) ÷ Vistas × 100</td>
+                <td>Vistas</td>
+              </tr>
+              <tr>
+                <td><span class="tag tag-foto">Foto</span> / <span class="tag tag-carrusel">Carrusel</span></td>
+                <td colspan="2" style="color:#94a3b8;">No aplica — aparece como <strong>—</strong></td>
+              </tr>
+            </tbody>
+          </table>
+
+          <p>
+            <strong>Ejemplo Reel:</strong> 6 500 reproducciones, 68 likes, 0
+            comentarios, 22 compartidos → (68+0+22) ÷ 6 500 × 100 =
+            <strong>1.4%</strong>
+          </p>
+
+          <div class="tip">
+            ✅ Para Fotos y Carruseles no ingresamos vistas. El Eng% aparece
+            como "—" y eso es correcto — no falta ningún dato.
+          </div>
+
           <div class="warn">
-            ⚠️ Si no ingresas vistas/reproducciones al registrar la publicación,
-            el Eng% aparece como "—" en la tabla. Siempre que puedas, registra
-            las vistas para tener este dato.
+            ⚠️ Para que el Eng% aparezca en un Reel, debes ingresar el número
+            de reproducciones al registrar la publicación.
           </div>
 
           <h2>C. ¿Qué cuenta como "interacción"?</h2>
@@ -585,8 +615,9 @@
             </li>
             <li><strong>Fecha y hora</strong> de publicación</li>
             <li>
-              <strong>👁️ Vistas</strong>: Para Foto/Carrusel/Story. En Reels
-              este valor es 0 porque usan Reproducciones
+              <strong>▶️ Reprod.</strong> (Reels) o <strong>👁️ Vistas</strong>
+              (Stories): métrica de visibilidad según el tipo. Para Fotos y
+              Carruseles esta fila no aparece.
             </li>
             <li>
               <strong>Interacc.</strong>: Total de interacciones (likes +
@@ -596,8 +627,8 @@
               <strong>❤️ / 💬 / ↗️</strong>: Desglose individual de cada métrica
             </li>
             <li>
-              <strong>Eng: X%</strong>: Engagement % (solo si hay vistas
-              registradas)
+              <strong>Eng: X%</strong>: Solo en Reels (÷ reproducciones) y
+              Stories (÷ vistas). En Fotos y Carruseles aparece "—".
             </li>
           </ul>
           <p>
@@ -643,12 +674,11 @@
                 <td>Veces compartida</td>
               </tr>
               <tr>
-                <td>👁️ Vistas</td>
-                <td>Vistas (para Foto, Carrusel, Story)</td>
-              </tr>
-              <tr>
-                <td>▶️ Reprod.</td>
-                <td>Reproducciones (solo para Reels)</td>
+                <td>👁 Visibilidad</td>
+                <td>
+                  Reproducciones (Reels), Vistas (Stories),
+                  o "—" para Fotos y Carruseles
+                </td>
               </tr>
               <tr>
                 <td>Total Int.</td>
@@ -656,7 +686,10 @@
               </tr>
               <tr>
                 <td>Eng.%</td>
-                <td>Engagement % calculado sobre vistas</td>
+                <td>
+                  Solo calculado para Reels (÷ reproducciones) y Stories (÷
+                  vistas). Para Fotos y Carruseles aparece "—"
+                </td>
               </tr>
               <tr>
                 <td>Acción</td>
@@ -768,24 +801,31 @@
         <div class="section-body">
           <p>
             El número de seguidores
-            <strong>no se actualiza automáticamente</strong>. Se registra de dos
-            maneras:
+            <strong>no se actualiza automáticamente desde Instagram</strong>.
+            Se registra así:
           </p>
           <ol>
             <li>
-              Al guardar una publicación, si llenas el campo
-              <strong>"Seguidores actuales"</strong>, el panel registra
-              automáticamente ese número con la fecha.
+              Al guardar o editar <strong>cualquier publicación</strong>, si
+              llenas el campo <strong>"Seguidores actuales"</strong>, el KPI
+              del panel se actualiza de inmediato.
             </li>
             <li>
-              Esos registros se ven en la gráfica de
-              <strong>Crecimiento de seguidores</strong> en la pantalla de
-              Inicio.
+              El panel muestra el valor del
+              <strong>post más reciente que tenga seguidores ingresados</strong>
+              como número actual. El segundo más reciente sirve de comparación
+              para calcular si subió o bajó.
+            </li>
+            <li>
+              Ese número también queda guardado en el historial de
+              <strong>Crecimiento de seguidores</strong> con la fecha de la
+              publicación, para la gráfica.
             </li>
           </ol>
           <div class="tip">
-            ✅ Recomendación: actualiza los seguidores al menos una vez por
-            semana, de preferencia siempre el mismo día (ej: todos los lunes).
+            ✅ Ingresa los seguidores cada vez que publiques. Si editas una
+            publicación antigua y cambias el número de seguidores, el historial
+            de esa fecha también se actualiza.
           </div>
         </div>
       </div>
