@@ -2695,8 +2695,8 @@
             (usingPostsAsSource ? " publicaciones" : " registros");
           document.getElementById("monthly-table-head").innerHTML =
             usingPostsAsSource
-              ? `<th class="p-3 font-medium">Fecha</th><th class="p-3 font-medium">Tipo</th><th class="p-3 font-medium">Título</th><th class="p-3 font-medium text-right">❤️</th><th class="p-3 font-medium text-right hidden sm:table-cell">💬</th><th class="p-3 font-medium text-right hidden sm:table-cell">🔖</th><th class="p-3 font-medium text-right">Total</th>`
-              : `<th class="p-3 font-medium">Fecha</th><th class="p-3 font-medium">Día</th><th class="p-3 font-medium text-right">❤️</th><th class="p-3 font-medium text-right hidden sm:table-cell">💬</th><th class="p-3 font-medium text-right hidden sm:table-cell">🔖</th><th class="p-3 font-medium text-right hidden sm:table-cell">↗️</th><th class="p-3 font-medium text-right">Total</th>`;
+              ? `<th class="p-3 font-medium">Fecha</th><th class="p-3 font-medium">Tipo</th><th class="p-3 font-medium">Título</th><th class="p-3 font-medium text-right">❤️</th><th class="p-3 font-medium text-right hidden sm:table-cell">💬</th><th class="p-3 font-medium text-right hidden sm:table-cell">↗️</th><th class="p-3 font-medium text-right">Total</th>`
+              : `<th class="p-3 font-medium">Fecha</th><th class="p-3 font-medium">Día</th><th class="p-3 font-medium text-right">❤️</th><th class="p-3 font-medium text-right hidden sm:table-cell">💬</th><th class="p-3 font-medium text-right hidden sm:table-cell">↗️</th><th class="p-3 font-medium text-right">Total</th>`;
           const BADGE_CLS = {
             Reel: "badge-reel",
             Foto: "badge-foto",
@@ -2723,6 +2723,7 @@
                     <td class="p-3 text-slate-600 text-xs max-w-[160px] truncate">${r.title || "-"}</td>
                     <td class="p-3 text-right text-pink-600">${(r.likes || 0).toLocaleString()}</td>
                     <td class="p-3 text-right text-blue-600 hidden sm:table-cell">${(r.comments || 0).toLocaleString()}</td>
+                    <td class="p-3 text-right text-green-600 hidden sm:table-cell">${(r.shares || 0).toLocaleString()}</td>
                     <td class="p-3 text-right font-bold text-club-green">${total.toLocaleString()}</td>
                   </tr>`;
                 }
