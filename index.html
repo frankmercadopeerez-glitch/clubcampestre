@@ -306,30 +306,117 @@
         color: #64748b;
       }
       /* ── Chart legend spacing ─────────────────────────────── */
-      /* Chart.js default legend box is too close to label text */
+      /* Chart.js global defaults set via JS after init */
 
       /* ── Mobile-first adjustments ──────────────────────────── */
       @media (max-width: 640px) {
-        .kpi-card {
-          padding: 1rem;
-        }
-        .kpi-card .kpi-value {
-          font-size: 1.35rem;
-        }
-        .tab-btn {
-          padding: 0.5rem 0.75rem;
-          font-size: 0.75rem;
-        }
-        main {
+        /* Header */
+        header .h-14 {
           padding-left: 0.75rem;
           padding-right: 0.75rem;
         }
+
+        /* Nav tabs — smaller padding & font */
+        .tab-btn {
+          padding: 0.5rem 0.7rem;
+          font-size: 0.72rem;
+          gap: 0.3rem;
+        }
+        .tab-btn svg {
+          width: 0.85rem;
+          height: 0.85rem;
+        }
+
+        /* Main content */
+        main {
+          padding-left: 0.75rem !important;
+          padding-right: 0.75rem !important;
+          padding-top: 1rem;
+          gap: 1rem;
+        }
+
+        /* KPI cards */
+        .kpi-card {
+          padding: 0.875rem 1rem;
+        }
+        .kpi-card .kpi-value {
+          font-size: 1.25rem;
+        }
+        .kpi-card .kpi-label {
+          font-size: 0.6rem;
+        }
+
+        /* Glass cards */
+        .glass-card {
+          border-radius: 0.625rem;
+        }
+
+        /* Section headings */
+        h2.text-xl {
+          font-size: 1.1rem;
+        }
+
+        /* Tables — tighter cells on mobile */
+        table td,
+        table th {
+          padding: 0.5rem 0.625rem !important;
+          font-size: 0.75rem;
+        }
+
+        /* Chart height reduction */
+        .h-64 {
+          height: 13rem;
+        }
+        .h-72 {
+          height: 14rem;
+        }
+        .h-80 {
+          height: 15rem;
+        }
+
+        /* Month selector wrap */
+        #btn-month-prev,
+        #btn-month-next {
+          padding: 0.375rem;
+        }
+        #monthly-label {
+          min-width: 100px;
+          font-size: 1rem;
+        }
+
+        /* Metric toggle buttons */
+        .monthly-metric-btn {
+          font-size: 0.65rem;
+          padding: 0.2rem 0.6rem;
+        }
+
+        /* Form inputs */
+        input,
+        select,
+        textarea {
+          font-size: 0.875rem;
+        }
+
+        /* Modals */
+        #modal-overlay > div {
+          padding: 1rem;
+          max-height: 96vh;
+        }
+
+        /* Post cards grid — single col is fine, reduce padding */
+        #posts-grid .glass-card {
+          padding: 0.75rem;
+        }
       }
 
-      /* Stack post cards nicely on small screens */
       @media (max-width: 480px) {
         .kpi-card .kpi-value {
-          font-size: 1.2rem;
+          font-size: 1.1rem;
+        }
+        /* Stack flex rows that are too tight */
+        .flex.items-center.justify-between {
+          flex-wrap: wrap;
+          gap: 0.5rem;
         }
       }
     </style>
@@ -717,7 +804,7 @@
     </div>
 
     <main
-      class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-8 w-full flex flex-col gap-6"
+      class="flex-grow max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 py-4 md:py-8 w-full flex flex-col gap-4 md:gap-6"
     >
       <!-- TAB: PANEL GENERAL -->
       <section id="tab-overview" class="flex flex-col gap-6">
@@ -801,6 +888,16 @@
               <div id="edit-daily-banner"></div>
               <button type="submit" id="btn-submit"></button>
             </form>
+            <!-- Weekly stubs for JS (tab-weekly removed) -->
+            <form id="weekly-form" class="hidden">
+              <input type="date" id="weekly-date" />
+              <input type="number" id="weekly-followers" />
+              <input type="number" id="weekly-visits" />
+              <div id="edit-weekly-banner"></div>
+              <button type="submit" id="btn-weekly-submit"></button>
+            </form>
+            <tbody id="weekly-table-body" class="hidden"></tbody>
+            <span id="weekly-history-count" class="hidden"></span>
 
             <!-- Post / Reel inline registration -->
             <div class="glass-card p-5">
@@ -848,7 +945,7 @@
                     />
                   </div>
                 </div>
-                <div class="grid grid-cols-2 gap-2">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
                   <div>
                     <label class="block text-xs font-medium text-slate-700 mb-1"
                       >Tipo de contenido</label
@@ -885,7 +982,7 @@
                   >
                     Visibilidad
                   </p>
-                  <div class="grid grid-cols-3 gap-2">
+                  <div class="grid grid-cols-2 sm:grid-cols-3 gap-2">
                     <div>
                       <label class="block text-xs text-slate-600 mb-1"
                         >👁️ Vistas</label
@@ -930,10 +1027,7 @@
                   >
                     Interacciones
                   </p>
-                  <div class="grid grid-cols-4 gap-2">
-                    <div>
-                      <label class="block text-xs text-slate-600 mb-1"
-                        >Likes</label
+                  <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
                       >
                       <input
                         type="number"
@@ -1298,150 +1392,6 @@
         </div>
       </section>
 
-      <!-- TAB: SEMANAL -->
-      <section id="tab-weekly" class="hidden flex-col gap-6">
-        <!-- Page title -->
-        <div>
-          <h2 class="text-xl font-bold text-slate-800">Seguimiento semanal</h2>
-          <p class="text-sm text-slate-400 mt-0.5">
-            Registra una vez por semana seguidores y visitas al perfil
-          </p>
-        </div>
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <!-- Formulario semanal -->
-          <div class="lg:col-span-1">
-            <div class="glass-card p-5">
-              <div
-                class="flex items-center gap-2 mb-4 border-b border-slate-100 pb-3"
-              >
-                <div
-                  class="w-7 h-7 rounded-lg bg-club-gold/15 flex items-center justify-center"
-                >
-                  <i
-                    data-lucide="calendar-days"
-                    class="w-4 h-4 text-club-gold"
-                  ></i>
-                </div>
-                <div>
-                  <h2 class="text-sm font-semibold text-slate-800">
-                    Nuevo registro
-                  </h2>
-                  <p class="text-xs text-slate-400">
-                    Seguidores y visitas al perfil
-                  </p>
-                </div>
-              </div>
-              <form id="weekly-form" class="space-y-4">
-                <div
-                  id="edit-weekly-banner"
-                  class="hidden bg-amber-50 border border-amber-200 rounded-lg px-3 py-2 text-xs text-amber-700 flex items-center gap-2"
-                >
-                  <i data-lucide="pencil" class="w-3.5 h-3.5 flex-shrink-0"></i>
-                  <span>Editando registro existente</span>
-                  <button
-                    type="button"
-                    onclick="cancelEditWeekly()"
-                    class="ml-auto text-amber-500 hover:text-amber-700 font-semibold"
-                  >
-                    Cancelar
-                  </button>
-                </div>
-                <div>
-                  <label class="block text-sm font-medium text-slate-700 mb-1"
-                    >Fecha de registro</label
-                  >
-                  <input
-                    type="date"
-                    id="weekly-date"
-                    required
-                    class="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-club-green/50 text-slate-700"
-                  />
-                </div>
-                <div>
-                  <label class="block text-sm font-medium text-slate-700 mb-1"
-                    >👥 Total de Seguidores</label
-                  >
-                  <input
-                    type="number"
-                    id="weekly-followers"
-                    required
-                    min="0"
-                    placeholder="0"
-                    class="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-club-green/50"
-                  />
-                </div>
-                <div>
-                  <label class="block text-sm font-medium text-slate-700 mb-1"
-                    >👁️ Visitas al perfil</label
-                  >
-                  <input
-                    type="number"
-                    id="weekly-visits"
-                    min="0"
-                    placeholder="0"
-                    class="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-club-green/50"
-                  />
-                </div>
-                <button
-                  type="submit"
-                  id="btn-weekly-submit"
-                  class="w-full bg-club-gold hover:bg-club-goldhover text-club-dark font-semibold py-2.5 px-4 rounded-lg transition-colors flex items-center justify-center gap-2"
-                >
-                  Guardar registro semanal
-                </button>
-              </form>
-            </div>
-          </div>
-          <!-- Historial semanal -->
-          <div class="lg:col-span-2">
-            <div class="glass-card overflow-hidden">
-              <div
-                class="p-4 border-b border-slate-100 flex items-center justify-between"
-              >
-                <div>
-                  <h3 class="text-sm font-semibold text-slate-800">
-                    Historial de crecimiento
-                  </h3>
-                  <p class="text-xs text-slate-400">
-                    Seguimiento de audiencia semana a semana
-                  </p>
-                </div>
-                <span
-                  id="weekly-history-count"
-                  class="text-xs text-slate-400"
-                ></span>
-              </div>
-              <div class="overflow-x-auto">
-                <table class="w-full text-left border-collapse">
-                  <thead>
-                    <tr
-                      class="bg-slate-50 text-slate-500 text-xs uppercase tracking-wider"
-                    >
-                      <th class="p-4 font-medium">Fecha</th>
-                      <th class="p-4 font-medium">Dia</th>
-                      <th class="p-4 font-medium text-right">Seguidores</th>
-                      <th class="p-4 font-medium text-right">Visitas perfil</th>
-                      <th class="p-4 font-medium text-right">Δ Visitas</th>
-                      <th class="p-4 font-medium text-center">Acción</th>
-                    </tr>
-                  </thead>
-                  <tbody
-                    id="weekly-table-body"
-                    class="text-sm divide-y divide-slate-100"
-                  >
-                    <tr>
-                      <td colspan="7" class="p-8 text-center text-slate-400">
-                        No hay registros semanales aún.
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
       <!-- TAB: MENSUAL -->
       <section id="tab-monthly" class="hidden flex-col gap-6">
         <!-- Page title -->
@@ -1451,8 +1401,8 @@
             Resumen semanal y mensual de todas las métricas
           </p>
         </div>
-        <!-- Selector de mes -->
-        <div class="flex items-center justify-between">
+        <!-- Selector de mes + año -->
+        <div class="flex flex-wrap items-center justify-between gap-3">
           <div class="flex items-center gap-2">
             <button
               id="btn-month-prev"
@@ -1471,13 +1421,19 @@
               <i data-lucide="chevron-right" class="w-5 h-5 text-slate-600"></i>
             </button>
           </div>
-          <select
-            id="monthly-period-filter"
-            class="text-sm border border-slate-200 rounded-md px-3 py-1.5 text-slate-600 focus:outline-none"
-          >
-            <option value="month">Vista mensual</option>
-            <option value="week">Vista semanal</option>
-          </select>
+          <div class="flex items-center gap-2">
+            <select
+              id="monthly-year-filter"
+              class="text-sm border border-slate-200 rounded-md px-3 py-1.5 text-slate-600 focus:outline-none"
+            ></select>
+            <select
+              id="monthly-period-filter"
+              class="text-sm border border-slate-200 rounded-md px-3 py-1.5 text-slate-600 focus:outline-none"
+            >
+              <option value="month">Vista mensual</option>
+              <option value="week">Vista semanal</option>
+            </select>
+          </div>
         </div>
 
         <!-- KPIs del mes -->
@@ -1726,155 +1682,8 @@
 
       // Datos históricos de Notion — siempre visibles, sin necesidad de login
       // Registros diarios derivados de los Stories de Notion
-      const NOTION_DAILY = [
-        {
-          id: "d26",
-          date: "2026-04-26",
-          time: "11:00",
-          storyViews: 2780,
-          likes: 221,
-          comments: 15,
-          saves: 71,
-          shares: 33,
-          createdAt: "2026-04-26T11:00:00.000Z",
-        },
-        {
-          id: "d25",
-          date: "2026-04-25",
-          time: "10:45",
-          storyViews: 3120,
-          likes: 267,
-          comments: 19,
-          saves: 84,
-          shares: 41,
-          createdAt: "2026-04-25T10:45:00.000Z",
-        },
-        {
-          id: "d24",
-          date: "2026-04-24",
-          time: "09:00",
-          storyViews: 2340,
-          likes: 189,
-          comments: 11,
-          saves: 62,
-          shares: 26,
-          createdAt: "2026-04-24T09:00:00.000Z",
-        },
-        {
-          id: "d23",
-          date: "2026-04-23",
-          time: "14:20",
-          storyViews: 1680,
-          likes: 134,
-          comments: 7,
-          saves: 41,
-          shares: 17,
-          createdAt: "2026-04-23T14:20:00.000Z",
-        },
-        {
-          id: "d22",
-          date: "2026-04-22",
-          time: "10:00",
-          storyViews: 20969,
-          likes: 606,
-          comments: 29,
-          saves: 376,
-          shares: 182,
-          createdAt: "2026-04-22T10:00:00.000Z",
-        },
-      ];
-
-      const NOTION_POSTS = [
-        {
-          id: "p1",
-          date: "2026-04-28",
-          publishedAt: "2026-04-28T10:00",
-          type: "Reel",
-          title: "Torneo Copa Campestre — Highlights",
-          vistas: 6420,
-          reproducciones: 3810,
-          reach: 4950,
-          likes: 487,
-          comments: 34,
-          saves: 115,
-          compartidos: 62,
-          pctSeguidores: 38.2,
-          pctInteractuantes: 13.7,
-          createdAt: "2026-04-28T10:00:00.000Z",
-        },
-        {
-          id: "p2",
-          date: "2026-04-27",
-          publishedAt: "2026-04-27T12:00",
-          type: "Carrusel",
-          title: "Instalaciones del club — Primavera 2026",
-          vistas: 4130,
-          reproducciones: 0,
-          reach: 3200,
-          likes: 315,
-          comments: 21,
-          saves: 88,
-          compartidos: 39,
-          pctSeguidores: 29.4,
-          pctInteractuantes: 10.2,
-          createdAt: "2026-04-27T12:00:00.000Z",
-        },
-        {
-          id: "p3",
-          date: "2026-04-25",
-          publishedAt: "2026-04-25T09:30",
-          type: "Foto",
-          title: "Atardecer en el campo de golf",
-          vistas: 3580,
-          reproducciones: 0,
-          reach: 2740,
-          likes: 294,
-          comments: 16,
-          saves: 71,
-          compartidos: 28,
-          pctSeguidores: 24.1,
-          pctInteractuantes: 11.5,
-          createdAt: "2026-04-25T09:30:00.000Z",
-        },
-        {
-          id: "p4",
-          date: "2026-04-24",
-          publishedAt: "2026-04-24T11:00",
-          type: "Reel",
-          title: "Tips de golf para principiantes",
-          vistas: 9870,
-          reproducciones: 6340,
-          reach: 7650,
-          likes: 562,
-          comments: 41,
-          saves: 158,
-          compartidos: 74,
-          pctSeguidores: 41.5,
-          pctInteractuantes: 14.9,
-          createdAt: "2026-04-24T11:00:00.000Z",
-        },
-        {
-          id: "p5",
-          date: "2026-04-22",
-          publishedAt: "2026-04-22T08:45",
-          type: "Carrusel",
-          title: "Agenda de actividades — última semana de abril",
-          vistas: 5210,
-          reproducciones: 0,
-          reach: 3890,
-          likes: 376,
-          comments: 25,
-          saves: 102,
-          compartidos: 47,
-          pctSeguidores: 32.8,
-          pctInteractuantes: 9.8,
-          createdAt: "2026-04-22T08:45:00.000Z",
-        },
-      ];
-      let globalPosts = [...NOTION_POSTS];
-      let globalData = [...NOTION_DAILY].sort(
-        (a, b) => new Date(b.date) - new Date(a.date),
-      );
+      let globalPosts = [];
+      let globalData = [];
       let editingDailyId = null;
       let editingWeeklyId = null;
       const MESES_ES = [
@@ -1930,13 +1739,12 @@
             if (fbLabel) fbLabel.textContent = "Conectado";
             const fbData = [];
             snap.forEach((d) => fbData.push({ id: d.id, ...d.data() }));
-            const fbDates = new Set(fbData.map((r) => r.date));
-            const notionOnly = NOTION_DAILY.filter((r) => !fbDates.has(r.date));
-            globalData = [...fbData, ...notionOnly].sort(
+            globalData = [...fbData].sort(
               (a, b) => new Date(b.date) - new Date(a.date),
             );
             updateDashboard();
             renderRecentPostsOverview();
+            populateYearSelector();
           },
           (err) => {
             clearTimeout(connTimeout);
@@ -1972,9 +1780,7 @@
           (snap) => {
             const firebasePosts = [];
             snap.forEach((d) => firebasePosts.push({ id: d.id, ...d.data() }));
-            const fbIds = new Set(firebasePosts.map((p) => p.id));
-            const notionOnly = NOTION_POSTS.filter((p) => !fbIds.has(p.id));
-            globalPosts = [...firebasePosts, ...notionOnly].sort(
+            globalPosts = [...firebasePosts].sort(
               (a, b) =>
                 new Date(b.publishedAt || b.date) -
                 new Date(a.publishedAt || a.date),
@@ -2066,30 +1872,14 @@
         };
         if (editingDailyId) {
           // UPDATE MODE
-          if (
-            !editingDailyId.startsWith("d") &&
-            !editingDailyId.startsWith("n")
-          ) {
-            try {
-              btnSubmit.disabled = true;
-              await updateDoc(
-                doc(db, "instagram_stats", editingDailyId),
-                record,
-              );
-              showToast("Registro actualizado");
-            } catch (err) {
-              showToast("Error: " + err.message, "error");
-            } finally {
-              btnSubmit.disabled = false;
-            }
-          } else {
-            // In-memory record — update globalData array directly
-            const idx = globalData.findIndex((r) => r.id === editingDailyId);
-            if (idx !== -1) {
-              globalData[idx] = { ...globalData[idx], ...record };
-              renderTable();
-              showToast("Registro actualizado");
-            }
+          try {
+            btnSubmit.disabled = true;
+            await updateDoc(doc(db, "instagram_stats", editingDailyId), record);
+            showToast("Registro actualizado");
+          } catch (err) {
+            showToast("Error: " + err.message, "error");
+          } finally {
+            btnSubmit.disabled = false;
           }
           editingDailyId = null;
           document.getElementById("edit-daily-banner").classList.add("hidden");
@@ -2223,18 +2013,10 @@
         btnPostSubmit.disabled = true;
         try {
           if (editingPostId) {
-            // Static seed IDs (p1, p2…) → write to Firestore with same ID so dedup works
-            if (/^[np]\d/.test(editingPostId)) {
-              await setDoc(
-                doc(db, "instagram_posts", editingPostId),
-                postRecord,
-              );
-            } else {
-              await updateDoc(
-                doc(db, "instagram_posts", editingPostId),
-                postRecord,
-              );
-            }
+            await updateDoc(
+              doc(db, "instagram_posts", editingPostId),
+              postRecord,
+            );
             showToast("Publicación actualizada");
           } else {
             await addDoc(collection(db, "instagram_posts"), postRecord);
@@ -2357,15 +2139,6 @@
 
       window.deleteRecord = async (id) => {
         if (!confirm("\u00bfEliminar este registro?")) return;
-        if (id.startsWith("d") || id.startsWith("n")) {
-          // In-memory record — remove from globalData array
-          globalData = globalData.filter((r) => r.id !== id);
-          renderTable();
-          renderPostsGrid();
-          renderInsights();
-          showToast("Registro eliminado");
-          return;
-        }
         try {
           await deleteDoc(doc(db, "instagram_stats", id));
           showToast("Registro eliminado");
@@ -2376,14 +2149,6 @@
 
       window.deletePost = async (id) => {
         if (!confirm("\u00bfEliminar esta publicación?")) return;
-        if (id.startsWith("p") || id.startsWith("n")) {
-          // In-memory record — remove from globalPosts array
-          globalPosts = globalPosts.filter((p) => p.id !== id);
-          renderPostsGrid();
-          renderInsights();
-          showToast("Publicacion eliminada");
-          return;
-        }
         try {
           await deleteDoc(doc(db, "instagram_posts", id));
           showToast("Publicacion eliminada");
@@ -2533,6 +2298,25 @@
       // ─── MENSUAL ───────────────────────────────────────────────────────────
       // (MESES_ES, monthlyYear, monthlyMonth, monthlyChartInst declared above)
 
+      function populateYearSelector() {
+        const sel = document.getElementById("monthly-year-filter");
+        const years = new Set(
+          [...globalData, ...globalPosts]
+            .map((r) => (r.date || r.publishedAt || "").slice(0, 4))
+            .filter(Boolean),
+        );
+        const currentYear = String(new Date().getFullYear());
+        if (!years.has(currentYear)) years.add(currentYear);
+        const sorted = [...years].sort((a, b) => b - a);
+        sel.innerHTML = sorted
+          .map(
+            (y) =>
+              `<option value="${y}" ${y === String(monthlyYear) ? "selected" : ""}>${y}</option>`,
+          )
+          .join("");
+        monthlyYear = parseInt(sel.value);
+      }
+
       document
         .getElementById("btn-month-prev")
         .addEventListener("click", () => {
@@ -2540,6 +2324,7 @@
           if (monthlyMonth < 0) {
             monthlyMonth = 11;
             monthlyYear--;
+            document.getElementById("monthly-year-filter").value = monthlyYear;
           }
           renderMonthly();
         });
@@ -2556,12 +2341,19 @@
           if (monthlyMonth > 11) {
             monthlyMonth = 0;
             monthlyYear++;
+            document.getElementById("monthly-year-filter").value = monthlyYear;
           }
           renderMonthly();
         });
       document
         .getElementById("monthly-period-filter")
         .addEventListener("change", renderMonthly);
+      document
+        .getElementById("monthly-year-filter")
+        .addEventListener("change", (e) => {
+          monthlyYear = parseInt(e.target.value);
+          renderMonthly();
+        });
 
       function renderMonthly() {
         const label = document.getElementById("monthly-label");
@@ -4094,6 +3886,7 @@
             renderWeeklyHistory();
           }
           if (tab === "monthly") {
+            populateYearSelector();
             renderMonthly();
           }
           lucide.createIcons();
