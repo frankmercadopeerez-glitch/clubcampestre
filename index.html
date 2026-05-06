@@ -2962,9 +2962,10 @@
 
       document
         .getElementById("history-filter")
-        .addEventListener("change", renderTable);
+        ?.addEventListener("change", renderTable);
 
       function renderTable() {
+        if (!tableBody) return;
         tableBody.innerHTML = "";
         const filter =
           document.getElementById("history-filter")?.value || "daily";
