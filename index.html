@@ -1305,78 +1305,6 @@
         <!-- Tabla detallada (se inyecta por JS) -->
         <div id="posts-table-wrap"></div>
 
-        <!-- Historial de métricas diarias / semanales / mensuales -->
-        <div class="glass-card overflow-hidden">
-          <div
-            class="p-4 md:p-6 border-b border-slate-100 flex flex-wrap items-center justify-between gap-3"
-          >
-            <div>
-              <h2 class="text-base sm:text-lg font-semibold text-slate-800">
-                Historial de stories
-              </h2>
-              <p class="text-xs text-slate-400 mt-0.5">
-                Likes y compartidos — Diario / Semanal / Mensual
-              </p>
-            </div>
-            <div class="flex items-center gap-3">
-              <select
-                id="history-filter"
-                class="text-sm border border-slate-200 rounded-md px-3 py-1.5 text-slate-600 focus:outline-none"
-              >
-                <option value="daily">Diario</option>
-                <option value="weekly">Semanal</option>
-                <option value="monthly">Mensual</option>
-              </select>
-              <span id="history-count" class="text-xs text-slate-400"></span>
-            </div>
-          </div>
-          <div class="overflow-x-auto">
-            <table class="w-full text-left border-collapse">
-              <thead id="history-thead">
-                <tr
-                  class="bg-slate-50 text-slate-500 text-xs uppercase tracking-wider"
-                >
-                  <th class="p-2 sm:p-4 font-medium">Fecha</th>
-                  <th class="p-2 sm:p-4 font-medium hidden sm:table-cell">
-                    Dia
-                  </th>
-                  <th class="p-2 sm:p-4 font-medium text-right">❤️</th>
-                  <th
-                    class="p-2 sm:p-4 font-medium text-right hidden sm:table-cell"
-                  >
-                    💬
-                  </th>
-                  <th
-                    class="p-2 sm:p-4 font-medium text-right hidden sm:table-cell"
-                  >
-                    🔖
-                  </th>
-                  <th
-                    class="p-2 sm:p-4 font-medium text-right hidden sm:table-cell"
-                  >
-                    ↗️
-                  </th>
-                  <th class="p-2 sm:p-4 font-medium text-right">Total</th>
-                  <th class="p-2 sm:p-4 font-medium text-right">Eng%</th>
-                  <th class="p-2 sm:p-4 font-medium text-center">Accion</th>
-                </tr>
-              </thead>
-              <tbody id="table-body" class="text-sm divide-y divide-slate-100">
-                <tr>
-                  <td colspan="10" class="p-8 text-center text-slate-400">
-                    <div class="flex flex-col items-center">
-                      <i
-                        data-lucide="database"
-                        class="w-8 h-8 mb-2 opacity-40"
-                      ></i>
-                      <p>Cargando datos...</p>
-                    </div>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
       </section>
 
       <!-- TAB: MENSUAL -->
@@ -3788,13 +3716,20 @@
             });
         }
 
-        // ---- Weekly table ----
+        // ---- Detailed table ----
+        // Read active type filter (persisted on tableWrap dataset)
+        const activeTypeFilter = tableWrap.dataset.typeFilter || "all";
+
         // Sort by publishedAt desc for table
         const sortedByDate = [...globalPosts].sort(
           (a, b) =>
             new Date(b.publishedAt || b.date) -
             new Date(a.publishedAt || a.date),
         );
+        const filteredByType =
+          activeTypeFilter === "all"
+            ? sortedByDate
+            : sortedByDate.filter((p) => p.type === activeTypeFilter);
         const TABLE_PAGE_SIZE = 12;
         let visibleTableCount =
           parseInt(tableWrap.dataset.visibleTableCount || "0") ||
@@ -3804,7 +3739,7 @@
           tableWrap.dataset.tableInitialized = "1";
         }
         tableWrap.dataset.visibleTableCount = visibleTableCount;
-        const visibleTableRows = sortedByDate.slice(0, visibleTableCount);
+        const visibleTableRows = filteredByType.slice(0, visibleTableCount);
         const tableRows = visibleTableRows
           .map((p) => {
             const total =
@@ -3854,9 +3789,21 @@
 
         tableWrap.innerHTML = `
           <div class="glass-card overflow-hidden mt-2">
-            <div class="p-4 border-b border-slate-100 flex items-center justify-between">
-              <h3 class="font-semibold text-club-dark">Tabla detallada de publicaciones</h3>
-              <span class="text-xs text-slate-400">${globalPosts.length} publicaciones</span>
+            <div class="p-4 border-b border-slate-100 flex flex-wrap items-center justify-between gap-3">
+              <div class="flex items-center gap-3">
+                <h3 class="font-semibold text-club-dark">Tabla detallada de publicaciones</h3>
+                <span class="text-xs text-slate-400">${filteredByType.length} publicaciones</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <label class="text-xs text-slate-500 font-medium">Tipo:</label>
+                <select id="table-type-filter" class="text-sm border border-slate-200 rounded-lg px-2 py-1.5 text-slate-600 focus:outline-none focus:ring-2 focus:ring-club-green/40">
+                  <option value="all"${activeTypeFilter === "all" ? " selected" : ""}>Todos</option>
+                  <option value="Reel"${activeTypeFilter === "Reel" ? " selected" : ""}>Reel</option>
+                  <option value="Foto"${activeTypeFilter === "Foto" ? " selected" : ""}>Foto</option>
+                  <option value="Carrusel"${activeTypeFilter === "Carrusel" ? " selected" : ""}>Carrusel</option>
+                  <option value="Story"${activeTypeFilter === "Story" ? " selected" : ""}>Story</option>
+                </select>
+              </div>
             </div>
             <div class="overflow-x-auto">
               <table class="w-full text-left border-collapse">
@@ -3880,8 +3827,8 @@
           </div>`;
 
         // "Ver más" button for table
-        if (visibleTableCount < sortedByDate.length) {
-          const tableRemaining = sortedByDate.length - visibleTableCount;
+        if (visibleTableCount < filteredByType.length) {
+          const tableRemaining = filteredByType.length - visibleTableCount;
           const tMoreBtn = document.createElement("div");
           tMoreBtn.className = "flex justify-center mt-3 mb-1";
           tMoreBtn.innerHTML = `<button id="btn-load-more-table" class="bg-white border border-slate-200 hover:border-club-green text-slate-600 hover:text-club-green font-semibold px-6 py-2.5 rounded-xl text-sm transition-colors shadow-sm">Ver más (${tableRemaining} restantes)</button>`;
@@ -3889,9 +3836,19 @@
           document
             .getElementById("btn-load-more-table")
             .addEventListener("click", () => {
-              tableWrap.dataset.visibleTableCount = sortedByDate.length;
+              tableWrap.dataset.visibleTableCount = filteredByType.length;
               renderPostsGrid();
             });
+        }
+
+        // Wire type filter
+        const typeFilterEl = document.getElementById("table-type-filter");
+        if (typeFilterEl) {
+          typeFilterEl.addEventListener("change", () => {
+            tableWrap.dataset.typeFilter = typeFilterEl.value;
+            tableWrap.dataset.tableInitialized = "";
+            renderPostsGrid();
+          });
         }
 
         // ---- Weekly KPI summary ----
