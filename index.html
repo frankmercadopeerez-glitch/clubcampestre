@@ -662,6 +662,23 @@
           height: .9rem;
         }
       }
+      .overview-hero {
+        min-height: calc(100svh - 6rem);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 2rem;
+      }
+      @media (min-width: 1024px) {
+        .overview-hero {
+          min-height: calc(100svh - 10rem);
+          padding-bottom: 1rem;
+        }
+        .overview-content {
+          padding-top: 1.5rem;
+          border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+      }
     </style>
   </head>
   <body class="text-slate-800 antialiased min-h-screen flex flex-col">
@@ -1043,6 +1060,7 @@
     >
       <!-- TAB: PANEL GENERAL -->
       <section id="tab-overview" class="flex flex-col gap-6">
+        <div class="overview-hero">
         <!-- Page title -->
         <div class="flex items-center justify-between">
           <div>
@@ -1093,46 +1111,43 @@
               style="opacity: 0.15"
             ></i>
           </div>
-        </div>
-
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div class="lg:col-span-1 flex flex-col gap-5">
-            <!-- Quick stats summary -->
-            <div class="glass-card p-4" id="quick-stats-card">
-              <p
-                class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3"
-              >
-                Resumen rápido
-              </p>
-              <div class="grid grid-cols-2 gap-3">
-                <div class="bg-slate-50 rounded-lg p-3 text-center">
-                  <p
-                    class="text-[10px] text-slate-400 uppercase tracking-wide font-semibold"
-                  >
-                    Publicaciones
-                  </p>
-                  <p
-                    class="text-xl font-bold text-slate-800 mt-0.5"
-                    id="qs-posts"
-                  >
-                    0
-                  </p>
-                </div>
-                <div class="bg-slate-50 rounded-lg p-3 text-center">
-                  <p
-                    class="text-[10px] text-slate-400 uppercase tracking-wide font-semibold"
-                  >
-                    Total Likes
-                  </p>
-                  <p
-                    class="text-xl font-bold text-slate-800 mt-0.5"
-                    id="qs-likes"
-                  >
-                    0
-                  </p>
-                </div>
+          <div class="kpi-card">
+            <span class="kpi-label">Resumen rápido</span>
+            <div class="grid grid-cols-2 gap-3 mt-2">
+              <div class="bg-slate-50 rounded-lg p-3 text-center">
+                <p
+                  class="text-[10px] text-slate-400 uppercase tracking-wide font-semibold"
+                >
+                  Publicaciones
+                </p>
+                <p
+                  class="text-xl font-bold text-slate-800 mt-0.5"
+                  id="qs-posts"
+                >
+                  0
+                </p>
+              </div>
+              <div class="bg-slate-50 rounded-lg p-3 text-center">
+                <p
+                  class="text-[10px] text-slate-400 uppercase tracking-wide font-semibold"
+                >
+                  Total Likes
+                </p>
+                <p
+                  class="text-xl font-bold text-slate-800 mt-0.5"
+                  id="qs-likes"
+                >
+                  0
+                </p>
               </div>
             </div>
+            <i data-lucide="layout-dashboard" class="kpi-icon text-club-dark"></i>
+          </div>
+        </div>
+        </div>
+
+        <div class="overview-content grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div class="lg:col-span-1 flex flex-col gap-5">
             <!-- hidden stubs: kept for JS compatibility -->
             <button id="btn-open-post-modal" class="hidden"></button>
             <form id="stats-form" class="hidden">
