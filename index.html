@@ -41,7 +41,7 @@
               },
             },
             fontFamily: {
-              sans: ["Poppins", "sans-serif"],
+              sans: ["Manrope", "sans-serif"],
             },
           },
         },
@@ -50,7 +50,7 @@
 
     <!-- Google Fonts -->
     <link
-      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Manrope:wght@400;500;600;700;800&display=swap"
       rel="stylesheet"
     />
 
@@ -64,7 +64,7 @@
 
     <style>
       body {
-        font-family: "Poppins", sans-serif;
+        font-family: "Manrope", sans-serif;
         background: #0b1628;
         background-image:
           radial-gradient(
@@ -470,6 +470,199 @@
         #posts-grid .glass-card {
           padding: 0.75rem;
         }
+      }
+
+      /* ── Country Club Analytics design system ─────────────── */
+      :root {
+        --surface-ivory: #fbfaf6;
+        --surface-mist: #f3f7f5;
+        --ink-strong: #132033;
+        --ink-muted: #718096;
+        --story: #17805b;
+        --story-soft: #e6f6ef;
+        --reel: #c68325;
+        --reel-soft: #fff3df;
+        --carousel: #315f9e;
+        --carousel-soft: #eaf1fb;
+        --photo: #7652a5;
+        --photo-soft: #f1ebf8;
+      }
+      body {
+        font-family: "Manrope", sans-serif;
+        font-feature-settings: "tnum" 1, "ss01" 1;
+      }
+      .page-title {
+        font-family: "Cormorant Garamond", serif;
+        font-size: clamp(1.85rem, 3vw, 2.55rem);
+        letter-spacing: -0.025em;
+        line-height: 1;
+      }
+      .overview-hero .page-title {
+        font-size: clamp(2.15rem, 4vw, 3.4rem);
+        text-shadow: 0 2px 18px rgba(0, 0, 0, 0.24);
+      }
+      h2, h3, .kpi-value {
+        letter-spacing: -0.025em;
+      }
+      .page-subtitle {
+        font-size: .82rem;
+        letter-spacing: .01em;
+      }
+      .glass-card {
+        background:
+          linear-gradient(145deg, rgba(255,255,255,.98), rgba(248,250,249,.97));
+      }
+      #insights-kpis > .glass-card,
+      #weekly-kpis > .glass-card,
+      #monthly-kpis > .glass-card {
+        overflow: hidden;
+        border: 1px solid rgba(255,255,255,.72);
+        border-left: 3px solid var(--club-gold-soft);
+        background:
+          radial-gradient(circle at 100% 0, rgba(197,160,89,.13), transparent 44%),
+          linear-gradient(145deg, #fff, #f6f8f7);
+      }
+      #insights-kpis > .glass-card:nth-child(2),
+      #weekly-kpis > .glass-card:nth-child(2),
+      #monthly-kpis > .glass-card:nth-child(2) {
+        border-left-color: var(--story);
+        background:
+          radial-gradient(circle at 100% 0, rgba(23,128,91,.13), transparent 44%),
+          linear-gradient(145deg, #fff, #f3f8f5);
+      }
+      #insights-kpis > .glass-card:nth-child(3),
+      #weekly-kpis > .glass-card:nth-child(3),
+      #monthly-kpis > .glass-card:nth-child(3) {
+        border-left-color: var(--carousel);
+        background:
+          radial-gradient(circle at 100% 0, rgba(49,95,158,.12), transparent 44%),
+          linear-gradient(145deg, #fff, #f4f7fb);
+      }
+      #insights-kpis > .glass-card:nth-child(4),
+      #weekly-kpis > .glass-card:nth-child(4),
+      #monthly-kpis > .glass-card:nth-child(4) {
+        border-left-color: var(--photo);
+      }
+      #weekday-bars {
+        padding: .3rem .15rem;
+      }
+      #content-type-table > div {
+        border: 1px solid #edf1ee;
+        border-radius: .85rem;
+        background: linear-gradient(135deg, #fff, #f6f9f7);
+        transition: transform .24s ease, border-color .24s ease;
+      }
+      #content-type-table > div:hover {
+        transform: translateX(3px);
+        border-color: rgba(20,83,51,.25);
+      }
+      .post-card {
+        --post-color: var(--story);
+        --post-soft: var(--story-soft);
+        min-height: 16.25rem;
+        overflow: hidden;
+        border: 1px solid color-mix(in srgb, var(--post-color) 20%, white);
+        border-top: 3px solid var(--post-color);
+        background:
+          radial-gradient(circle at 100% 0, color-mix(in srgb, var(--post-color) 13%, transparent), transparent 46%),
+          linear-gradient(145deg, #fff 18%, var(--post-soft));
+      }
+      .post-card::after {
+        content: "";
+        position: absolute;
+        width: 7rem;
+        height: 7rem;
+        right: -2.75rem;
+        top: -2.75rem;
+        border: 1px solid color-mix(in srgb, var(--post-color) 24%, transparent);
+        border-radius: 50%;
+        pointer-events: none;
+      }
+      .post-card-story { --post-color: var(--story); --post-soft: var(--story-soft); }
+      .post-card-reel { --post-color: var(--reel); --post-soft: var(--reel-soft); }
+      .post-card-carrusel { --post-color: var(--carousel); --post-soft: var(--carousel-soft); }
+      .post-card-foto { --post-color: var(--photo); --post-soft: var(--photo-soft); }
+      .post-card-video { --post-color: #0f4c62; --post-soft: #e8f3f5; }
+      .post-card .post-format-badge {
+        color: var(--post-color);
+        background: color-mix(in srgb, var(--post-color) 12%, white);
+        border: 1px solid color-mix(in srgb, var(--post-color) 20%, white);
+      }
+      .post-card .post-rank {
+        display: inline-grid;
+        place-items: center;
+        width: 1.55rem;
+        height: 1.55rem;
+        border-radius: .5rem;
+        color: #fff;
+        background: var(--post-color);
+        font-size: .65rem;
+        font-weight: 800;
+        box-shadow: 0 5px 14px color-mix(in srgb, var(--post-color) 24%, transparent);
+      }
+      .post-card .post-metric-panel {
+        border-color: color-mix(in srgb, var(--post-color) 12%, white);
+        background: rgba(255,255,255,.56);
+        border-radius: .8rem;
+        padding: .65rem;
+      }
+      .post-card .post-engagement {
+        color: var(--post-color);
+        background: color-mix(in srgb, var(--post-color) 10%, white);
+        border: 1px solid color-mix(in srgb, var(--post-color) 16%, white);
+      }
+      .post-card .post-action {
+        opacity: .46;
+        border-radius: .55rem;
+      }
+      .post-card .post-action:hover {
+        opacity: 1;
+        color: var(--post-color);
+        background: rgba(255,255,255,.78);
+      }
+      .chart-shell,
+      #tab-insights .glass-card,
+      #tab-monthly > .glass-card {
+        box-shadow: 0 20px 55px rgba(1,14,22,.2);
+      }
+      canvas {
+        filter: saturate(.94);
+      }
+      table thead {
+        position: sticky;
+        top: 0;
+        z-index: 2;
+      }
+      table tbody tr {
+        transition: background-color .2s ease, transform .2s ease;
+      }
+      table tbody tr:hover {
+        background: #f4f8f5;
+      }
+      .monthly-metric-btn.active {
+        color: #fff !important;
+        background: #163f35 !important;
+        border-color: #163f35 !important;
+        box-shadow: 0 5px 14px rgba(15,77,50,.2);
+      }
+      @media (max-width: 640px) {
+        .page-title { font-size: 1.8rem; }
+        .overview-hero .page-title { font-size: 2.25rem; }
+        .post-card { min-height: auto; }
+        #posts-grid { gap: .85rem; }
+        #insights-kpis,
+        #weekly-kpis,
+        #monthly-kpis {
+          grid-template-columns: repeat(2, minmax(0,1fr));
+        }
+        #tab-monthly .glass-card canvas {
+          min-width: 36rem;
+        }
+        #tab-monthly .glass-card:has(canvas) > .w-full {
+          overflow-x: auto;
+          overscroll-behavior-x: contain;
+        }
+        table tbody tr:hover { transform: none; }
       }
 
       @media (max-width: 480px) {
@@ -1824,7 +2017,13 @@
       const DEMO_MODE = firebaseConfig.apiKey === "REEMPLAZAR_API_KEY";
 
       // ── Chart.js global defaults ─────────────────────────────────────────
-      Chart.defaults.font.family = "'Poppins', sans-serif";
+      Chart.defaults.font.family = "'Manrope', sans-serif";
+      Chart.defaults.font.size = 11;
+      Chart.defaults.color = "#718096";
+      Chart.defaults.animation.duration = 720;
+      Chart.defaults.animation.easing = "easeOutQuart";
+      Chart.defaults.elements.line.borderWidth = 2.5;
+      Chart.defaults.elements.point.hoverRadius = 6;
       Chart.defaults.plugins.legend.labels.padding = 16;
       Chart.defaults.plugins.legend.labels.boxWidth = 10;
       Chart.defaults.plugins.legend.labels.boxHeight = 10;
@@ -2790,7 +2989,7 @@
             interacciones: {
               label: "Interacciones",
               type: "bar",
-              color: "rgba(20,83,51,0.75)",
+              color: "rgba(23,128,91,0.82)",
               fn: (v) => v.likes + v.comments + v.shares,
             },
             likes: {
@@ -2832,18 +3031,28 @@
               type: def.type,
               backgroundColor: isBar ? def.color : "transparent",
               borderColor: isBar ? undefined : def.color,
-              borderWidth: isBar ? 0 : 2,
-              borderRadius: isBar ? 6 : undefined,
+              borderWidth: isBar ? 0 : 2.5,
+              borderRadius: isBar ? 10 : undefined,
+              borderSkipped: false,
               pointRadius: isBar ? undefined : 3,
-              pointBackgroundColor: isBar ? undefined : def.color,
-              tension: 0.3,
+              pointBackgroundColor: isBar ? undefined : "#fff",
+              pointBorderColor: isBar ? undefined : def.color,
+              pointBorderWidth: isBar ? undefined : 2,
+              tension: 0.42,
               yAxisID: hasBar && hasLine ? (isBar ? "y" : "y1") : "y",
               order: isBar ? 2 : 1,
             };
           });
           const wScales = {
-            x: { grid: { display: false } },
-            y: { grid: { color: "#f1f5f9" } },
+            x: {
+              grid: { display: false },
+              border: { display: false },
+              ticks: { maxRotation: 0, autoSkip: true, maxTicksLimit: 8 },
+            },
+            y: {
+              border: { display: false },
+              grid: { color: "rgba(148,163,184,.16)", drawTicks: false },
+            },
           };
           if (hasBar && hasLine) {
             wScales.y1 = {
@@ -2979,19 +3188,31 @@
               type: def.type,
               backgroundColor: isBar ? def.color : "transparent",
               borderColor: isBar ? undefined : def.color,
-              borderWidth: isBar ? 0 : 2,
-              borderRadius: isBar ? 5 : undefined,
+              borderWidth: isBar ? 0 : 2.5,
+              borderRadius: isBar ? 9 : undefined,
+              borderSkipped: false,
               pointRadius: isBar ? undefined : 3,
-              pointBackgroundColor: isBar ? undefined : def.color,
-              tension: 0.3,
+              pointBackgroundColor: isBar ? undefined : "#fff",
+              pointBorderColor: isBar ? undefined : def.color,
+              pointBorderWidth: isBar ? undefined : 2,
+              tension: 0.42,
               yAxisID: hasBar && hasLine ? def.axis : "y",
               order: isBar ? 2 : 1,
             };
           });
 
           const scalesConfig = {
-            x: { grid: { display: false } },
-            y: { type: "linear", position: "left", grid: { color: "#f1f5f9" } },
+            x: {
+              grid: { display: false },
+              border: { display: false },
+              ticks: { maxRotation: 0, autoSkip: true, maxTicksLimit: 10 },
+            },
+            y: {
+              type: "linear",
+              position: "left",
+              border: { display: false },
+              grid: { color: "rgba(148,163,184,.16)", drawTicks: false },
+            },
           };
           if (hasBar && hasLine) {
             scalesConfig.y.title = {
@@ -3601,12 +3822,15 @@
                   (x) =>
                     (x.likes || 0) + (x.comments || 0) + (x.compartidos || 0),
                 ),
-                borderColor: "#C5A059",
-                backgroundColor: "rgba(197,160,89,0.12)",
-                borderWidth: 2.5,
-                tension: 0.35,
+                borderColor: "#B88935",
+                backgroundColor: "rgba(197,160,89,0.16)",
+                borderWidth: 3,
+                tension: 0.42,
                 fill: true,
-                pointRadius: 4,
+                pointRadius: source.length > 18 ? 2 : 4,
+                pointBackgroundColor: "#fff",
+                pointBorderColor: "#B88935",
+                pointBorderWidth: 2,
                 pointHoverRadius: 7,
               },
             ]
@@ -3614,13 +3838,16 @@
               {
                 label: "Interacciones",
                 data: source.map((x) => (x.likes || 0) + (x.shares || 0)),
-                borderColor: "#C5A059",
-                backgroundColor: "rgba(197,160,89,0.12)",
-                borderWidth: 2.5,
-                tension: 0.35,
+                borderColor: "#B88935",
+                backgroundColor: "rgba(197,160,89,0.16)",
+                borderWidth: 3,
+                tension: 0.42,
                 fill: true,
                 yAxisID: "y",
-                pointRadius: 3,
+                pointRadius: source.length > 18 ? 2 : 3,
+                pointBackgroundColor: "#fff",
+                pointBorderColor: "#B88935",
+                pointBorderWidth: 2,
                 pointHoverRadius: 6,
               },
             ];
@@ -3639,22 +3866,27 @@
                   usePointStyle: true,
                   boxWidth: 10,
                   padding: 16,
-                  font: { family: "Poppins", size: 12 },
+                    font: { family: "Manrope", size: 11, weight: "600" },
                 },
               },
               tooltip: tooltipStyle(),
             },
             scales: {
-              x: { grid: { display: false }, ticks: { maxTicksLimit: 10 } },
+              x: {
+                grid: { display: false },
+                border: { display: false },
+                ticks: { maxTicksLimit: 8, maxRotation: 0, autoSkip: true },
+              },
               y: {
                 type: "linear",
                 display: true,
                 position: "left",
-                grid: { color: "#f1f5f9" },
+                border: { display: false },
+                grid: { color: "rgba(148,163,184,.16)", drawTicks: false },
                 title: {
                   display: true,
                   text: "Interacciones",
-                  font: { family: "Poppins", size: 11 },
+                  font: { family: "Manrope", size: 11, weight: "600" },
                 },
               },
             },
@@ -3683,12 +3915,15 @@
               {
                 label: "Seguidores",
                 data: sorted.map((x) => x.followers || 0),
-                borderColor: "#145333",
-                backgroundColor: "rgba(20,83,51,0.08)",
-                borderWidth: 2.5,
-                tension: 0.35,
+                borderColor: "#17805b",
+                backgroundColor: "rgba(23,128,91,0.13)",
+                borderWidth: 3,
+                tension: 0.42,
                 fill: true,
                 pointRadius: 3,
+                pointBackgroundColor: "#fff",
+                pointBorderColor: "#17805b",
+                pointBorderWidth: 2,
               },
             ],
           },
@@ -3697,9 +3932,14 @@
             maintainAspectRatio: false,
             plugins: { legend: { display: false }, tooltip: tooltipStyle() },
             scales: {
-              x: { grid: { display: false }, ticks: { maxTicksLimit: 10 } },
+              x: {
+                grid: { display: false },
+                border: { display: false },
+                ticks: { maxTicksLimit: 8, maxRotation: 0 },
+              },
               y: {
-                grid: { color: "#f1f5f9" },
+                border: { display: false },
+                grid: { color: "rgba(148,163,184,.16)", drawTicks: false },
                 ticks: { callback: (v) => v.toLocaleString() },
               },
             },
@@ -3815,7 +4055,10 @@
               {
                 data: labels.map((t) => types[t].totalInteractions),
                 backgroundColor: bgColors,
-                borderWidth: 0,
+                borderColor: "#ffffff",
+                borderWidth: 4,
+                hoverOffset: 10,
+                spacing: 2,
               },
             ],
           },
@@ -3823,7 +4066,15 @@
             responsive: true,
             maintainAspectRatio: false,
             plugins: {
-              legend: { position: "bottom" },
+              legend: {
+                position: "bottom",
+                labels: {
+                  padding: 18,
+                  usePointStyle: true,
+                  pointStyle: "circle",
+                  font: { family: "Manrope", size: 11, weight: "600" },
+                },
+              },
               tooltip: {
                 ...tooltipStyle(),
                 callbacks: {
@@ -3995,10 +4246,11 @@
               {
                 label: "Interacciones",
                 data: sortedWeeks.map((wk) => weeks[wk].interactions),
-                backgroundColor: "rgba(20,83,51,0.75)",
-                borderRadius: 6,
+                backgroundColor: "rgba(23,128,91,0.82)",
+                borderRadius: 10,
+                borderSkipped: false,
                 borderWidth: 0,
-                hoverBackgroundColor: "#C5A059",
+                hoverBackgroundColor: "#B88935",
               },
             ],
           },
@@ -4007,9 +4259,14 @@
             maintainAspectRatio: false,
             plugins: { legend: { display: false }, tooltip: tooltipStyle() },
             scales: {
-              x: { grid: { display: false } },
+              x: {
+                grid: { display: false },
+                border: { display: false },
+                ticks: { maxRotation: 0, maxTicksLimit: 8 },
+              },
               y: {
-                grid: { color: "#f1f5f9" },
+                border: { display: false },
+                grid: { color: "rgba(148,163,184,.16)", drawTicks: false },
                 ticks: { callback: (v) => v },
               },
             },
@@ -4087,21 +4344,27 @@
             const visValue = visDenom;
             const engPost =
               visDenom > 0 ? ((total / visDenom) * 100).toFixed(1) : null;
-            const medal =
-              idx === 0 ? "🥇" : idx === 1 ? "🥈" : idx === 2 ? "🥉" : "";
-            return `<div class="glass-card p-4 flex flex-col gap-3 hover:shadow-md transition-shadow">
+            const rank = idx < 3 ? idx + 1 : null;
+            const typeClass = String(p.type || "story")
+              .toLowerCase()
+              .normalize("NFD")
+              .replace(/[\u0300-\u036f]/g, "");
+            return `<div class="glass-card post-card post-card-${typeClass} p-4 flex flex-col gap-3">
             <div class="flex items-start justify-between">
-              <span class="px-2.5 py-1 rounded-full text-xs font-semibold ${BADGE[p.type] || ""}">${p.type}</span>
+              <div class="flex items-center gap-2">
+                ${rank ? `<span class="post-rank">0${rank}</span>` : ""}
+                <span class="post-format-badge px-2.5 py-1 rounded-full text-xs font-semibold">${p.type}</span>
+              </div>
               <div class="flex items-center gap-0.5">
-                <button onclick="editPost('${p.id}')" class="text-slate-300 hover:text-club-green transition-colors p-1" title="Editar"><i data-lucide="pencil" class="w-3.5 h-3.5"></i></button>
-                <button onclick="deletePost('${p.id}')" class="text-slate-300 hover:text-red-500 transition-colors p-1" title="Eliminar"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
+                <button onclick="editPost('${p.id}')" class="post-action text-slate-400 p-1.5" title="Editar"><i data-lucide="pencil" class="w-3.5 h-3.5"></i></button>
+                <button onclick="deletePost('${p.id}')" class="post-action text-slate-400 hover:!text-red-500 p-1.5" title="Eliminar"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
               </div>
             </div>
-            <p class="text-sm font-medium text-slate-700 leading-snug">${medal} ${p.title}</p>
+            <p class="text-sm font-bold text-slate-800 leading-snug min-h-[2.5rem]">${p.title}</p>
             <p class="text-xs text-slate-400">${fmtDate}${timeStr ? " · <b>" + timeStr + "</b>" : ""}</p>
-            <div class="grid ${visLabel ? "grid-cols-2" : "grid-cols-1"} gap-1.5 pt-2 border-t border-slate-100 text-center">
+            <div class="post-metric-panel grid ${visLabel ? "grid-cols-2" : "grid-cols-1"} gap-1.5 text-center">
               ${visLabel ? `<div><p class="text-base font-bold text-club-dark">${visValue.toLocaleString()}</p><p class="text-[10px] text-slate-400">${visLabel}</p></div>` : ""}
-              <div><p class="text-base font-bold text-club-gold">${total.toLocaleString()}</p><p class="text-[10px] text-slate-400">Interacc.</p></div>
+              <div><p class="text-base font-extrabold" style="color:var(--post-color)">${total.toLocaleString()}</p><p class="text-[10px] text-slate-400">Interacciones</p></div>
             </div>
             <div class="grid grid-cols-3 gap-1 text-center text-xs text-slate-500">
               <div><span class="block font-semibold text-slate-700">${(p.likes || 0).toLocaleString()}</span>❤️</div>
@@ -4116,8 +4379,8 @@
                   </div>`
                 : ""
             }
-            <div class="flex gap-2 text-xs justify-between bg-slate-50 rounded-lg px-3 py-1.5">
-              <span class="text-slate-500">Eng: <b class="text-club-gold">${engPost !== null ? engPost + "%" : "—"}</b></span>
+            <div class="post-engagement flex gap-2 text-xs justify-between rounded-lg px-3 py-2">
+              <span>Engagement</span><b>${engPost !== null ? engPost + "%" : "—"}</b>
             </div>
           </div>`;
           })
@@ -4395,11 +4658,16 @@
       }
       function tooltipStyle() {
         return {
-          backgroundColor: "rgba(11,47,29,0.92)",
-          titleFont: { family: "Inter" },
-          bodyFont: { family: "Inter" },
-          padding: 10,
-          cornerRadius: 8,
+          backgroundColor: "rgba(7,26,38,0.94)",
+          titleColor: "#d8bf82",
+          bodyColor: "#ffffff",
+          borderColor: "rgba(216,191,130,.32)",
+          borderWidth: 1,
+          titleFont: { family: "Manrope", weight: "700" },
+          bodyFont: { family: "Manrope", weight: "500" },
+          padding: 12,
+          cornerRadius: 10,
+          displayColors: true,
         };
       }
       function getISOWeek(date) {
