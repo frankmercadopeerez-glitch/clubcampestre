@@ -668,6 +668,21 @@
         flex-direction: column;
         justify-content: center;
         gap: 2rem;
+        position: relative;
+        isolation: isolate;
+        overflow: hidden;
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        border-radius: 1.75rem;
+        padding: clamp(1.25rem, 3vw, 2.75rem);
+        background-image:
+          linear-gradient(90deg, rgba(4, 18, 27, 0.9) 0%, rgba(4, 25, 30, 0.7) 48%, rgba(7, 26, 38, 0.42) 100%),
+          linear-gradient(180deg, rgba(7, 26, 38, 0.12), rgba(7, 26, 38, 0.72)),
+          url("assets/golf-dashboard-hero.webp");
+        background-position: center;
+        background-size: cover;
+        box-shadow:
+          inset 0 1px 0 rgba(255, 255, 255, 0.08),
+          0 28px 70px rgba(1, 12, 18, 0.28);
       }
       @media (min-width: 1024px) {
         .overview-hero {
@@ -677,6 +692,17 @@
         .overview-content {
           padding-top: 1.5rem;
           border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+      }
+      @media (max-width: 640px) {
+        .overview-hero {
+          border-radius: 1.25rem;
+          padding: 1rem;
+          background-image:
+            linear-gradient(90deg, rgba(4, 18, 27, 0.9), rgba(4, 25, 30, 0.66)),
+            linear-gradient(180deg, rgba(7, 26, 38, 0.2), rgba(7, 26, 38, 0.82)),
+            url("assets/golf-dashboard-hero.webp");
+          background-position: 68% center;
         }
       }
     </style>
