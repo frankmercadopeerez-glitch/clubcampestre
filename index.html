@@ -1155,7 +1155,7 @@
                     Registrar Publicación
                   </h2>
                   <p class="text-xs text-slate-400">
-                    Post, Reel, Carrusel o Foto
+                    Post, Reel, Carrusel, Foto o Story
                   </p>
                 </div>
               </div>
@@ -1288,6 +1288,65 @@
                         placeholder="0"
                         class="w-full px-2 py-1.5 text-sm border border-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-club-green/50"
                       />
+                    </div>
+                  </div>
+                </div>
+                <div id="panel-story-stickers-wrap" class="sticker-panel">
+                  <div class="form-section">
+                    <div class="flex items-start gap-2.5 mb-3">
+                      <span class="sticker-icon"><i data-lucide="sparkles"></i></span>
+                      <div>
+                        <p class="text-xs font-semibold text-slate-800">
+                          Stickers de la historia
+                        </p>
+                        <p class="text-[10px] leading-relaxed text-slate-500">
+                          Respuestas y toques generados por cada sticker.
+                        </p>
+                      </div>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                      <label class="sticker-chip">
+                        <span class="sticker-icon"><i data-lucide="bar-chart-3"></i></span>
+                        <span class="min-w-0 flex-1">
+                          <span class="block text-[11px] font-semibold text-slate-700">Encuesta</span>
+                          <input type="number" id="panel-sticker-poll" min="0" placeholder="Respuestas" aria-label="Respuestas a encuesta" />
+                        </span>
+                      </label>
+                      <label class="sticker-chip">
+                        <span class="sticker-icon"><i data-lucide="message-circle-question"></i></span>
+                        <span class="min-w-0 flex-1">
+                          <span class="block text-[11px] font-semibold text-slate-700">Preguntas</span>
+                          <input type="number" id="panel-sticker-questions" min="0" placeholder="Respuestas" aria-label="Respuestas a preguntas" />
+                        </span>
+                      </label>
+                      <label class="sticker-chip">
+                        <span class="sticker-icon"><i data-lucide="list-checks"></i></span>
+                        <span class="min-w-0 flex-1">
+                          <span class="block text-[11px] font-semibold text-slate-700">Cuestionario</span>
+                          <input type="number" id="panel-sticker-quiz" min="0" placeholder="Respuestas" aria-label="Respuestas al cuestionario" />
+                        </span>
+                      </label>
+                      <label class="sticker-chip">
+                        <span class="sticker-icon"><i data-lucide="gauge"></i></span>
+                        <span class="min-w-0 flex-1">
+                          <span class="block text-[11px] font-semibold text-slate-700">Deslizador</span>
+                          <input type="number" id="panel-sticker-slider" min="0" placeholder="Respuestas" aria-label="Respuestas al deslizador" />
+                        </span>
+                      </label>
+                      <label class="sticker-chip">
+                        <span class="sticker-icon"><i data-lucide="link-2"></i></span>
+                        <span class="min-w-0 flex-1">
+                          <span class="block text-[11px] font-semibold text-slate-700">Enlace</span>
+                          <input type="number" id="panel-sticker-link" min="0" placeholder="Toques" aria-label="Toques en enlace" />
+                        </span>
+                      </label>
+                      <label class="sticker-chip">
+                        <span class="sticker-icon"><i data-lucide="at-sign"></i></span>
+                        <span class="min-w-0 flex-1">
+                          <span class="block text-[11px] font-semibold text-slate-700">Mención / hashtag</span>
+                          <input type="number" id="panel-sticker-mention" min="0" placeholder="Toques" aria-label="Toques en menciones o hashtags" />
+                        </span>
+                      </label>
                     </div>
                   </div>
                 </div>
@@ -2127,6 +2186,11 @@
             .getElementById("story-stickers-wrap")
             .classList.toggle("is-visible", type === "Story");
         }
+        if (prefix === "panel-post") {
+          document
+            .getElementById("panel-story-stickers-wrap")
+            .classList.toggle("is-visible", type === "Story");
+        }
       }
       document
         .getElementById("post-type")
@@ -2140,6 +2204,9 @@
         });
       postForm.addEventListener("reset", () => {
         requestAnimationFrame(() => toggleVisFields("post", ""));
+      });
+      panelPostForm.addEventListener("reset", () => {
+        requestAnimationFrame(() => toggleVisFields("panel-post", ""));
       });
 
       postForm.addEventListener("submit", async (e) => {
@@ -2268,8 +2335,32 @@
           compartidos:
             parseInt(document.getElementById("panel-post-compartidos").value) ||
             0,
+          storyStickers: {
+            poll:
+              parseInt(document.getElementById("panel-sticker-poll").value) ||
+              0,
+            questions:
+              parseInt(
+                document.getElementById("panel-sticker-questions").value,
+              ) || 0,
+            quiz:
+              parseInt(document.getElementById("panel-sticker-quiz").value) ||
+              0,
+            slider:
+              parseInt(
+                document.getElementById("panel-sticker-slider").value,
+              ) || 0,
+            link:
+              parseInt(document.getElementById("panel-sticker-link").value) ||
+              0,
+            mention:
+              parseInt(
+                document.getElementById("panel-sticker-mention").value,
+              ) || 0,
+          },
           createdAt: new Date().toISOString(),
         };
+        if (panelRecord.type !== "Story") delete panelRecord.storyStickers;
         const panelFollowers =
           parseInt(document.getElementById("panel-post-followers").value) || 0;
         if (panelFollowers > 0) panelRecord.followers = panelFollowers;
