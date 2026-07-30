@@ -482,6 +482,167 @@
           gap: 0.5rem;
         }
       }
+
+      /* Professional motion and visual finish */
+      :root {
+        --club-ink: #071a26;
+        --club-green-rich: #0f4d32;
+        --club-gold-soft: #d5b56f;
+      }
+      html { scroll-behavior: smooth; }
+      body {
+        background-color: var(--club-ink);
+        background-image:
+          radial-gradient(circle at 10% -10%, rgba(213, 181, 111, 0.13), transparent 30rem),
+          radial-gradient(circle at 88% 12%, rgba(20, 83, 51, 0.32), transparent 34rem),
+          linear-gradient(155deg, #081724 0%, #0a2330 50%, #071a26 100%);
+        background-attachment: fixed;
+      }
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        opacity: 0.035;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 160 160' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.8'/%3E%3C/svg%3E");
+        z-index: -1;
+      }
+      header, nav {
+        backdrop-filter: blur(18px) saturate(140%);
+        -webkit-backdrop-filter: blur(18px) saturate(140%);
+      }
+      .glass-card, .kpi-card {
+        border: 1px solid rgba(255, 255, 255, 0.74);
+        box-shadow: 0 18px 48px rgba(1, 14, 22, 0.19), 0 2px 8px rgba(1, 14, 22, 0.08);
+        transition: transform .35s cubic-bezier(.2,.8,.2,1), box-shadow .35s ease, border-color .35s ease;
+      }
+      .glass-card:hover, .kpi-card:hover {
+        transform: translateY(-4px);
+        border-color: rgba(213, 181, 111, 0.5);
+        box-shadow: 0 24px 60px rgba(1, 14, 22, 0.27), 0 4px 12px rgba(1, 14, 22, 0.1);
+      }
+      .tab-btn {
+        transition: color .25s ease, background .25s ease, transform .25s ease;
+      }
+      .tab-btn:hover { transform: translateY(-1px); }
+      .tab-btn::after {
+        transform: scaleX(0);
+        transform-origin: center;
+        transition: transform .3s cubic-bezier(.2,.8,.2,1), background .25s;
+      }
+      .tab-btn.active::after { transform: scaleX(1); }
+      button, a, input, select, textarea {
+        transition: color .22s ease, background-color .22s ease, border-color .22s ease, box-shadow .22s ease, transform .22s ease;
+      }
+      button:not(:disabled):active { transform: scale(.98); }
+      input, select, textarea { background-color: #fbfdfc; }
+      input:hover, select:hover, textarea:hover { border-color: #94a99c; }
+      input:focus, select:focus, textarea:focus {
+        background: #fff;
+        border-color: var(--club-green-rich);
+        box-shadow: 0 0 0 4px rgba(15, 77, 50, 0.11);
+      }
+      section:not(.hidden) {
+        animation: section-in .48s cubic-bezier(.2,.8,.2,1) both;
+      }
+      @keyframes section-in {
+        from { opacity: 0; transform: translateY(12px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      #modal-overlay {
+        opacity: 0;
+        background: rgba(2, 12, 19, 0.68);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+      }
+      #modal-overlay:not(.hidden) { opacity: 1; animation: fade-in .24s ease both; }
+      #modal-overlay > .glass-card {
+        border-radius: 1.4rem;
+        transform: translateY(16px) scale(.98);
+      }
+      #modal-overlay:not(.hidden) > .glass-card {
+        animation: modal-in .38s cubic-bezier(.16,1,.3,1) both;
+      }
+      @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+      @keyframes modal-in {
+        from { opacity: 0; transform: translateY(24px) scale(.97); }
+        to { opacity: 1; transform: translateY(0) scale(1); }
+      }
+      .form-section {
+        border: 1px solid #e7ece8;
+        background: linear-gradient(145deg, #fff, #f8faf8);
+        border-radius: 1rem;
+        padding: 1rem;
+      }
+      .sticker-panel {
+        overflow: hidden;
+        max-height: 0;
+        opacity: 0;
+        transform: translateY(-8px);
+        transition: max-height .55s cubic-bezier(.2,.8,.2,1), opacity .3s ease, transform .35s ease, margin .35s ease;
+      }
+      .sticker-panel.is-visible {
+        max-height: 900px;
+        opacity: 1;
+        transform: translateY(0);
+        margin-top: .75rem;
+      }
+      .sticker-chip {
+        display: flex;
+        align-items: center;
+        gap: .55rem;
+        padding: .7rem;
+        background: #fff;
+        border: 1px solid #e2e8e3;
+        border-radius: .8rem;
+      }
+      .sticker-chip:focus-within {
+        border-color: rgba(15, 77, 50, .5);
+        box-shadow: 0 0 0 3px rgba(15, 77, 50, .08);
+      }
+      .sticker-icon {
+        display: grid;
+        width: 2rem;
+        height: 2rem;
+        flex: 0 0 2rem;
+        place-items: center;
+        border-radius: .65rem;
+        color: #fff;
+        background: linear-gradient(135deg, #145333, #0f4c62);
+        box-shadow: 0 5px 12px rgba(15, 77, 50, .2);
+      }
+      .sticker-chip input {
+        width: 100%;
+        min-width: 0;
+        border: 0;
+        border-bottom: 1px solid #dbe3dd;
+        border-radius: 0;
+        padding: .25rem 0;
+        background: transparent;
+        box-shadow: none;
+      }
+      .sticker-chip input:focus {
+        box-shadow: none;
+        border-bottom-color: #145333;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        *, *::before, *::after {
+          scroll-behavior: auto !important;
+          animation-duration: .01ms !important;
+          animation-iteration-count: 1 !important;
+          transition-duration: .01ms !important;
+        }
+      }
+      @media (max-width: 640px) {
+        #modal-overlay { align-items: flex-end; padding: 0; }
+        #modal-overlay > .glass-card {
+          max-height: 94vh;
+          border-radius: 1.25rem 1.25rem 0 0;
+          padding: 1rem;
+        }
+        #post-form > .grid { grid-template-columns: 1fr; gap: .75rem; }
+        #post-form .grid-cols-4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      }
     </style>
   </head>
   <body class="text-slate-800 antialiased min-h-screen flex flex-col">
@@ -662,6 +823,66 @@
                   placeholder="0"
                   class="w-full px-2 py-1.5 text-sm border border-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-club-green/50"
                 />
+              </div>
+            </div>
+          </div>
+          <!-- Interacciones de stickers, disponibles para historias -->
+          <div id="story-stickers-wrap" class="sticker-panel">
+            <div class="form-section">
+              <div class="flex items-start gap-3 mb-3">
+                <span class="sticker-icon"><i data-lucide="sparkles"></i></span>
+                <div>
+                  <p class="text-sm font-semibold text-slate-800">
+                    Interacciones con stickers
+                  </p>
+                  <p class="text-xs text-slate-500 mt-0.5">
+                    Registra las respuestas y toques recibidos en esta historia.
+                  </p>
+                </div>
+              </div>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                <label class="sticker-chip">
+                  <span class="sticker-icon"><i data-lucide="bar-chart-3"></i></span>
+                  <span class="min-w-0 flex-1">
+                    <span class="block text-xs font-semibold text-slate-700">Encuesta</span>
+                    <input type="number" id="sticker-poll" min="0" placeholder="Respuestas" aria-label="Respuestas a encuesta" />
+                  </span>
+                </label>
+                <label class="sticker-chip">
+                  <span class="sticker-icon"><i data-lucide="message-circle-question"></i></span>
+                  <span class="min-w-0 flex-1">
+                    <span class="block text-xs font-semibold text-slate-700">Preguntas</span>
+                    <input type="number" id="sticker-questions" min="0" placeholder="Respuestas" aria-label="Respuestas a preguntas" />
+                  </span>
+                </label>
+                <label class="sticker-chip">
+                  <span class="sticker-icon"><i data-lucide="list-checks"></i></span>
+                  <span class="min-w-0 flex-1">
+                    <span class="block text-xs font-semibold text-slate-700">Cuestionario</span>
+                    <input type="number" id="sticker-quiz" min="0" placeholder="Respuestas" aria-label="Respuestas al cuestionario" />
+                  </span>
+                </label>
+                <label class="sticker-chip">
+                  <span class="sticker-icon"><i data-lucide="gauge"></i></span>
+                  <span class="min-w-0 flex-1">
+                    <span class="block text-xs font-semibold text-slate-700">Deslizador</span>
+                    <input type="number" id="sticker-slider" min="0" placeholder="Respuestas" aria-label="Respuestas al deslizador" />
+                  </span>
+                </label>
+                <label class="sticker-chip">
+                  <span class="sticker-icon"><i data-lucide="link-2"></i></span>
+                  <span class="min-w-0 flex-1">
+                    <span class="block text-xs font-semibold text-slate-700">Enlace</span>
+                    <input type="number" id="sticker-link" min="0" placeholder="Toques" aria-label="Toques en enlace" />
+                  </span>
+                </label>
+                <label class="sticker-chip">
+                  <span class="sticker-icon"><i data-lucide="at-sign"></i></span>
+                  <span class="min-w-0 flex-1">
+                    <span class="block text-xs font-semibold text-slate-700">Mención / hashtag</span>
+                    <input type="number" id="sticker-mention" min="0" placeholder="Toques" aria-label="Toques en menciones o hashtags" />
+                  </span>
+                </label>
               </div>
             </div>
           </div>
@@ -1870,6 +2091,15 @@
         document.getElementById("post-likes").value = p.likes || 0;
         document.getElementById("post-comments").value = p.comments || 0;
         document.getElementById("post-compartidos").value = p.compartidos || 0;
+        const stickers = p.storyStickers || {};
+        document.getElementById("sticker-poll").value = stickers.poll || "";
+        document.getElementById("sticker-questions").value =
+          stickers.questions || "";
+        document.getElementById("sticker-quiz").value = stickers.quiz || "";
+        document.getElementById("sticker-slider").value = stickers.slider || "";
+        document.getElementById("sticker-link").value = stickers.link || "";
+        document.getElementById("sticker-mention").value =
+          stickers.mention || "";
         document.getElementById("post-followers").value = p.followers || "";
         document.getElementById("edit-post-banner").classList.remove("hidden");
         document.getElementById("modal-post-title").textContent =
@@ -1892,6 +2122,11 @@
         if (!isReel)
           document.getElementById(prefix + "-reproducciones").value = 0;
         if (isReel) document.getElementById(prefix + "-vistas").value = 0;
+        if (prefix === "post") {
+          document
+            .getElementById("story-stickers-wrap")
+            .classList.toggle("is-visible", type === "Story");
+        }
       }
       document
         .getElementById("post-type")
@@ -1903,6 +2138,9 @@
         .addEventListener("change", function () {
           toggleVisFields("panel-post", this.value);
         });
+      postForm.addEventListener("reset", () => {
+        requestAnimationFrame(() => toggleVisFields("post", ""));
+      });
 
       postForm.addEventListener("submit", async (e) => {
         e.preventDefault();
@@ -1924,8 +2162,20 @@
             parseInt(document.getElementById("post-comments").value) || 0,
           compartidos:
             parseInt(document.getElementById("post-compartidos").value) || 0,
+          storyStickers: {
+            poll: parseInt(document.getElementById("sticker-poll").value) || 0,
+            questions:
+              parseInt(document.getElementById("sticker-questions").value) || 0,
+            quiz: parseInt(document.getElementById("sticker-quiz").value) || 0,
+            slider:
+              parseInt(document.getElementById("sticker-slider").value) || 0,
+            link: parseInt(document.getElementById("sticker-link").value) || 0,
+            mention:
+              parseInt(document.getElementById("sticker-mention").value) || 0,
+          },
           createdAt: new Date().toISOString(),
         };
+        if (postRecord.type !== "Story") delete postRecord.storyStickers;
         const postFollowers =
           parseInt(document.getElementById("post-followers").value) || 0;
         if (postFollowers > 0) postRecord.followers = postFollowers;
@@ -3576,8 +3826,14 @@
           const wk = getISOWeek(d);
           const key = d.getFullYear() + "-W" + String(wk).padStart(2, "0");
           if (!weeks[key]) weeks[key] = { interactions: 0 };
+          const stickerInteractions = Object.values(
+            item.storyStickers || {},
+          ).reduce((sum, value) => sum + (Number(value) || 0), 0);
           weeks[key].interactions +=
-            (item.likes || 0) + (item.comments || 0) + (item.compartidos || 0);
+            (item.likes || 0) +
+            (item.comments || 0) +
+            (item.compartidos || 0) +
+            stickerInteractions;
         });
         const sortedWeeks = Object.keys(weeks).sort().slice(-12);
         weeklyEngagementInst = new Chart(ctx, {
@@ -3649,8 +3905,15 @@
 
         grid.innerHTML = visiblePosts
           .map((p, idx) => {
+            const stickerTotal = Object.values(p.storyStickers || {}).reduce(
+              (sum, value) => sum + (Number(value) || 0),
+              0,
+            );
             const total =
-              (p.likes || 0) + (p.comments || 0) + (p.compartidos || 0);
+              (p.likes || 0) +
+              (p.comments || 0) +
+              (p.compartidos || 0) +
+              stickerTotal;
             const d = new Date(p.date + "T00:00:00");
             const fmtDate = d.toLocaleDateString("es-ES", {
               day: "2-digit",
@@ -3694,6 +3957,14 @@
               <div><span class="block font-semibold text-slate-700">${(p.comments || 0).toLocaleString()}</span>💬</div>
               <div><span class="block font-semibold text-slate-700">${(p.compartidos || 0).toLocaleString()}</span>↗️</div>
             </div>
+            ${
+              stickerTotal
+                ? `<div class="flex items-center justify-between rounded-lg bg-emerald-50 px-3 py-2 text-xs text-emerald-800">
+                    <span class="flex items-center gap-1.5"><i data-lucide="sparkles" class="w-3.5 h-3.5"></i> Stickers de historia</span>
+                    <b>${stickerTotal.toLocaleString()}</b>
+                  </div>`
+                : ""
+            }
             <div class="flex gap-2 text-xs justify-between bg-slate-50 rounded-lg px-3 py-1.5">
               <span class="text-slate-500">Eng: <b class="text-club-gold">${engPost !== null ? engPost + "%" : "—"}</b></span>
             </div>
