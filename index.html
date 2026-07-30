@@ -642,6 +642,25 @@
         }
         #post-form > .grid { grid-template-columns: 1fr; gap: .75rem; }
         #post-form .grid-cols-4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        #panel-story-stickers-wrap .grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+        #panel-story-stickers-wrap .sticker-chip {
+          align-items: flex-start;
+          flex-direction: column;
+          gap: .4rem;
+          min-height: 6.25rem;
+          padding: .65rem;
+        }
+        #panel-story-stickers-wrap .sticker-icon {
+          width: 1.75rem;
+          height: 1.75rem;
+          flex-basis: 1.75rem;
+        }
+        #panel-story-stickers-wrap .sticker-icon svg {
+          width: .9rem;
+          height: .9rem;
+        }
       }
     </style>
   </head>
@@ -674,7 +693,7 @@
             class="text-lg font-semibold text-club-dark"
             id="modal-post-title"
           >
-            Registrar Publicacion (Detallado)
+            Registrar publicación
           </h2>
         </div>
         <!-- Edit banner -->
@@ -1309,42 +1328,42 @@
                         <span class="sticker-icon"><i data-lucide="bar-chart-3"></i></span>
                         <span class="min-w-0 flex-1">
                           <span class="block text-[11px] font-semibold text-slate-700">Encuesta</span>
-                          <input type="number" id="panel-sticker-poll" min="0" placeholder="Respuestas" aria-label="Respuestas a encuesta" />
+                          <input type="number" id="panel-sticker-poll" min="0" placeholder="0" aria-label="Respuestas a encuesta" />
                         </span>
                       </label>
                       <label class="sticker-chip">
                         <span class="sticker-icon"><i data-lucide="message-circle-question"></i></span>
                         <span class="min-w-0 flex-1">
                           <span class="block text-[11px] font-semibold text-slate-700">Preguntas</span>
-                          <input type="number" id="panel-sticker-questions" min="0" placeholder="Respuestas" aria-label="Respuestas a preguntas" />
+                          <input type="number" id="panel-sticker-questions" min="0" placeholder="0" aria-label="Respuestas a preguntas" />
                         </span>
                       </label>
                       <label class="sticker-chip">
                         <span class="sticker-icon"><i data-lucide="list-checks"></i></span>
                         <span class="min-w-0 flex-1">
                           <span class="block text-[11px] font-semibold text-slate-700">Cuestionario</span>
-                          <input type="number" id="panel-sticker-quiz" min="0" placeholder="Respuestas" aria-label="Respuestas al cuestionario" />
+                          <input type="number" id="panel-sticker-quiz" min="0" placeholder="0" aria-label="Respuestas al cuestionario" />
                         </span>
                       </label>
                       <label class="sticker-chip">
                         <span class="sticker-icon"><i data-lucide="gauge"></i></span>
                         <span class="min-w-0 flex-1">
                           <span class="block text-[11px] font-semibold text-slate-700">Deslizador</span>
-                          <input type="number" id="panel-sticker-slider" min="0" placeholder="Respuestas" aria-label="Respuestas al deslizador" />
+                          <input type="number" id="panel-sticker-slider" min="0" placeholder="0" aria-label="Respuestas al deslizador" />
                         </span>
                       </label>
                       <label class="sticker-chip">
                         <span class="sticker-icon"><i data-lucide="link-2"></i></span>
                         <span class="min-w-0 flex-1">
                           <span class="block text-[11px] font-semibold text-slate-700">Enlace</span>
-                          <input type="number" id="panel-sticker-link" min="0" placeholder="Toques" aria-label="Toques en enlace" />
+                          <input type="number" id="panel-sticker-link" min="0" placeholder="0" aria-label="Toques en enlace" />
                         </span>
                       </label>
                       <label class="sticker-chip">
                         <span class="sticker-icon"><i data-lucide="at-sign"></i></span>
                         <span class="min-w-0 flex-1">
                           <span class="block text-[11px] font-semibold text-slate-700">Mención / hashtag</span>
-                          <input type="number" id="panel-sticker-mention" min="0" placeholder="Toques" aria-label="Toques en menciones o hashtags" />
+                          <input type="number" id="panel-sticker-mention" min="0" placeholder="0" aria-label="Toques en menciones o hashtags" />
                         </span>
                       </label>
                     </div>
@@ -2122,7 +2141,7 @@
           .slice(0, 5);
         document.getElementById("edit-post-banner").classList.add("hidden");
         document.getElementById("modal-post-title").textContent =
-          "Registrar Publicacion (Detallado)";
+          "Registrar publicación";
         btnPostSubmit.innerHTML = `<i data-lucide="save" class="w-4 h-4"></i> Guardar Publicacion`;
         lucide.createIcons();
       };
@@ -2296,7 +2315,7 @@
             .slice(0, 5);
           document.getElementById("edit-post-banner").classList.add("hidden");
           document.getElementById("modal-post-title").textContent =
-            "Registrar Publicacion (Detallado)";
+            "Registrar publicación";
           btnPostSubmit.innerHTML = `<i data-lucide="save" class="w-4 h-4"></i> Guardar Publicacion`;
           modalOverlay.classList.add("hidden");
         } catch (err) {
