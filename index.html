@@ -362,6 +362,9 @@
           padding-left: 0.75rem;
           padding-right: 0.75rem;
         }
+        .club-brand-logo {
+          width: min(13.5rem, 67vw);
+        }
 
         /* Nav tabs — smaller padding & font */
         .tab-btn {
@@ -925,6 +928,13 @@
         border: 1px solid rgba(13,51,65,.35);
         border-radius: 50%;
       }
+      .club-brand-logo {
+        display: block;
+        width: clamp(13.5rem, 22vw, 18.5rem);
+        height: auto;
+        object-fit: contain;
+        object-position: left center;
+      }
       body > nav {
         background: rgba(242,236,224,.96) !important;
         border-color: rgba(13,51,65,.12) !important;
@@ -1294,19 +1304,17 @@
       "
     >
       <div
-        class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between"
+        class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between"
       >
-        <div class="flex items-center gap-3">
-          <span class="brand-monogram" aria-hidden="true">CC</span>
-          <div>
-            <h1 class="font-semibold text-sm leading-tight">
-              Club Campestre de Cartagena
-            </h1>
-            <p class="text-xs text-white/50 leading-tight">
-              Analytics · Instagram
-            </p>
-          </div>
-        </div>
+        <a href="#" class="flex items-center" aria-label="Club Campestre de Cartagena — Inicio">
+          <img
+            src="assets/logo-club-campestre.png"
+            alt="Club Campestre de Cartagena"
+            class="club-brand-logo"
+            width="640"
+            height="162"
+          />
+        </a>
         <div class="flex items-center gap-3">
           <div
             id="firebase-status"
