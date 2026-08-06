@@ -25,32 +25,12 @@
          8. En Firestore: "Reglas" → Pegar las reglas indicadas abajo.
          ===================================================================== -->
 
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-      tailwind.config = {
-        theme: {
-          extend: {
-            colors: {
-              club: {
-                dark: "#0F4C62",
-                green: "#145333",
-                light: "#E8F1EC",
-                gold: "#C5A059",
-                goldhover: "#B08D4C",
-              },
-            },
-            fontFamily: {
-              sans: ["Manrope", "sans-serif"],
-            },
-          },
-        },
-      };
-    </script>
+    <!-- Compiled interface styles (local for reliable loading) -->
+    <link rel="stylesheet" href="assets/tailwind.css" />
 
     <!-- Google Fonts -->
     <link
-      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Unna:wght@400;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&family=Unna:wght@400;700&display=swap"
       rel="stylesheet"
     />
 
@@ -64,7 +44,7 @@
 
     <style>
       body {
-        font-family: "Manrope", sans-serif;
+        font-family: "Poppins", sans-serif;
         background: #0b1628;
         background-image:
           radial-gradient(
@@ -488,7 +468,7 @@
         --photo-soft: #f1ebf8;
       }
       body {
-        font-family: "Manrope", sans-serif;
+        font-family: "Poppins", sans-serif;
         font-feature-settings: "tnum" 1, "ss01" 1;
       }
       .page-title {
@@ -870,7 +850,7 @@
         background-image:
           linear-gradient(90deg, rgba(4, 18, 27, 0.9) 0%, rgba(4, 25, 30, 0.7) 48%, rgba(7, 26, 38, 0.42) 100%),
           linear-gradient(180deg, rgba(7, 26, 38, 0.12), rgba(7, 26, 38, 0.72)),
-          url("assets/golf-dashboard-hero.webp");
+          url("assets/header-club-campestre.webp");
         background-position: center;
         background-size: cover;
         box-shadow:
@@ -894,9 +874,140 @@
           background-image:
             linear-gradient(90deg, rgba(4, 18, 27, 0.9), rgba(4, 25, 30, 0.66)),
             linear-gradient(180deg, rgba(7, 26, 38, 0.2), rgba(7, 26, 38, 0.82)),
-            url("assets/golf-dashboard-hero.webp");
+            url("assets/header-club-campestre.webp");
           background-position: 68% center;
         }
+      }
+
+      /* Official Club Campestre visual language */
+      :root {
+        --official-ivory: #f2ece0;
+        --official-paper: #fffdf8;
+        --official-teal: #0d3341;
+        --official-charcoal: #404041;
+        --official-sage: #a2ac87;
+        --official-sand: #c8b89b;
+      }
+      body {
+        color: var(--official-charcoal);
+        background-color: var(--official-ivory);
+        background-image:
+          radial-gradient(circle at 90% 10%, rgba(162,172,135,.2), transparent 32rem),
+          linear-gradient(180deg, #f7f2e9 0%, var(--official-ivory) 60%, #eee6d8 100%);
+      }
+      body::before { opacity: .018; }
+      #main-header {
+        color: var(--official-teal) !important;
+        background: rgba(242,236,224,.96) !important;
+        border-bottom: 1px solid rgba(13,51,65,.12);
+        box-shadow: 0 8px 28px rgba(64,64,65,.06);
+      }
+      #main-header h1 {
+        color: var(--official-teal);
+        font-family: "Unna", serif;
+        font-size: 1.08rem;
+        font-weight: 400;
+        letter-spacing: .015em;
+      }
+      #main-header p,
+      #main-header #firebase-status {
+        color: rgba(13,51,65,.56) !important;
+      }
+      .brand-monogram {
+        display: grid;
+        place-items: center;
+        width: 2rem;
+        height: 2rem;
+        color: var(--official-teal);
+        font-family: "Unna", serif;
+        font-size: .78rem;
+        letter-spacing: -.08em;
+        border: 1px solid rgba(13,51,65,.35);
+        border-radius: 50%;
+      }
+      body > nav {
+        background: rgba(242,236,224,.96) !important;
+        border-color: rgba(13,51,65,.12) !important;
+        box-shadow: 0 10px 30px rgba(64,64,65,.05);
+      }
+      .tab-btn {
+        color: rgba(64,64,65,.68);
+        font-size: .72rem;
+        font-weight: 400;
+        letter-spacing: .075em;
+        text-transform: uppercase;
+      }
+      .tab-btn:hover {
+        color: var(--official-teal);
+        background: rgba(13,51,65,.055);
+      }
+      .tab-btn.active { color: var(--official-teal); }
+      .tab-btn.active::after { background: var(--official-teal); }
+      section:not(#tab-overview) .page-title { color: var(--official-teal); }
+      section:not(#tab-overview) .page-subtitle { color: rgba(64,64,65,.62); }
+      .overview-hero {
+        border-color: rgba(242,236,224,.42);
+        background-image:
+          linear-gradient(90deg, rgba(13,51,65,.9) 0%, rgba(13,51,65,.62) 47%, rgba(13,51,65,.18) 100%),
+          linear-gradient(180deg, rgba(13,51,65,.04), rgba(13,51,65,.62)),
+          url("assets/header-club-campestre.webp");
+        background-position: center;
+        box-shadow: 0 24px 64px rgba(13,51,65,.18);
+      }
+      .overview-content { border-color: rgba(13,51,65,.15) !important; }
+      .glass-card,
+      .kpi-card {
+        border-color: rgba(13,51,65,.11);
+        background: linear-gradient(145deg, rgba(255,253,248,.99), rgba(249,246,239,.98));
+        box-shadow: 0 16px 42px rgba(64,64,65,.1), 0 2px 8px rgba(64,64,65,.04);
+      }
+      .glass-card:hover,
+      .kpi-card:hover {
+        border-color: rgba(13,51,65,.24);
+        box-shadow: 0 22px 50px rgba(64,64,65,.14), 0 4px 10px rgba(64,64,65,.05);
+      }
+      .kpi-card { border-top-color: var(--official-sage); }
+      .kpi-card:nth-child(2) { border-top-color: var(--official-teal); }
+      .kpi-card:nth-child(3) { border-top-color: var(--official-sand); }
+      .kpi-card.kpi-accent {
+        background: linear-gradient(135deg, #0d3341, #174b59);
+      }
+      .kpi-card.kpi-accent .kpi-value { color: #f2ece0; }
+      .kpi-card.kpi-accent .kpi-label { color: rgba(242,236,224,.68); }
+      .post-card-story { --post-color: #607c67; --post-soft: #edf1e8; }
+      .post-card-reel { --post-color: #9a7657; --post-soft: #f3e9dd; }
+      .post-card-carrusel { --post-color: #496b78; --post-soft: #e8eff0; }
+      .post-card-foto { --post-color: #786b70; --post-soft: #efe9e7; }
+      #btn-add-post-top,
+      #btn-panel-post-submit,
+      #btn-post-submit {
+        color: var(--official-ivory) !important;
+        background: var(--official-teal) !important;
+        border: 1px solid var(--official-teal);
+        box-shadow: 0 8px 20px rgba(13,51,65,.16);
+      }
+      #btn-add-post-top:hover,
+      #btn-panel-post-submit:hover,
+      #btn-post-submit:hover { background: #174b59 !important; }
+      .monthly-metric-btn.active {
+        background: var(--official-teal) !important;
+        border-color: var(--official-teal) !important;
+      }
+      input, select, textarea { background-color: var(--official-paper); }
+      input:focus, select:focus, textarea:focus {
+        border-color: var(--official-teal);
+        box-shadow: 0 0 0 4px rgba(13,51,65,.1);
+      }
+      ::-webkit-scrollbar-thumb { background: rgba(13,51,65,.24); }
+      @media (max-width: 640px) {
+        .overview-hero {
+          background-image:
+            linear-gradient(90deg, rgba(13,51,65,.88), rgba(13,51,65,.5)),
+            linear-gradient(180deg, rgba(13,51,65,.14), rgba(13,51,65,.72)),
+            url("assets/header-club-campestre.webp");
+          background-position: 55% center;
+        }
+        .tab-btn { font-size: .64rem; letter-spacing: .045em; }
       }
     </style>
   </head>
@@ -1186,11 +1297,7 @@
         class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between"
       >
         <div class="flex items-center gap-3">
-          <div
-            class="bg-club-gold/20 p-1.5 rounded-lg border border-club-gold/30"
-          >
-            <i data-lucide="bar-chart-2" class="w-4 h-4 text-club-gold"></i>
-          </div>
+          <span class="brand-monogram" aria-hidden="true">CC</span>
           <div>
             <h1 class="font-semibold text-sm leading-tight">
               Club Campestre de Cartagena
@@ -1908,21 +2015,21 @@
               </button>
               <button
                 data-metric="likes"
-                data-color="#e11d48"
+                data-color="#a2ac87"
                 class="monthly-metric-btn"
               >
                 Likes
               </button>
               <button
                 data-metric="comentarios"
-                data-color="#2563eb"
+                data-color="#9a7657"
                 class="monthly-metric-btn"
               >
                 Comentarios
               </button>
               <button
                 data-metric="compartidos"
-                data-color="#0891b2"
+                data-color="#496b78"
                 class="monthly-metric-btn"
               >
                 Compartidos
@@ -2017,7 +2124,7 @@
       const DEMO_MODE = firebaseConfig.apiKey === "REEMPLAZAR_API_KEY";
 
       // ── Chart.js global defaults ─────────────────────────────────────────
-      Chart.defaults.font.family = "'Manrope', sans-serif";
+      Chart.defaults.font.family = "'Poppins', sans-serif";
       Chart.defaults.font.size = 11;
       Chart.defaults.color = "#718096";
       Chart.defaults.animation.duration = 720;
@@ -2989,25 +3096,25 @@
             interacciones: {
               label: "Interacciones",
               type: "bar",
-              color: "rgba(23,128,91,0.82)",
+              color: "rgba(13,51,65,0.86)",
               fn: (v) => v.likes + v.comments + v.shares,
             },
             likes: {
               label: "Likes",
               type: "line",
-              color: "#e11d48",
+              color: "#a2ac87",
               fn: (v) => v.likes,
             },
             comentarios: {
               label: "Comentarios",
               type: "line",
-              color: "#2563eb",
+              color: "#9a7657",
               fn: (v) => v.comments,
             },
             compartidos: {
               label: "Compartidos",
               type: "line",
-              color: "#0891b2",
+              color: "#496b78",
               fn: (v) => v.shares,
             },
           };
@@ -3138,28 +3245,28 @@
             interacciones: {
               label: "Interacciones",
               type: "bar",
-              color: "rgba(197,160,89,0.85)",
+              color: "rgba(13,51,65,0.86)",
               axis: "y",
               fn: (r) => (r.likes || 0) + (r.comments || 0) + (r.shares || 0),
             },
             likes: {
               label: "Likes",
               type: "line",
-              color: "#e11d48",
+              color: "#a2ac87",
               axis: "y1",
               fn: (r) => r.likes || 0,
             },
             comentarios: {
               label: "Comentarios",
               type: "line",
-              color: "#2563eb",
+              color: "#9a7657",
               axis: "y1",
               fn: (r) => r.comments || 0,
             },
             compartidos: {
               label: "Compartidos",
               type: "line",
-              color: "#0891b2",
+              color: "#496b78",
               axis: "y1",
               fn: (r) => r.shares || 0,
             },
@@ -3822,14 +3929,14 @@
                   (x) =>
                     (x.likes || 0) + (x.comments || 0) + (x.compartidos || 0),
                 ),
-                borderColor: "#B88935",
-                backgroundColor: "rgba(197,160,89,0.16)",
+                borderColor: "#0d3341",
+                backgroundColor: "rgba(13,51,65,0.12)",
                 borderWidth: 3,
                 tension: 0.42,
                 fill: true,
                 pointRadius: source.length > 18 ? 2 : 4,
                 pointBackgroundColor: "#fff",
-                pointBorderColor: "#B88935",
+                pointBorderColor: "#0d3341",
                 pointBorderWidth: 2,
                 pointHoverRadius: 7,
               },
@@ -3838,15 +3945,15 @@
               {
                 label: "Interacciones",
                 data: source.map((x) => (x.likes || 0) + (x.shares || 0)),
-                borderColor: "#B88935",
-                backgroundColor: "rgba(197,160,89,0.16)",
+                borderColor: "#0d3341",
+                backgroundColor: "rgba(13,51,65,0.12)",
                 borderWidth: 3,
                 tension: 0.42,
                 fill: true,
                 yAxisID: "y",
                 pointRadius: source.length > 18 ? 2 : 3,
                 pointBackgroundColor: "#fff",
-                pointBorderColor: "#B88935",
+                pointBorderColor: "#0d3341",
                 pointBorderWidth: 2,
                 pointHoverRadius: 6,
               },
@@ -3866,7 +3973,7 @@
                   usePointStyle: true,
                   boxWidth: 10,
                   padding: 16,
-                    font: { family: "Manrope", size: 11, weight: "600" },
+                    font: { family: "Poppins", size: 11, weight: "500" },
                 },
               },
               tooltip: tooltipStyle(),
@@ -3886,7 +3993,7 @@
                 title: {
                   display: true,
                   text: "Interacciones",
-                  font: { family: "Manrope", size: 11, weight: "600" },
+                  font: { family: "Poppins", size: 11, weight: "500" },
                 },
               },
             },
@@ -3915,14 +4022,14 @@
               {
                 label: "Seguidores",
                 data: sorted.map((x) => x.followers || 0),
-                borderColor: "#17805b",
-                backgroundColor: "rgba(23,128,91,0.13)",
+                borderColor: "#607c67",
+                backgroundColor: "rgba(162,172,135,0.18)",
                 borderWidth: 3,
                 tension: 0.42,
                 fill: true,
                 pointRadius: 3,
                 pointBackgroundColor: "#fff",
-                pointBorderColor: "#17805b",
+                pointBorderColor: "#607c67",
                 pointBorderWidth: 2,
               },
             ],
@@ -4031,18 +4138,18 @@
         });
         const labels = Object.keys(types);
         const TYPE_COLORS = {
-          Carrusel: "#C5A059",
-          Foto: "#0D3341",
-          Reel: "#E1D3B8",
-          Story: "#145333",
-          Video: "#0D3341",
+          Carrusel: "#496b78",
+          Foto: "#786b70",
+          Reel: "#9a7657",
+          Story: "#607c67",
+          Video: "#0d3341",
         };
         const fallbackColors = [
-          "#C5A059",
-          "#0D3341",
-          "#E1D3B8",
-          "#145333",
-          "#6B7280",
+          "#496b78",
+          "#786b70",
+          "#9a7657",
+          "#607c67",
+          "#a2ac87",
         ];
         const bgColors = labels.map(
           (t, i) => TYPE_COLORS[t] || fallbackColors[i % fallbackColors.length],
@@ -4072,7 +4179,7 @@
                   padding: 18,
                   usePointStyle: true,
                   pointStyle: "circle",
-                  font: { family: "Manrope", size: 11, weight: "600" },
+                  font: { family: "Poppins", size: 11, weight: "500" },
                 },
               },
               tooltip: {
@@ -4246,11 +4353,11 @@
               {
                 label: "Interacciones",
                 data: sortedWeeks.map((wk) => weeks[wk].interactions),
-                backgroundColor: "rgba(23,128,91,0.82)",
+                backgroundColor: "rgba(162,172,135,0.9)",
                 borderRadius: 10,
                 borderSkipped: false,
                 borderWidth: 0,
-                hoverBackgroundColor: "#B88935",
+                hoverBackgroundColor: "#0d3341",
               },
             ],
           },
@@ -4663,8 +4770,8 @@
           bodyColor: "#ffffff",
           borderColor: "rgba(216,191,130,.32)",
           borderWidth: 1,
-          titleFont: { family: "Manrope", weight: "700" },
-          bodyFont: { family: "Manrope", weight: "500" },
+          titleFont: { family: "Poppins", weight: "600" },
+          bodyFont: { family: "Poppins", weight: "400" },
           padding: 12,
           cornerRadius: 10,
           displayColors: true,
