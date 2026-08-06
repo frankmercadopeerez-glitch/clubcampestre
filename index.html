@@ -476,6 +476,7 @@
       body {
         font-family: "Poppins", sans-serif;
         font-feature-settings: "tnum" 1, "ss01" 1;
+        font-weight: 400;
       }
       .page-title {
         font-family: "Unna", serif;
@@ -487,12 +488,49 @@
         font-size: clamp(2.15rem, 4vw, 3.4rem);
         text-shadow: 0 2px 18px rgba(0, 0, 0, 0.24);
       }
-      h2, h3, .kpi-value {
+      h2, h3, h4 {
+        font-family: "Unna", serif;
+        font-weight: 400 !important;
+        letter-spacing: .005em;
+        line-height: 1.08;
+      }
+      .kpi-value {
         letter-spacing: -0.025em;
       }
       .page-subtitle {
         font-size: .82rem;
+        font-weight: 300;
         letter-spacing: .01em;
+      }
+      #panel-register-card h2,
+      #modal-post-title {
+        color: var(--official-teal);
+        font-size: 1.4rem;
+      }
+      #panel-register-card > div:first-child p,
+      #modal-overlay h2 + p {
+        font-weight: 300;
+      }
+      #post-form-panel label,
+      #modal-overlay form label {
+        font-weight: 400;
+      }
+      #post-form-panel input,
+      #post-form-panel select,
+      #post-form-panel textarea,
+      #modal-overlay form input,
+      #modal-overlay form select,
+      #modal-overlay form textarea {
+        font-family: "Poppins", sans-serif;
+        font-weight: 300;
+      }
+      #post-form-panel .uppercase,
+      #modal-overlay form .uppercase {
+        color: var(--official-teal) !important;
+        font-family: "Unna", serif;
+        font-size: 1rem;
+        font-weight: 400 !important;
+        letter-spacing: .07em;
       }
       .glass-card {
         background:
