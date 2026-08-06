@@ -979,15 +979,15 @@
       .main-header-inner {
         min-height: 5rem;
       }
-      body > nav {
+      #main-navigation {
         background: rgba(242,236,224,.96) !important;
         border-color: rgba(13,51,65,.12) !important;
         box-shadow: 0 10px 30px rgba(64,64,65,.05);
-        top: 5rem;
+        top: 5rem !important;
       }
       @media (max-width: 640px) {
-        body > nav {
-          top: 4.5rem;
+        #main-navigation {
+          top: 4.5rem !important;
         }
       }
       .tab-btn {
@@ -1383,7 +1383,10 @@
     </header>
 
     <!-- Navigation Tabs -->
-    <nav class="bg-[#0b1e38] border-b border-white/10 sticky top-14 z-40">
+    <nav
+      id="main-navigation"
+      class="bg-[#0b1e38] border-b border-white/10 sticky z-40"
+    >
       <div
         class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 flex overflow-x-auto scrollbar-none"
         style="touch-action: pan-x; overscroll-behavior-x: contain"
