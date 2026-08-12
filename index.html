@@ -1058,6 +1058,106 @@
         border-color: var(--official-teal);
         box-shadow: 0 0 0 4px rgba(13,51,65,.1);
       }
+      /* Readability and contrast pass */
+      section:not(#tab-overview) .page-subtitle {
+        color: #536267;
+      }
+      .text-slate-300 { color: #7a898e !important; }
+      .text-slate-400 { color: #65757a !important; }
+      .text-slate-500 { color: #50646b !important; }
+      .text-slate-600 { color: #344f58 !important; }
+      input, select, textarea {
+        color: #263f48 !important;
+        border-color: rgba(13,51,65,.2) !important;
+      }
+      input::placeholder,
+      textarea::placeholder { color: #748187; opacity: 1; }
+      table thead { color: #40565d !important; }
+      .kpi-card .kpi-label { color: #53666d; }
+      #monthly-label {
+        color: var(--official-teal) !important;
+        font-size: clamp(1.2rem, 2.2vw, 1.55rem);
+        font-weight: 700;
+        letter-spacing: .01em;
+      }
+      .monthly-period-nav {
+        padding: .35rem;
+        border: 1px solid rgba(13,51,65,.14);
+        border-radius: 1rem;
+        background: rgba(255,253,248,.82);
+        box-shadow: 0 10px 28px rgba(64,64,65,.07);
+      }
+      #btn-month-prev,
+      #btn-month-next {
+        color: var(--official-teal);
+        border: 1px solid rgba(13,51,65,.18);
+        background: rgba(255,255,255,.72);
+      }
+      #btn-month-prev:hover,
+      #btn-month-next:hover {
+        color: #fff;
+        border-color: var(--official-teal);
+        background: var(--official-teal);
+      }
+      #btn-month-prev:focus-visible,
+      #btn-month-next:focus-visible {
+        outline: 3px solid rgba(13,51,65,.22);
+        outline-offset: 2px;
+      }
+      #monthly-year-filter,
+      #monthly-period-filter {
+        color: #203e49 !important;
+        font-weight: 700;
+        border-color: rgba(13,51,65,.24) !important;
+      }
+      .monthly-metric-btn {
+        color: #344f58;
+        border-color: rgba(13,51,65,.25);
+        background: rgba(255,253,248,.82);
+      }
+      .followers-summary-panel {
+        padding: 1.25rem;
+        border: 1px solid rgba(13,51,65,.13);
+        border-radius: 1.15rem;
+        background:
+          radial-gradient(circle at 100% 0, rgba(162,172,135,.2), transparent 48%),
+          linear-gradient(145deg, #fffdf8, #f1f2ea);
+      }
+      .followers-current-value {
+        color: var(--official-teal);
+        font-size: clamp(2.4rem, 6vw, 4rem);
+        font-weight: 700;
+        line-height: .95;
+      }
+      .followers-change-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: .3rem;
+        margin-top: .75rem;
+        padding: .35rem .65rem;
+        border-radius: 999px;
+        font-size: .82rem;
+        font-weight: 700;
+      }
+      .followers-change-badge.is-positive { color: #17603f; background: #e2f2e8; }
+      .followers-change-badge.is-negative { color: #963b3b; background: #f8e6e4; }
+      .followers-change-badge.is-neutral { color: #4e6066; background: #e9eeec; }
+      .followers-history-row td { border-top: 1px solid rgba(13,51,65,.08); }
+      .followers-history-row:first-child td { border-top: 0; }
+      #monthly-followers-empty {
+        color: #65757a;
+        background: linear-gradient(180deg, rgba(255,253,248,.72), rgba(242,236,224,.52));
+        border: 1px dashed rgba(13,51,65,.2);
+        border-radius: 1rem;
+      }
+      #monthlyChart,
+      #monthlyFollowersChart {
+        min-width: 0 !important;
+        max-width: 100% !important;
+      }
+      #tab-monthly .glass-card:has(canvas) > .w-full {
+        overflow-x: hidden;
+      }
       ::-webkit-scrollbar-thumb { background: rgba(13,51,65,.24); }
       @media (max-width: 640px) {
         .overview-hero {
@@ -1068,6 +1168,8 @@
           background-position: 55% center;
         }
         .tab-btn { font-size: .64rem; letter-spacing: .045em; }
+        .monthly-period-nav { width: 100%; justify-content: space-between; }
+        #monthly-label { min-width: 8.5rem; }
       }
     </style>
   </head>
@@ -2018,22 +2120,22 @@
         </div>
         <!-- Selector de mes + año -->
         <div class="flex flex-wrap items-center justify-between gap-3">
-          <div class="flex items-center gap-2">
+          <div class="monthly-period-nav flex items-center gap-2">
             <button
               id="btn-month-prev"
               class="p-2 rounded-lg hover:bg-slate-200 transition"
             >
-              <i data-lucide="chevron-left" class="w-5 h-5 text-white"></i>
+              <i data-lucide="chevron-left" class="w-5 h-5"></i>
             </button>
             <span
               id="monthly-label"
-              class="text-lg font-bold text-white min-w-[160px] text-center capitalize"
+              class="text-lg font-bold min-w-[160px] text-center capitalize"
             ></span>
             <button
               id="btn-month-next"
               class="p-2 rounded-lg hover:bg-slate-200 transition"
             >
-              <i data-lucide="chevron-right" class="w-5 h-5 text-white"></i>
+              <i data-lucide="chevron-right" class="w-5 h-5"></i>
             </button>
           </div>
           <div class="flex items-center gap-2">
@@ -2099,6 +2201,65 @@
           </div>
           <div class="w-full h-72 relative">
             <canvas id="monthlyChart"></canvas>
+          </div>
+        </div>
+
+        <!-- Evolución histórica de seguidores -->
+        <div class="glass-card p-4 md:p-6" id="monthly-followers-card">
+          <div class="flex flex-wrap items-start justify-between gap-3 mb-5">
+            <div class="flex items-start gap-3">
+              <div class="w-8 h-8 rounded-lg bg-club-dark/10 flex items-center justify-center shrink-0">
+                <i data-lucide="users-round" class="w-4 h-4 text-club-dark"></i>
+              </div>
+              <div>
+                <h2 class="text-base sm:text-lg font-semibold text-club-dark">Evolución de seguidores</h2>
+                <p class="text-xs text-slate-500 mt-1">Historial de los valores registrados en publicaciones</p>
+              </div>
+            </div>
+            <span id="monthly-followers-count" class="text-xs text-slate-500 px-2.5 py-1 rounded-full bg-slate-100"></span>
+          </div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
+            <div class="followers-summary-panel">
+              <p class="text-xs uppercase tracking-wider text-slate-500">Seguidores actuales</p>
+              <p id="monthly-followers-current" class="followers-current-value mt-3">—</p>
+              <span id="monthly-followers-change" class="followers-change-badge is-neutral">Sin registros</span>
+              <p id="monthly-followers-change-note" class="text-xs text-slate-500 mt-3">Registra el total de seguidores en una publicación.</p>
+              <div class="mt-5 pt-4 border-t border-slate-200 flex items-center justify-between gap-3">
+                <span class="text-xs text-slate-500">Primer registro</span>
+                <strong id="monthly-followers-start" class="text-sm text-club-dark">—</strong>
+              </div>
+            </div>
+
+            <div class="lg:col-span-2 min-w-0">
+              <div class="w-full h-64 relative">
+                <canvas id="monthlyFollowersChart"></canvas>
+                <div id="monthly-followers-empty" class="absolute inset-0 hidden flex-col items-center justify-center text-center p-5">
+                  <i data-lucide="users" class="w-8 h-8 mb-2 opacity-60"></i>
+                  <p class="text-sm font-bold text-club-dark">Aún no hay historial suficiente</p>
+                  <p class="text-xs mt-1 max-w-[18rem]">Agrega “Seguidores actuales” al registrar publicaciones para ver su evolución.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-5 pt-4 border-t border-slate-100">
+            <div class="flex items-center justify-between gap-3 mb-2">
+              <h3 class="text-sm font-semibold text-club-dark">Últimos registros</h3>
+              <span class="text-xs text-slate-500">Cambio frente al registro anterior</span>
+            </div>
+            <div class="overflow-x-auto">
+              <table class="w-full text-left border-collapse">
+                <thead>
+                  <tr class="text-xs uppercase tracking-wider text-slate-500">
+                    <th class="py-2 pr-3 font-medium">Fecha</th>
+                    <th class="py-2 px-3 font-medium text-right">Seguidores</th>
+                    <th class="py-2 pl-3 font-medium text-right">Cambio</th>
+                  </tr>
+                </thead>
+                <tbody id="monthly-followers-history" class="text-sm"></tbody>
+              </table>
+            </div>
           </div>
         </div>
 
@@ -2187,7 +2348,7 @@
       // ── Chart.js global defaults ─────────────────────────────────────────
       Chart.defaults.font.family = "'Unna', serif";
       Chart.defaults.font.size = 11;
-      Chart.defaults.color = "#718096";
+      Chart.defaults.color = "#50646b";
       Chart.defaults.animation.duration = 720;
       Chart.defaults.animation.easing = "easeOutQuart";
       Chart.defaults.elements.line.borderWidth = 2.5;
@@ -2289,6 +2450,7 @@
       let globalWeekly = [];
       let mainChartInstance,
         followersChartInst,
+        monthlyFollowersChartInst,
         contentTypeChartInst,
         weeklyEngagementInst;
 
@@ -2315,6 +2477,27 @@
       let monthlyYear = new Date().getFullYear();
       let monthlyMonth = new Date().getMonth();
       let monthlyChartInst = null;
+
+      function getFollowerHistory() {
+        const byDate = new Map();
+        globalPosts.forEach((post) => {
+          const followers = Number(post.followers) || 0;
+          const date = (post.publishedAt || post.date || "").split("T")[0];
+          if (followers > 0 && date) {
+            byDate.set(date, { date, followers, source: "post" });
+          }
+        });
+        globalWeekly.forEach((record) => {
+          const followers = Number(record.followers) || 0;
+          const date = (record.date || "").split("T")[0];
+          if (followers > 0 && date) {
+            byDate.set(date, { date, followers, source: "weekly" });
+          }
+        });
+        return [...byDate.values()].sort(
+          (a, b) => new Date(a.date) - new Date(b.date),
+        );
+      }
 
       // Mostrar datos históricos inmediatamente al cargar
       updateDashboard();
@@ -2380,6 +2563,9 @@
             renderWeeklyHistory();
             calculateKPIs();
             renderFollowersChart();
+            if (!document.getElementById("tab-monthly").classList.contains("hidden")) {
+              renderMonthlyFollowers();
+            }
           },
           (err) => console.error(err),
         );
@@ -2987,8 +3173,8 @@
 
       function populateYearSelector() {
         const sel = document.getElementById("monthly-year-filter");
-        const years = new Set(
-          [...globalData, ...globalPosts]
+          const years = new Set(
+            [...globalData, ...globalPosts, ...getFollowerHistory()]
             .map((r) => (r.date || r.publishedAt || "").slice(0, 4))
             .filter(Boolean),
         );
@@ -3094,6 +3280,11 @@
           chartSource.length > 0
             ? (totalInt / chartSource.length).toFixed(1)
             : "0.0";
+        const followerHistory = getFollowerHistory();
+        const currentFollowers = followerHistory.at(-1)?.followers || 0;
+        const previousFollowers =
+          followerHistory.at(-2)?.followers || currentFollowers;
+        const followerDelta = currentFollowers - previousFollowers;
         document.getElementById("monthly-kpis").innerHTML = [
           {
             label: "Total Interacc.",
@@ -3113,11 +3304,23 @@
             icon: "trending-up",
             color: "border-amber-400",
           },
+          {
+            label: "Seguidores",
+            val: currentFollowers
+              ? currentFollowers.toLocaleString("es-ES")
+              : "Sin datos",
+            note: currentFollowers
+              ? `${followerDelta > 0 ? "+" : ""}${followerDelta.toLocaleString("es-ES")} vs anterior`
+              : "Agrega un registro",
+            icon: "users",
+            color: "border-club-dark",
+          },
         ]
           .map(
             (k) => `<div class="glass-card p-3 sm:p-4 border-l-4 ${k.color}">
           <p class="text-xs text-slate-500 mb-1">${k.label}</p>
           <p class="text-xl font-bold text-club-dark">${k.val}</p>
+          ${k.note ? `<p class="text-xs text-slate-500 mt-1">${k.note}</p>` : ""}
         </div>`,
           )
           .join("");
@@ -3477,6 +3680,151 @@
               .join("") ||
             `<tr><td colspan="6" class="p-8 text-center text-slate-400">Sin datos para este mes.</td></tr>`;
         }
+        renderMonthlyFollowers();
+        lucide.createIcons();
+      }
+
+      function renderMonthlyFollowers() {
+        const history = getFollowerHistory();
+        const currentEl = document.getElementById("monthly-followers-current");
+        const changeEl = document.getElementById("monthly-followers-change");
+        const noteEl = document.getElementById("monthly-followers-change-note");
+        const startEl = document.getElementById("monthly-followers-start");
+        const countEl = document.getElementById("monthly-followers-count");
+        const historyBody = document.getElementById("monthly-followers-history");
+        const emptyEl = document.getElementById("monthly-followers-empty");
+        const canvas = document.getElementById("monthlyFollowersChart");
+        if (!currentEl || !canvas) return;
+
+        if (monthlyFollowersChartInst) {
+          monthlyFollowersChartInst.destroy();
+          monthlyFollowersChartInst = null;
+        }
+
+        countEl.textContent = history.length
+          ? `${history.length} ${history.length === 1 ? "registro" : "registros"}`
+          : "Sin registros";
+
+        if (!history.length) {
+          currentEl.textContent = "—";
+          changeEl.className = "followers-change-badge is-neutral";
+          changeEl.textContent = "Sin registros";
+          noteEl.textContent = "Registra el total de seguidores en una publicación.";
+          startEl.textContent = "—";
+          emptyEl.style.display = "flex";
+          historyBody.innerHTML = `<tr><td colspan="3" class="py-6 text-center text-slate-500">No hay valores de seguidores registrados.</td></tr>`;
+          canvas.getContext("2d").clearRect(0, 0, canvas.width, canvas.height);
+          return;
+        }
+
+        const first = history[0];
+        const current = history[history.length - 1];
+        const previous = history.length > 1 ? history[history.length - 2] : null;
+        const lastDelta = previous ? current.followers - previous.followers : null;
+        const totalDelta = current.followers - first.followers;
+        const formatDate = (date, withYear = true) =>
+          new Date(date + "T00:00:00").toLocaleDateString("es-ES", {
+            day: "2-digit",
+            month: "short",
+            ...(withYear ? { year: "numeric" } : {}),
+          });
+        const signed = (value) => `${value > 0 ? "+" : ""}${value.toLocaleString("es-ES")}`;
+
+        currentEl.textContent = current.followers.toLocaleString("es-ES");
+        changeEl.className =
+          "followers-change-badge " +
+          (lastDelta === null || lastDelta === 0
+            ? "is-neutral"
+            : lastDelta > 0
+              ? "is-positive"
+              : "is-negative");
+        changeEl.innerHTML = lastDelta === null
+          ? `<i data-lucide="minus" class="w-3.5 h-3.5"></i> Primer registro`
+          : `<i data-lucide="${lastDelta >= 0 ? "trending-up" : "trending-down"}" class="w-3.5 h-3.5"></i> ${signed(lastDelta)} vs anterior`;
+        noteEl.textContent = history.length > 1
+          ? `${signed(totalDelta)} de crecimiento acumulado desde ${formatDate(first.date)}.`
+          : `Último registro: ${formatDate(current.date)}.`;
+        startEl.textContent = `${first.followers.toLocaleString("es-ES")} · ${formatDate(first.date, false)}`;
+
+        const rows = history
+          .map((item, index) => ({
+            ...item,
+            delta: index ? item.followers - history[index - 1].followers : null,
+          }))
+          .reverse()
+          .slice(0, 6);
+        historyBody.innerHTML = rows
+          .map((item) => {
+            const deltaClass = item.delta > 0
+              ? "text-green-600"
+              : item.delta < 0
+                ? "text-red-500"
+                : "text-slate-500";
+            return `<tr class="followers-history-row">
+              <td class="py-2.5 pr-3 text-slate-600 whitespace-nowrap">${formatDate(item.date)}</td>
+              <td class="py-2.5 px-3 text-right font-bold text-club-dark">${item.followers.toLocaleString("es-ES")}</td>
+              <td class="py-2.5 pl-3 text-right font-bold ${deltaClass}">${item.delta === null ? "—" : signed(item.delta)}</td>
+            </tr>`;
+          })
+          .join("");
+
+        if (history.length < 2) {
+          emptyEl.style.display = "flex";
+          emptyEl.querySelector("p.font-bold").textContent = "Ya existe el primer registro";
+          emptyEl.querySelector("p.text-xs").textContent = "Agrega otro valor de seguidores para comparar el cambio en el tiempo.";
+          canvas.getContext("2d").clearRect(0, 0, canvas.width, canvas.height);
+          lucide.createIcons();
+          return;
+        }
+
+        emptyEl.style.display = "none";
+        monthlyFollowersChartInst = new Chart(canvas.getContext("2d"), {
+          type: "line",
+          data: {
+            labels: history.map((item) => formatDate(item.date, false)),
+            datasets: [
+              {
+                label: "Seguidores",
+                data: history.map((item) => item.followers),
+                borderColor: "#0d3341",
+                backgroundColor: "rgba(162,172,135,.22)",
+                borderWidth: 3,
+                fill: true,
+                tension: .36,
+                pointRadius: 4,
+                pointHoverRadius: 6,
+                pointBackgroundColor: "#fffdf8",
+                pointBorderColor: "#0d3341",
+                pointBorderWidth: 2,
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            interaction: { mode: "index", intersect: false },
+            plugins: {
+              legend: { display: false },
+              tooltip: tooltipStyle(),
+            },
+            scales: {
+              x: {
+                grid: { display: false },
+                border: { display: false },
+                ticks: { color: "#50646b", maxTicksLimit: 8, maxRotation: 0 },
+              },
+              y: {
+                border: { display: false },
+                grid: { color: "rgba(13,51,65,.1)", drawTicks: false },
+                ticks: {
+                  color: "#50646b",
+                  precision: 0,
+                  callback: (value) => value.toLocaleString("es-ES"),
+                },
+              },
+            },
+          },
+        });
         lucide.createIcons();
       }
       // ──────────────────────────────────────────────────────────────────────
@@ -3634,18 +3982,10 @@
       }
 
       function calculateKPIs() {
-        // Seguidores: driven entirely by posts that carry a followers value.
-        // Most recent entry = current; second most recent = previous (for trend).
-        const postWithFollowers = [...globalPosts]
-          .filter((p) => p.followers > 0)
-          .sort(
-            (a, b) =>
-              new Date(b.publishedAt || b.date) -
-              new Date(a.publishedAt || a.date),
-          );
-        const latestFollowers = postWithFollowers[0]?.followers || 0;
+        const followerHistory = getFollowerHistory();
+        const latestFollowers = followerHistory.at(-1)?.followers || 0;
         const prevFollowers =
-          postWithFollowers[1]?.followers || latestFollowers;
+          followerHistory.at(-2)?.followers || latestFollowers;
         document.getElementById("kpi-followers").textContent =
           latestFollowers > 0 ? latestFollowers.toLocaleString() : "Sin datos";
         if (latestFollowers > 0) {
@@ -4066,15 +4406,14 @@
         const ctx = document.getElementById("followersChart").getContext("2d");
         const emptyEl = document.getElementById("followers-chart-empty");
         if (followersChartInst) followersChartInst.destroy();
-        if (globalWeekly.length < 2) {
+        const followerHistory = getFollowerHistory();
+        if (followerHistory.length < 2) {
           if (emptyEl) emptyEl.style.display = "flex";
           ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
           return;
         }
         if (emptyEl) emptyEl.style.display = "none";
-        const sorted = [...globalWeekly].sort(
-          (a, b) => new Date(a.date) - new Date(b.date),
-        );
+        const sorted = followerHistory;
         followersChartInst = new Chart(ctx, {
           type: "line",
           data: {
