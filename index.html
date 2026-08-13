@@ -1170,6 +1170,55 @@
       .followers-change-badge.is-positive { color: #17603f; background: #e2f2e8; }
       .followers-change-badge.is-negative { color: #963b3b; background: #f8e6e4; }
       .followers-change-badge.is-neutral { color: #4e6066; background: #e9eeec; }
+      .followers-history-panel {
+        position: relative;
+        margin-top: 1.5rem;
+        padding: 1rem 1rem .4rem;
+        overflow: hidden;
+        border: 1px solid rgba(13,51,65,.14);
+        border-top: 3px solid var(--official-sage);
+        border-radius: 1rem;
+        background: linear-gradient(180deg, rgba(242,236,224,.42), rgba(255,253,248,.9));
+      }
+      .followers-history-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        padding-bottom: .85rem;
+        margin-bottom: .25rem;
+        border-bottom: 1px solid rgba(13,51,65,.1);
+      }
+      .followers-history-icon {
+        display: grid;
+        place-items: center;
+        width: 2rem;
+        height: 2rem;
+        flex: 0 0 auto;
+        color: var(--official-teal);
+        border-radius: .65rem;
+        background: rgba(162,172,135,.2);
+      }
+      .followers-history-eyebrow {
+        color: #66766f;
+        font-size: .68rem;
+        font-weight: 700;
+        letter-spacing: .1em;
+        line-height: 1;
+        text-transform: uppercase;
+      }
+      .followers-history-context {
+        display: inline-flex;
+        align-items: center;
+        gap: .35rem;
+        padding: .38rem .65rem;
+        color: #53666c;
+        font-size: .75rem;
+        white-space: nowrap;
+        border: 1px solid rgba(13,51,65,.1);
+        border-radius: 999px;
+        background: rgba(255,255,255,.68);
+      }
       .followers-history-row td { border-top: 1px solid rgba(13,51,65,.08); }
       .followers-history-row:first-child td { border-top: 0; }
       #monthly-followers-empty {
@@ -1248,6 +1297,9 @@
         .tab-btn { font-size: .64rem; letter-spacing: .045em; }
         .monthly-period-nav { width: 100%; justify-content: space-between; }
         #monthly-label { min-width: 8.5rem; }
+        .followers-history-panel { padding: .9rem .8rem .3rem; }
+        .followers-history-header { align-items: flex-start; flex-direction: column; gap: .7rem; }
+        .followers-history-context { white-space: normal; }
         .monthly-comparison-callout {
           width: 100%;
           justify-content: center;
@@ -2326,10 +2378,21 @@
             </div>
           </div>
 
-          <div class="mt-5 pt-4 border-t border-slate-100">
-            <div class="flex items-center justify-between gap-3 mb-2">
-              <h3 class="text-sm font-semibold text-club-dark">Últimos registros</h3>
-              <span class="text-xs text-slate-500">Cambio frente al registro anterior</span>
+          <div class="followers-history-panel">
+            <div class="followers-history-header">
+              <div class="flex items-center gap-3">
+                <span class="followers-history-icon">
+                  <i data-lucide="history" class="w-4 h-4"></i>
+                </span>
+                <div>
+                  <p class="followers-history-eyebrow">Detalle histórico</p>
+                  <h3 class="text-sm sm:text-base font-semibold text-club-dark mt-1">Últimos registros de seguidores</h3>
+                </div>
+              </div>
+              <span class="followers-history-context">
+                <i data-lucide="git-compare-arrows" class="w-3.5 h-3.5 shrink-0"></i>
+                El cambio se compara con el registro anterior
+              </span>
             </div>
             <div class="overflow-x-auto">
               <table class="w-full text-left border-collapse">
