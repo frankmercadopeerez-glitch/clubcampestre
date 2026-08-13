@@ -576,6 +576,13 @@
         background: linear-gradient(135deg, #fff, #f6f9f7);
         transition: transform .24s ease, border-color .24s ease;
       }
+      #content-type-table .content-type-summary {
+        padding: 1rem 1.1rem;
+      }
+      #content-type-table .content-type-summary-head,
+      #content-type-table .content-type-summary-metrics {
+        padding-inline: .15rem;
+      }
       #content-type-table > div:hover {
         transform: translateX(3px);
         border-color: rgba(20,83,51,.25);
@@ -4866,15 +4873,15 @@
                 grandTotal > 0
                   ? ((v.totalInteractions / grandTotal) * 100).toFixed(1)
                   : 0;
-              return `<div class="py-3 border-b border-slate-100 last:border-0">
-            <div class="flex items-center justify-between mb-1">
+              return `<div class="content-type-summary border-b border-slate-100 last:border-0">
+            <div class="content-type-summary-head flex items-center justify-between gap-3 mb-2">
               <span class="font-semibold text-slate-700 text-sm">${t}</span>
-              <span class="text-xs font-bold text-club-gold">${pct}%</span>
+              <span class="text-xs font-bold text-club-gold shrink-0">${pct}%</span>
             </div>
-            <div class="w-full bg-slate-100 rounded-full h-1.5 mb-1.5">
+            <div class="w-full bg-slate-100 rounded-full h-1.5 mb-2.5">
               <div class="bg-club-gold h-1.5 rounded-full" style="width:${barW}%"></div>
             </div>
-            <div class="flex gap-4 text-xs text-slate-500">
+            <div class="content-type-summary-metrics flex flex-wrap gap-x-5 gap-y-1 text-xs text-slate-500">
               <span>${v.count} pub.</span>
               <span>Prom. <b class="text-slate-700">${avgInt}</b> int.</span>
               <span>Eng. <b class="text-slate-700">${avgEng}%</b></span>
