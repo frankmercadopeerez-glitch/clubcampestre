@@ -939,6 +939,26 @@
           radial-gradient(circle at 90% 10%, rgba(162,172,135,.2), transparent 32rem),
           linear-gradient(180deg, #f7f2e9 0%, var(--official-ivory) 60%, #eee6d8 100%);
       }
+      body:has(#tab-insights:not(.hidden)),
+      body:has(#tab-posts:not(.hidden)),
+      body:has(#tab-monthly:not(.hidden)) {
+        background-color: #071a26;
+        background-image:
+          radial-gradient(circle at 10% -10%, rgba(213,181,111,.13), transparent 30rem),
+          radial-gradient(circle at 88% 12%, rgba(20,83,51,.32), transparent 34rem),
+          linear-gradient(155deg, #081724 0%, #0a2330 50%, #071a26 100%);
+        background-attachment: fixed;
+      }
+      body:has(#tab-insights:not(.hidden)) #tab-insights > div:first-child .page-title,
+      body:has(#tab-posts:not(.hidden)) #tab-posts > div:first-child .page-title,
+      body:has(#tab-monthly:not(.hidden)) #tab-monthly > div:first-child .page-title {
+        color: var(--official-ivory);
+      }
+      body:has(#tab-insights:not(.hidden)) #tab-insights > div:first-child .page-subtitle,
+      body:has(#tab-posts:not(.hidden)) #tab-posts > div:first-child .page-subtitle,
+      body:has(#tab-monthly:not(.hidden)) #tab-monthly > div:first-child .page-subtitle {
+        color: rgba(242,236,224,.72);
+      }
       body::before { opacity: .018; }
       #main-header {
         color: var(--official-teal) !important;
