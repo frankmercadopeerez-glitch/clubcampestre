@@ -2612,6 +2612,15 @@
         );
       }
 
+      function getFollowerCloseForMonth(history, year, month) {
+        const monthKey = `${year}-${String(month + 1).padStart(2, "0")}`;
+        return (
+          history
+            .filter((item) => item.date.slice(0, 7) <= monthKey)
+            .at(-1) || null
+        );
+      }
+
       // Mostrar datos históricos inmediatamente al cargar
       updateDashboard();
       enableForms();
@@ -3394,10 +3403,21 @@
             ? (totalInt / chartSource.length).toFixed(1)
             : "0.0";
         const followerHistory = getFollowerHistory();
-        const currentFollowers = followerHistory.at(-1)?.followers || 0;
-        const previousFollowers =
-          followerHistory.at(-2)?.followers || currentFollowers;
-        const followerDelta = currentFollowers - previousFollowers;
+        const selectedFollowerClose = getFollowerCloseForMonth(
+          followerHistory,
+          monthlyYear,
+          monthlyMonth,
+        );
+        const previousMonthDate = new Date(monthlyYear, monthlyMonth - 1, 1);
+        const previousFollowerClose = getFollowerCloseForMonth(
+          followerHistory,
+          previousMonthDate.getFullYear(),
+          previousMonthDate.getMonth(),
+        );
+        const currentFollowers = selectedFollowerClose?.followers || 0;
+        const followerDelta = previousFollowerClose
+          ? currentFollowers - previousFollowerClose.followers
+          : null;
         document.getElementById("monthly-kpis").innerHTML = [
           {
             label: "Total Interacc.",
@@ -3423,7 +3443,9 @@
               ? currentFollowers.toLocaleString("es-ES")
               : "Sin datos",
             note: currentFollowers
-              ? `${followerDelta > 0 ? "+" : ""}${followerDelta.toLocaleString("es-ES")} vs anterior`
+              ? followerDelta === null
+                ? "Primer cierre registrado"
+                : `${followerDelta > 0 ? "+" : ""}${followerDelta.toLocaleString("es-ES")} vs cierre anterior`
               : "Agrega un registro",
             icon: "users",
             color: "border-club-dark",
